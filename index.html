@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Operador</title>
+
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+
+    body {
+      margin: 0;
+      background: #101114;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .card {
+      background: #1c1d22;
+      border: 1px solid #2d2e35;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3 { margin-top: 0; }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 9px;
+      border: none;
+      margin: 6px 0 12px;
+      font-size: 15px;
+    }
+
+    input, select, textarea {
+      background: #fff;
+      color: #111;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      background: #e8e8e8;
+      color: #111;
+    }
+
+    .primary { background: #4c6fff; color: #fff; }
+    .success { background: #12b76a; color: #fff; }
+    .danger { background: #f04438; color: #fff; }
+    .warning { background: #fdb022; color: #111; }
+    .secondary { background: #667085; color: #fff; }
+
+    .hidden { display: none; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .row button {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #2d2e35;
+      margin: 4px 4px 4px 0;
+      font-size: 14px;
+    }
+
+    .msg {
+      color: #d0d5dd;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+
+    .okBox {
+      background: #123322;
+      border-left: 5px solid #12b76a;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .errBox {
+      background: #3a1717;
+      border-left: 5px solid #f04438;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #333640;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #252731;
+      color: #fff;
+    }
+
+    tr:hover {
+      background: #22242c;
+    }
+
+    .miniBtn {
+      padding: 8px;
+      font-size: 13px;
+      margin: 3px 0;
+    }
+
+    .chatBox {
+      background: #111217;
+      border: 1px solid #333640;
+      border-radius: 10px;
+      padding: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    .chatMsg {
+      background: #242631;
+      padding: 9px;
+      border-radius: 9px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .chatMeta {
+      color: #98a2b3;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .small { color: #98a2b3; font-size: 13px; }
+
+    @media (max-width: 650px) {
+      .container { padding: 12px; }
+      th, td { font-size: 12px; padding: 7px; }
+      .row button { min-width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <div id="loginCard" class="card">
+    <h1>Panel Operador</h1>
+    <p class="small">Ingreso operativo / administrativo</p>
+
+    <label>Usuario</label>
+    <input id="loginUsuario" placeholder="Ej: brenda" />
+
+    <label>Clave</label>
+    <input id="loginClave" type="password" placeholder="Clave" />
+
+    <button class="primary" onclick="login()">Ingresar</button>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+
+  <div id="app" class="hidden">
+
+    <div class="card">
+      <h2>Sesión activa</h2>
+      <div id="operadorInfo"></div>
+
+      <div class="row">
+        <button class="secondary" onclick="refrescarTodo()">Refrescar</button>
+        <button class="secondary" onclick="mostrarCambioClave()">Cambiar clave</button>
+        <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
+      </div>
+
+      <div id="claveBox" class="hidden">
+        <h3>Cambiar clave</h3>
+        <input id="claveActual" type="password" placeholder="Clave actual" />
+        <input id="claveNueva" type="password" placeholder="Nueva clave" />
+        <button class="primary" onclick="cambiarClave()">Guardar nueva clave</button>
+        <div id="claveMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Billeteras de la PC</h3>
+      <p class="small">El operador puede elegir qué billetera usar manualmente.</p>
+
+      <select id="selectBilletera"></select>
+      <button class="primary" onclick="seleccionarBilletera()">Activar billetera seleccionada</button>
+
+      <div id="billeteraInfo" class="msg"></div>
+    </div>
+
+    <div class="card">
+      <h3>Solicitudes pendientes</h3>
+
+      <div class="row">
+        <button class="secondary" onclick="cargarPendientes()">Actualizar pendientes</button>
+      </div>
+
+      <div id="pendientesMsg" class="msg"></div>
+      <div id="tablaPendientes"></div>
+    </div>
+
+    <div id="detalleCard" class="card hidden">
+      <h3>Detalle solicitud</h3>
+      <div id="detalleSolicitud"></div>
+
+      <label>Observaciones</label>
+      <textarea id="detalleObs" placeholder="Observaciones para aprobar/rechazar/cerrar"></textarea>
+
+      <label>Monto real</label>
+      <input id="detalleMontoReal" type="number" placeholder="Monto real si difiere" />
+
+      <label>Operation ID / comprobante interno</label>
+      <input id="detalleOperationId" placeholder="Opcional" />
+
+      <div class="row">
+        <button class="warning" onclick="tomarSolicitud()">Tomar</button>
+        <button class="success" onclick="aprobarSolicitud()">Aprobar</button>
+        <button class="danger" onclick="rechazarSolicitud()">Rechazar</button>
+        <button class="primary" onclick="cerrarRetiro()">Cerrar retiro pagado</button>
+      </div>
+
+      <div id="detalleMsg" class="msg"></div>
+    </div>
+
+    <div id="chatCard" class="card hidden">
+      <h3>Chat de solicitud</h3>
+      <div id="chatBox" class="chatBox"></div>
+
+      <textarea id="chatMensaje" placeholder="Escribir mensaje..."></textarea>
+      <button class="primary" onclick="enviarMensaje()">Enviar mensaje</button>
+
+      <div id="chatMsg" class="msg"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzTZyoqP4mqsfEnQXQAY5vLoumtjwz7xQ3MWuIWcW3RxCSebJeK1X6CuGk08RQA3Qef/exec";
+
+let operador = JSON.parse(localStorage.getItem("operador_core") || "null");
+let billeteras = [];
+let solicitudSeleccionada = null;
+
+window.onload = () => {
+  if (operador) mostrarApp();
+};
+
+async function api(params) {
+  const url = API_URL + "?" + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  const text = await res.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error(text);
+    return { ok: false, error: "Respuesta inválida de API" };
+  }
+}
+
+function msg(id, text, ok = null) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = text || "";
+  if (ok === true) el.className = "okBox";
+  else if (ok === false) el.className = "errBox";
+  else el.className = "msg";
+}
+
+async function login() {
+  const usuario = document.getElementById("loginUsuario").value.trim();
+  const clave = document.getElementById("loginClave").value.trim();
+
+  if (!usuario || !clave) {
+    msg("loginMsg", "Completá usuario y clave.", false);
+    return;
+  }
+
+  msg("loginMsg", "Validando...");
+
+  const r = await api({ action: "login", usuario, clave });
+
+  if (!r.ok) {
+    msg("loginMsg", r.error || "No se pudo ingresar.", false);
+    return;
+  }
+
+  operador = r.operador;
+  localStorage.setItem("operador_core", JSON.stringify(operador));
+  mostrarApp();
+}
+
+function mostrarApp() {
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  document.getElementById("operadorInfo").innerHTML = `
+    <span class="badge"><b>${operador.nombre}</b></span>
+    <span class="badge">Rol: ${operador.rol}</span>
+    <span class="badge">PC: ${operador.pc}</span>
+    <span class="badge">Turno: ${operador.turno}</span>
+  `;
+
+  refrescarTodo();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("operador_core");
+  operador = null;
+  location.reload();
+}
+
+function mostrarCambioClave() {
+  document.getElementById("claveBox").classList.toggle("hidden");
+}
+
+async function cambiarClave() {
+  const claveActual = document.getElementById("claveActual").value.trim();
+  const claveNueva = document.getElementById("claveNueva").value.trim();
+
+  const r = await api({
+    action: "cambiarclave",
+    usuario: operador.usuario,
+    clave: claveActual,
+    nuevaClave: claveNueva
+  });
+
+  msg("claveMsg", r.ok ? "Clave actualizada correctamente." : r.error, r.ok);
+}
+
+async function refrescarTodo() {
+  await cargarBilleteras();
+  await cargarPendientes();
+}
+
+async function cargarBilleteras() {
+  const pcConsulta = operador.rol === "ADMIN" ? "" : operador.pc;
+
+  const r = await api({
+    action: "getbilleteras",
+    pc: pcConsulta
+  });
+
+  if (!r.ok) {
+    msg("billeteraInfo", r.error || "No se pudieron cargar billeteras.", false);
+    return;
+  }
+
+  billeteras = r.billeteras || [];
+
+  const select = document.getElementById("selectBilletera");
+  select.innerHTML = "";
+
+  if (billeteras.length === 0) {
+    select.innerHTML = `<option>No hay billeteras activas</option>`;
+    msg("billeteraInfo", "No hay billeteras activas para esta PC.", false);
+    return;
+  }
+
+  billeteras.forEach(b => {
+    const opt = document.createElement("option");
+    opt.value = b.ID_BILLETERA;
+    opt.textContent = `${b.NOMBRE_VISIBLE} | ${b.PC} | ${b.TIPO} | $${b.SALDO_ESTIMADO || 0}`;
+    select.appendChild(opt);
+  });
+
+  renderBilleteraInfo();
+}
+
+function renderBilleteraInfo() {
+  const id = document.getElementById("selectBilletera").value;
+  const b = billeteras.find(x => String(x.ID_BILLETERA) === String(id));
+
+  if (!b) return;
+
+  msg("billeteraInfo",
+    `Seleccionada en lista:\n` +
+    `Nombre: ${b.NOMBRE_VISIBLE}\n` +
+    `PC: ${b.PC}\n` +
+    `Tipo: ${b.TIPO}\n` +
+    `Alias: ${b.ALIAS}\n` +
+    `Titular: ${b.TITULAR}\n` +
+    `Saldo estimado: ${b.SALDO_ESTIMADO || 0}\n` +
+    `Límite descarga: ${b.LIMITE_DESCARGA || ""}`
+  );
+}
+
+document.addEventListener("change", (e) => {
+  if (e.target && e.target.id === "selectBilletera") renderBilleteraInfo();
+});
+
+async function seleccionarBilletera() {
+  const idBilletera = document.getElementById("selectBilletera").value;
+
+  if (!idBilletera) {
+    msg("billeteraInfo", "Seleccioná una billetera.", false);
+    return;
+  }
+
+  const r = await api({
+    action: "seleccionarbilletera",
+    operador: operador.nombre,
+    idBilletera
+  });
+
+  msg("billeteraInfo", r.ok ? "Billetera activada correctamente." : r.error, r.ok);
+}
+
+async function cargarPendientes() {
+  msg("pendientesMsg", "Cargando pendientes...");
+
+  const r = await api({
+    action: "listarpendientes",
+    operador: operador.nombre
+  });
+
+  if (!r.ok) {
+    msg("pendientesMsg", r.error || "No se pudieron cargar pendientes.", false);
+    return;
+  }
+
+  const solicitudes = r.solicitudes || [];
+
+  if (solicitudes.length === 0) {
+    document.getElementById("tablaPendientes").innerHTML = "";
+    msg("pendientesMsg", "Sin solicitudes pendientes.", true);
+    return;
+  }
+
+  msg("pendientesMsg", `Pendientes: ${solicitudes.length}`, true);
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Monto</th>
+          <th>PC</th>
+          <th>Billetera</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  solicitudes.forEach(s => {
+    const safe = encodeURIComponent(JSON.stringify(s));
+
+    html += `
+      <tr>
+        <td>${s.TIPO_SOLICITUD || ""}</td>
+        <td><b>${s.USUARIO || ""}</b></td>
+        <td>${s.NOMBRE_COMPLETO || ""}</td>
+        <td>$${s.MONTO_DECLARADO || ""}</td>
+        <td>${s.PC || ""}</td>
+        <td>${s.BILLETERA_NOMBRE || ""}</td>
+        <td>${s.ESTADO || ""}</td>
+        <td>
+          <button class="miniBtn primary" onclick="verSolicitud('${safe}')">Ver</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaPendientes").innerHTML = html;
+}
+
+function verSolicitud(encoded) {
+  solicitudSeleccionada = JSON.parse(decodeURIComponent(encoded));
+
+  document.getElementById("detalleCard").classList.remove("hidden");
+  document.getElementById("chatCard").classList.remove("hidden");
+
+  document.getElementById("detalleMontoReal").value = solicitudSeleccionada.MONTO_DECLARADO || "";
+  document.getElementById("detalleOperationId").value = solicitudSeleccionada.OPERATION_ID || "";
+  document.getElementById("detalleObs").value = solicitudSeleccionada.OBS || "";
+
+  document.getElementById("detalleSolicitud").innerHTML = `
+    <span class="badge">ID: ${solicitudSeleccionada.ID}</span>
+    <span class="badge">Tipo: ${solicitudSeleccionada.TIPO_SOLICITUD}</span>
+    <span class="badge">Estado: ${solicitudSeleccionada.ESTADO}</span>
+    <span class="badge">PC: ${solicitudSeleccionada.PC}</span>
+    <br><br>
+    <b>Usuario:</b> ${solicitudSeleccionada.USUARIO}<br>
+    <b>Nombre:</b> ${solicitudSeleccionada.NOMBRE_COMPLETO}<br>
+    <b>Monto declarado:</b> $${solicitudSeleccionada.MONTO_DECLARADO}<br>
+    <b>Billetera:</b> ${solicitudSeleccionada.BILLETERA_NOMBRE}<br>
+    <b>Método:</b> ${solicitudSeleccionada.METODO_BILLETERA}<br>
+    <b>Fecha:</b> ${solicitudSeleccionada.FECHA_CREACION}<br>
+  `;
+
+  cargarChat();
+  window.scrollTo({ top: document.getElementById("detalleCard").offsetTop - 10, behavior: "smooth" });
+}
+
+async function tomarSolicitud() {
+  if (!solicitudSeleccionada) return;
+
+  const r = await api({
+    action: "tomarsolicitud",
+    operador: operador.nombre,
+    solicitudId: solicitudSeleccionada.ID
+  });
+
+  msg("detalleMsg", r.ok ? "Solicitud tomada." : r.error, r.ok);
+  await cargarPendientes();
+}
+
+async function aprobarSolicitud() {
+  if (!solicitudSeleccionada) return;
+
+  const montoReal = document.getElementById("detalleMontoReal").value;
+  const observaciones = document.getElementById("detalleObs").value;
+
+  const r = await api({
+    action: "aprobarsolicitud",
+    operador: operador.nombre,
+    solicitudId: solicitudSeleccionada.ID,
+    montoReal,
+    observaciones
+  });
+
+  msg("detalleMsg", r.ok ? "Solicitud aprobada." : r.error, r.ok);
+  await cargarPendientes();
+}
+
+async function rechazarSolicitud() {
+  if (!solicitudSeleccionada) return;
+
+  const observaciones = document.getElementById("detalleObs").value;
+
+  if (!confirm("¿Seguro querés rechazar esta solicitud?")) return;
+
+  const r = await api({
+    action: "rechazarsolicitud",
+    operador: operador.nombre,
+    solicitudId: solicitudSeleccionada.ID,
+    observaciones
+  });
+
+  msg("detalleMsg", r.ok ? "Solicitud rechazada." : r.error, r.ok);
+  await cargarPendientes();
+}
+
+async function cerrarRetiro() {
+  if (!solicitudSeleccionada) return;
+
+  const operationId = document.getElementById("detalleOperationId").value;
+  const observaciones = document.getElementById("detalleObs").value;
+
+  const r = await api({
+    action: "cerrarretiro",
+    operador: operador.nombre,
+    solicitudId: solicitudSeleccionada.ID,
+    operationId,
+    observaciones
+  });
+
+  msg("detalleMsg", r.ok ? "Retiro cerrado como pagado." : r.error, r.ok);
+  await cargarPendientes();
+}
+
+async function cargarChat() {
+  if (!solicitudSeleccionada) return;
+
+  const r = await api({
+    action: "getchat",
+    solicitudId: solicitudSeleccionada.ID
+  });
+
+  const box = document.getElementById("chatBox");
+
+  if (!r.ok) {
+    box.innerHTML = `<div class="errBox">${r.error || "Error cargando chat"}</div>`;
+    return;
+  }
+
+  const mensajes = r.mensajes || [];
+
+  if (mensajes.length === 0) {
+    box.innerHTML = `<div class="small">Sin mensajes todavía.</div>`;
+    return;
+  }
+
+  box.innerHTML = "";
+
+  mensajes.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "chatMsg";
+    div.innerHTML = `
+      <div class="chatMeta">${m.FECHA || ""} · ${m.EMISOR || ""} · ${m.TIPO_EMISOR || ""}</div>
+      <div>${m.MENSAJE || ""}</div>
+      ${m.IMAGEN_URL ? `<div><a href="${m.IMAGEN_URL}" target="_blank">Ver imagen</a></div>` : ""}
+    `;
+    box.appendChild(div);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+async function enviarMensaje() {
+  if (!solicitudSeleccionada) return;
+
+  const mensaje = document.getElementById("chatMensaje").value.trim();
+
+  if (!mensaje) {
+    msg("chatMsg", "Escribí un mensaje.", false);
+    return;
+  }
+
+  const r = await api({
+    action: "enviarmensaje",
+    solicitudId: solicitudSeleccionada.ID,
+    emisor: operador.nombre,
+    tipoEmisor: "OPERADOR",
+    mensaje
+  });
+
+  if (r.ok) {
+    document.getElementById("chatMensaje").value = "";
+    msg("chatMsg", "Mensaje enviado.", true);
+    cargarChat();
+  } else {
+    msg("chatMsg", r.error || "No se pudo enviar.", false);
+  }
+}
+
+setInterval(() => {
+  if (operador) cargarPendientes();
+}, 60000);
+</script>
+</body>
+</html>
