@@ -246,6 +246,23 @@
       .card { padding: 18px; border-radius: 22px; }
       .big-data { font-size: 22px; }
     }
+    .close-modal {
+  width: auto;
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  background: transparent;
+  color: white;
+  box-shadow: none;
+  font-size: 28px;
+  padding: 0;
+  margin: 0;
+}
+
+.success-box {
+  position: relative;
+}
+  
   </style>
 </head>
 
@@ -298,16 +315,19 @@
   </div>
 
   <div id="successModal" class="success-modal hidden">
-    <div class="success-box">
-      <div class="success-icon">✅</div>
-      <h2>¡Fichas cargadas!</h2>
-      <p>Tu carga fue acreditada correctamente.</p>
-      <button onclick="irPlataforma()">🎮 INGRESAR A LA PLATAFORMA</button>
-    </div>
+  <div class="success-box">
+    <button class="close-modal" onclick="cerrarModalExito()">×</button>
+
+    <div class="success-icon">✅</div>
+    <h2>¡Fichas cargadas!</h2>
+    <p>Tu carga fue acreditada correctamente.</p>
+
+    <button onclick="irPlataforma()">🎮 INGRESAR A LA PLATAFORMA</button>
   </div>
+</div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwd8WNkgUYnMRV_0UJxXIHRfJsZhnB2-quzwAeIMhtnanbRiI_lBMQ14FWaPFxZBEfi/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzCVsrY6ltCVyOoL4RAyqEm_70EqEAeludJJr4-xTsSTTOJ4cSARnyyCmSXAKDKj9Y/exec";
 
 const WHATSAPP_POR_PC = {
   CHINO: "54911XXXXXXXX",
