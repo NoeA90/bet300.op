@@ -3,51 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel Operador</title>
+  <title>Panel Operativo</title>
 
   <style>
     * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { margin: 0; background: #0f1115; color: #fff; }
 
-    body {
-      margin: 0;
-      background: #101114;
-      color: #fff;
+    .hidden { display: none !important; }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .container {
-      max-width: 1150px;
-      margin: auto;
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: #1c1d22;
+      border: 1px solid #30323a;
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #15161b;
+      border-right: 1px solid #30323a;
       padding: 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
     }
+
+    .main {
+      padding: 18px;
+      overflow-x: hidden;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .small { color: #98a2b3; font-size: 13px; }
+    .muted { color: #98a2b3; }
 
     .card {
       background: #1c1d22;
-      border: 1px solid #2d2e35;
+      border: 1px solid #30323a;
       border-radius: 14px;
       padding: 18px;
       margin-bottom: 16px;
     }
 
-    h1, h2, h3 { margin-top: 0; }
+    h1, h2, h3, h4 { margin-top: 0; }
 
     input, select, textarea, button {
       width: 100%;
-      padding: 12px;
-      border-radius: 9px;
+      padding: 11px;
+      border-radius: 8px;
       border: none;
-      margin: 6px 0 12px;
-      font-size: 15px;
+      margin: 5px 0 10px;
+      font-size: 14px;
     }
 
-    input, select, textarea {
-      background: #fff;
-      color: #111;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+    input, select, textarea { background: #fff; color: #111; }
+    textarea { min-height: 80px; resize: vertical; }
 
     button {
       cursor: pointer;
@@ -59,26 +90,21 @@
     .primary { background: #4c6fff; color: #fff; }
     .success { background: #12b76a; color: #fff; }
     .danger { background: #f04438; color: #fff; }
-    .warning { background: #fdb022; color: #111; }
     .secondary { background: #667085; color: #fff; }
+    .warning { background: #fdb022; color: #111; }
 
-    .hidden { display: none; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+    .nav-btn {
+      background: transparent;
+      color: #d0d5dd;
+      text-align: left;
+      border: 1px solid transparent;
+      margin: 4px 0;
     }
 
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .row button {
-      flex: 1;
-      min-width: 140px;
+    .nav-btn:hover, .nav-btn.active {
+      background: #232631;
+      border-color: #3b3f4a;
+      color: white;
     }
 
     .badge {
@@ -87,73 +113,127 @@
       border-radius: 999px;
       background: #2d2e35;
       margin: 4px 4px 4px 0;
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    .msg {
-      color: #d0d5dd;
-      font-size: 14px;
-      white-space: pre-wrap;
+    .badge-ok { background: #123322; color: #b7f7cf; }
+    .badge-warn { background: #3d2d10; color: #ffe0a3; }
+    .badge-danger { background: #3a1717; color: #ffd0d0; }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .okBox {
-      background: #123322;
-      border-left: 5px solid #12b76a;
-      padding: 12px;
-      border-radius: 10px;
-      margin-top: 10px;
+    .row button { flex: 1; min-width: 140px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
     }
 
-    .errBox {
-      background: #3a1717;
-      border-left: 5px solid #f04438;
-      padding: 12px;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
+    .msg { color: #d0d5dd; white-space: pre-wrap; font-size: 14px; }
+    .okBox { background: #123322; border-left: 5px solid #12b76a; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    .errBox { background: #3a1717; border-left: 5px solid #f04438; padding: 12px; border-radius: 10px; margin-top: 10px; }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 12px;
-      overflow: hidden;
-      border-radius: 10px;
     }
 
     th, td {
       border-bottom: 1px solid #333640;
-      padding: 10px;
+      padding: 9px;
       text-align: left;
       vertical-align: top;
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    th {
-      background: #252731;
-      color: #fff;
-    }
-
-    tr:hover {
-      background: #22242c;
-    }
+    th { background: #252731; position: sticky; top: 0; z-index: 1; }
+    tr:hover { background: #22242c; }
 
     .miniBtn {
-      padding: 8px;
-      font-size: 13px;
-      margin: 3px 0;
+      padding: 7px;
+      font-size: 12px;
+      margin: 2px 0;
     }
 
-    .chatBox {
+    .wallet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .wallet-item {
+      border: 1px solid #30323a;
+      background: #1f222b;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .wallet-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .main-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .modal {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: min(520px, calc(100vw - 36px));
+      max-height: 86vh;
+      background: #1c1d22;
+      border: 1px solid #424651;
+      border-radius: 16px;
+      box-shadow: 0 16px 60px rgba(0,0,0,.45);
+      z-index: 50;
+      overflow: hidden;
+    }
+
+    .modal.minimized {
+      height: 58px;
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #252731;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 14px;
+      max-height: 72vh;
+      overflow-y: auto;
+    }
+
+    .chat-box {
       background: #111217;
       border: 1px solid #333640;
       border-radius: 10px;
       padding: 12px;
-      max-height: 300px;
+      max-height: 330px;
       overflow-y: auto;
       margin-bottom: 10px;
     }
 
-    .chatMsg {
+    .chat-msg {
       background: #242631;
       padding: 9px;
       border-radius: 9px;
@@ -161,122 +241,186 @@
       font-size: 14px;
     }
 
-    .chatMeta {
+    .chat-meta {
       color: #98a2b3;
       font-size: 12px;
       margin-bottom: 4px;
     }
 
-    .small { color: #98a2b3; font-size: 13px; }
-
-    @media (max-width: 650px) {
-      .container { padding: 12px; }
-      th, td { font-size: 12px; padding: 7px; }
+    @media (max-width: 850px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+      th, td { font-size: 11px; padding: 6px; }
       .row button { min-width: 100%; }
     }
   </style>
 </head>
 
 <body>
-<div class="container">
 
-  <div id="loginCard" class="card">
-    <h1>Panel Operador</h1>
-    <p class="small">Ingreso operativo / administrativo</p>
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <h1>Panel Operativo</h1>
+    <p class="small">Ingreso de operador / franquero</p>
 
     <label>Usuario</label>
-    <input id="loginUsuario" placeholder="Ej: brenda" />
+    <input id="loginUsuario" placeholder="usuario">
 
     <label>Clave</label>
-    <input id="loginClave" type="password" placeholder="Clave" />
+    <input id="loginClave" type="password" placeholder="clave">
 
     <button class="primary" onclick="login()">Ingresar</button>
     <div id="loginMsg" class="msg"></div>
   </div>
+</div>
 
-  <div id="app" class="hidden">
+<div id="appView" class="layout hidden">
+
+  <aside class="sidebar">
+    <div class="brand">CORE OPS</div>
+    <div class="small">Panel operativo</div>
+
+    <div class="card" style="margin-top:14px;">
+      <div id="operadorBox"></div>
+
+      <div id="franqueroBox" class="hidden">
+        <label>PC que cubrís hoy</label>
+        <select id="pcOperativaSelect"></select>
+        <button class="primary" onclick="confirmarPcOperativa()">Ingresar a PC</button>
+        <div id="pcOperativaMsg" class="msg"></div>
+      </div>
+
+      <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+
+    <button id="navSolicitudes" class="nav-btn active" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
+    <button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button>
+    <button id="navChat" class="nav-btn" onclick="mostrarVista('chat')">💬 Chat</button>
 
     <div class="card">
-      <h2>Sesión activa</h2>
-      <div id="operadorInfo"></div>
-
-      <div class="row">
-        <button class="secondary" onclick="refrescarTodo()">Refrescar</button>
-        <button class="secondary" onclick="mostrarCambioClave()">Cambiar clave</button>
-        <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
-      </div>
-
-      <div id="claveBox" class="hidden">
-        <h3>Cambiar clave</h3>
-        <input id="claveActual" type="password" placeholder="Clave actual" />
-        <input id="claveNueva" type="password" placeholder="Nueva clave" />
-        <button class="primary" onclick="cambiarClave()">Guardar nueva clave</button>
-        <div id="claveMsg" class="msg"></div>
+      <h4>Billeteras</h4>
+      <div id="sidebarWallets" class="wallet-list">
+        <div class="small">Cargando...</div>
       </div>
     </div>
+  </aside>
 
-    <div class="card">
-      <h3>Billeteras de la PC</h3>
-      <p class="small">El operador puede elegir qué billetera usar manualmente.</p>
+  <main class="main">
 
-      <select id="selectBilletera"></select>
-      <button class="primary" onclick="seleccionarBilletera()">Activar billetera seleccionada</button>
+    <section id="viewSolicitudes">
+      <div class="card">
+        <div class="main-title">
+          <div>
+            <h2>Solicitudes</h2>
+            <div class="small">Vista completa de la PC operativa. El estado se actualiza, no desaparece.</div>
+          </div>
+          <button class="secondary" style="max-width:180px;" onclick="refrescarTodo()">Refrescar</button>
+        </div>
 
-      <div id="billeteraInfo" class="msg"></div>
-    </div>
+        <div class="grid">
+          <div>
+            <label>Tipo</label>
+            <select id="filtroTipo" onchange="cargarSolicitudes()">
+              <option value="">Todos</option>
+              <option value="CARGA">CARGA</option>
+              <option value="RETIRO">RETIRO</option>
+            </select>
+          </div>
 
-    <div class="card">
-      <h3>Solicitudes pendientes</h3>
+          <div>
+            <label>Estado</label>
+            <select id="filtroEstado" onchange="cargarSolicitudes()">
+              <option value="">Todos</option>
+              <option value="PENDIENTE_PAGO">PENDIENTE_PAGO</option>
+              <option value="PENDIENTE_APROBACION">PENDIENTE_APROBACION</option>
+              <option value="APROBADA_MANUAL">APROBADA_MANUAL</option>
+              <option value="RECHAZADA">RECHAZADA</option>
+              <option value="PAGADA">PAGADA</option>
+              <option value="ACREDITADA">ACREDITADA</option>
+              <option value="ERROR">ERROR</option>
+            </select>
+          </div>
+        </div>
 
-      <div class="row">
-        <button class="secondary" onclick="cargarPendientes()">Actualizar pendientes</button>
+        <div id="solicitudesMsg" class="msg"></div>
+        <div id="tablaSolicitudes"></div>
       </div>
+    </section>
 
-      <div id="pendientesMsg" class="msg"></div>
-      <div id="tablaPendientes"></div>
-    </div>
+    <section id="viewBilleteras" class="hidden">
+      <div class="card">
+        <h2>Billeteras de la PC</h2>
+        <p class="small">Acá podés activar la billetera que se muestra en la landing pública.</p>
 
-    <div id="detalleCard" class="card hidden">
-      <h3>Detalle solicitud</h3>
-      <div id="detalleSolicitud"></div>
+        <select id="selectBilletera"></select>
+        <button class="primary" onclick="seleccionarBilletera()">Activar billetera seleccionada</button>
 
-      <label>Observaciones</label>
-      <textarea id="detalleObs" placeholder="Observaciones para aprobar/rechazar/cerrar"></textarea>
-
-      <label>Monto real</label>
-      <input id="detalleMontoReal" type="number" placeholder="Monto real si difiere" />
-
-      <label>Operation ID / comprobante interno</label>
-      <input id="detalleOperationId" placeholder="Opcional" />
-
-      <div class="row">
-        <button class="warning" onclick="tomarSolicitud()">Tomar</button>
-        <button class="success" onclick="aprobarSolicitud()">Aprobar</button>
-        <button class="danger" onclick="rechazarSolicitud()">Rechazar</button>
-        <button class="primary" onclick="cerrarRetiro()">Cerrar retiro pagado</button>
+        <div id="billeteraMsg" class="msg"></div>
+        <div id="tablaBilleteras"></div>
       </div>
+    </section>
 
-      <div id="detalleMsg" class="msg"></div>
+    <section id="viewChat" class="hidden">
+      <div class="card">
+        <h2>Chat</h2>
+        <p class="small">Seleccioná una solicitud desde la tabla para abrir su chat.</p>
+
+        <div id="chatEmpty" class="okBox">No hay chat seleccionado.</div>
+
+        <div id="chatPanel" class="hidden">
+          <h3 id="chatTitulo"></h3>
+          <div id="chatBox" class="chat-box"></div>
+
+          <textarea id="chatMensaje" placeholder="Escribir mensaje..."></textarea>
+          <button class="primary" onclick="enviarMensaje()">Enviar mensaje</button>
+          <div id="chatMsg" class="msg"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="detalleModal" class="modal hidden">
+  <div class="modal-head" onclick="toggleModalMin()">
+    <b id="modalTitle">Detalle solicitud</b>
+    <span class="small">clic para minimizar</span>
+  </div>
+
+  <div class="modal-body">
+    <div id="detalleSolicitud"></div>
+
+    <label>Monto real</label>
+    <input id="detalleMontoReal" type="number" placeholder="Monto real">
+
+    <label>Operation ID / comprobante interno</label>
+    <input id="detalleOperationId" placeholder="Opcional">
+
+    <label>Observaciones</label>
+    <textarea id="detalleObs" placeholder="Observaciones"></textarea>
+
+    <div class="row">
+      <button class="warning" onclick="tomarSolicitud()">Tomar</button>
+      <button class="success" onclick="aprobarSolicitud()">Aceptar / aprobar</button>
+      <button class="danger" onclick="rechazarSolicitud()">Rechazar</button>
+      <button class="primary" onclick="cerrarRetiro()">Cerrar retiro</button>
     </div>
 
-    <div id="chatCard" class="card hidden">
-      <h3>Chat de solicitud</h3>
-      <div id="chatBox" class="chatBox"></div>
-
-      <textarea id="chatMensaje" placeholder="Escribir mensaje..."></textarea>
-      <button class="primary" onclick="enviarMensaje()">Enviar mensaje</button>
-
-      <div id="chatMsg" class="msg"></div>
-    </div>
-
+    <button class="secondary" onclick="abrirChatDesdeModal()">Abrir chat</button>
+    <div id="detalleMsg" class="msg"></div>
   </div>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyJSowqbIjjuGdth21LOWWMkMOO-sbixCHpArT0XWu_Wl9FjdxO6kp-9jvbYHxsFo_6/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzf3jRkVb4Y0wy6AtlMMJoYaacDFk8jjT2qzYwjNSDFGjM6R0w8ksbb4FMgGKy3jHar/exec";
 
-let operador = JSON.parse(localStorage.getItem("operador_core") || "null");
+let operador = JSON.parse(localStorage.getItem("operador_core_v2") || "null");
+let pcOperativa = localStorage.getItem("pc_operativa_core") || "";
 let billeteras = [];
+let solicitudes = [];
 let solicitudSeleccionada = null;
 
 window.onload = () => {
@@ -324,204 +468,301 @@ async function login() {
   }
 
   operador = r.operador;
-  localStorage.setItem("operador_core", JSON.stringify(operador));
+  localStorage.setItem("operador_core_v2", JSON.stringify(operador));
+
+  if (!operador.requiereSeleccionPc) {
+    pcOperativa = operador.pcOperativa || operador.pc;
+    localStorage.setItem("pc_operativa_core", pcOperativa);
+  } else {
+    pcOperativa = "";
+    localStorage.removeItem("pc_operativa_core");
+  }
+
   mostrarApp();
 }
 
 function mostrarApp() {
-  document.getElementById("loginCard").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("loginView").classList.add("hidden");
+  document.getElementById("appView").classList.remove("hidden");
 
-  document.getElementById("operadorInfo").innerHTML = `
-    <span class="badge"><b>${operador.nombre}</b></span>
-    <span class="badge">Rol: ${operador.rol}</span>
-    <span class="badge">PC: ${operador.pc}</span>
-    <span class="badge">Turno: ${operador.turno}</span>
-  `;
+  renderOperador();
+
+  if (operador.requiereSeleccionPc && !pcOperativa) {
+    prepararSelectorFranquero();
+    bloquearHastaPc();
+    return;
+  }
 
   refrescarTodo();
 }
 
-function cerrarSesion() {
-  localStorage.removeItem("operador_core");
-  operador = null;
-  location.reload();
+function renderOperador() {
+  document.getElementById("operadorBox").innerHTML = `
+    <span class="badge"><b>${operador.nombre}</b></span>
+    <span class="badge">Rol: ${operador.rol}</span>
+    <span class="badge">Tipo: ${operador.tipoOperador}</span>
+    <span class="badge">PC: ${pcOperativa || operador.pc}</span>
+    <span class="badge">Turno: ${operador.turno}</span>
+  `;
 }
 
-function mostrarCambioClave() {
-  document.getElementById("claveBox").classList.toggle("hidden");
-}
+function prepararSelectorFranquero() {
+  document.getElementById("franqueroBox").classList.remove("hidden");
+  const sel = document.getElementById("pcOperativaSelect");
+  sel.innerHTML = "";
 
-async function cambiarClave() {
-  const claveActual = document.getElementById("claveActual").value.trim();
-  const claveNueva = document.getElementById("claveNueva").value.trim();
-
-  const r = await api({
-    action: "cambiarclave",
-    usuario: operador.usuario,
-    clave: claveActual,
-    nuevaClave: claveNueva
+  (operador.pcsDisponibles || []).forEach(pc => {
+    const opt = document.createElement("option");
+    opt.value = pc;
+    opt.textContent = pc;
+    sel.appendChild(opt);
   });
-
-  msg("claveMsg", r.ok ? "Clave actualizada correctamente." : r.error, r.ok);
 }
 
-async function refrescarTodo() {
-  await cargarBilleteras();
-  await cargarPendientes();
+function bloquearHastaPc() {
+  msg("solicitudesMsg", "Seleccioná la PC que cubrís hoy para operar.", false);
+  document.getElementById("tablaSolicitudes").innerHTML = "";
+  document.getElementById("sidebarWallets").innerHTML = `<div class="small">Seleccioná PC.</div>`;
 }
 
-async function cargarBilleteras() {
-  const pcConsulta = operador.rol === "ADMIN" ? "" : operador.pc;
+async function confirmarPcOperativa() {
+  const pc = document.getElementById("pcOperativaSelect").value;
 
   const r = await api({
-    action: "getbilleteras",
-    pc: pcConsulta
+    action: "validarpcoperativa",
+    usuario: operador.usuario,
+    pcOperativa: pc
   });
 
   if (!r.ok) {
-    msg("billeteraInfo", r.error || "No se pudieron cargar billeteras.", false);
+    msg("pcOperativaMsg", r.error || "No se pudo validar PC.", false);
+    return;
+  }
+
+  pcOperativa = r.pcOperativa;
+  localStorage.setItem("pc_operativa_core", pcOperativa);
+  msg("pcOperativaMsg", "PC seleccionada correctamente.", true);
+  renderOperador();
+  refrescarTodo();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("operador_core_v2");
+  localStorage.removeItem("pc_operativa_core");
+  operador = null;
+  pcOperativa = "";
+  location.reload();
+}
+
+function mostrarVista(vista) {
+  ["Solicitudes", "Billeteras", "Chat"].forEach(v => {
+    document.getElementById("view" + v).classList.add("hidden");
+    document.getElementById("nav" + v).classList.remove("active");
+  });
+
+  const cap = vista.charAt(0).toUpperCase() + vista.slice(1);
+  document.getElementById("view" + cap).classList.remove("hidden");
+  document.getElementById("nav" + cap).classList.add("active");
+}
+
+async function refrescarTodo() {
+  if (!pcOperativa) return;
+  await cargarBilleteras();
+  await cargarSolicitudes();
+}
+
+async function cargarBilleteras() {
+  const r = await api({ action: "getbilleteras", pc: pcOperativa });
+
+  if (!r.ok) {
+    msg("billeteraMsg", r.error || "No se pudieron cargar billeteras.", false);
     return;
   }
 
   billeteras = r.billeteras || [];
+  renderSidebarWallets();
+  renderBilleteras();
+}
 
-  const select = document.getElementById("selectBilletera");
-  select.innerHTML = "";
+function renderSidebarWallets() {
+  const box = document.getElementById("sidebarWallets");
+  box.innerHTML = "";
 
   if (billeteras.length === 0) {
-    select.innerHTML = `<option>No hay billeteras activas</option>`;
-    msg("billeteraInfo", "No hay billeteras activas para esta PC.", false);
+    box.innerHTML = `<div class="small">Sin billeteras activas.</div>`;
     return;
   }
 
   billeteras.forEach(b => {
+    const selected = String(b.SELECCIONADA_MANUAL || "").toUpperCase() === "SI";
+    const div = document.createElement("div");
+    div.className = "wallet-item";
+    div.innerHTML = `
+      <div class="wallet-title">${b.NOMBRE_VISIBLE || ""}</div>
+      <div>${b.TIPO || ""} · ${b.PC || ""}</div>
+      <div>Saldo: $${b.SALDO_ESTIMADO || 0}</div>
+      <div>${selected ? '<span class="badge badge-ok">ACTIVA</span>' : '<span class="badge">INACTIVA</span>'}</div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function renderBilleteras() {
+  const select = document.getElementById("selectBilletera");
+  select.innerHTML = "";
+
+  billeteras.forEach(b => {
     const opt = document.createElement("option");
     opt.value = b.ID_BILLETERA;
-    opt.textContent = `${b.NOMBRE_VISIBLE} | ${b.PC} | ${b.TIPO} | $${b.SALDO_ESTIMADO || 0}`;
+    opt.textContent = `${b.NOMBRE_VISIBLE} | ${b.TIPO} | $${b.SALDO_ESTIMADO || 0}`;
     select.appendChild(opt);
   });
-
-  renderBilleteraInfo();
-}
-
-function renderBilleteraInfo() {
-  const id = document.getElementById("selectBilletera").value;
-  const b = billeteras.find(x => String(x.ID_BILLETERA) === String(id));
-
-  if (!b) return;
-
-  msg("billeteraInfo",
-    `Seleccionada en lista:\n` +
-    `Nombre: ${b.NOMBRE_VISIBLE}\n` +
-    `PC: ${b.PC}\n` +
-    `Tipo: ${b.TIPO}\n` +
-    `Alias: ${b.ALIAS}\n` +
-    `Titular: ${b.TITULAR}\n` +
-    `Saldo estimado: ${b.SALDO_ESTIMADO || 0}\n` +
-    `Límite descarga: ${b.LIMITE_DESCARGA || ""}`
-  );
-}
-
-document.addEventListener("change", (e) => {
-  if (e.target && e.target.id === "selectBilletera") renderBilleteraInfo();
-});
-
-async function seleccionarBilletera() {
-  const idBilletera = document.getElementById("selectBilletera").value;
-
-  if (!idBilletera) {
-    msg("billeteraInfo", "Seleccioná una billetera.", false);
-    return;
-  }
-
-  const r = await api({
-    action: "seleccionarbilletera",
-    operador: operador.nombre,
-    idBilletera
-  });
-
-  msg("billeteraInfo", r.ok ? "Billetera activada correctamente." : r.error, r.ok);
-}
-
-async function cargarPendientes() {
-  msg("pendientesMsg", "Cargando pendientes...");
-
-  const r = await api({
-    action: "listarpendientes",
-    operador: operador.nombre
-  });
-
-  if (!r.ok) {
-    msg("pendientesMsg", r.error || "No se pudieron cargar pendientes.", false);
-    return;
-  }
-
-  const solicitudes = r.solicitudes || [];
-
-  if (solicitudes.length === 0) {
-    document.getElementById("tablaPendientes").innerHTML = "";
-    msg("pendientesMsg", "Sin solicitudes pendientes.", true);
-    return;
-  }
-
-  msg("pendientesMsg", `Pendientes: ${solicitudes.length}`, true);
 
   let html = `
     <table>
       <thead>
         <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Alias/CVU</th>
+          <th>Saldo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  billeteras.forEach(b => {
+    const selected = String(b.SELECCIONADA_MANUAL || "").toUpperCase() === "SI";
+    html += `
+      <tr>
+        <td><b>${b.NOMBRE_VISIBLE || ""}</b><br>${b.TITULAR || ""}</td>
+        <td>${b.TIPO || ""}<br>${b.VALIDACION || ""}</td>
+        <td>${b.ALIAS || ""}<br>${b.CVU_CBU || ""}</td>
+        <td>
+          Estimado: $${b.SALDO_ESTIMADO || 0}<br>
+          Real: $${b.SALDO_REAL || 0}<br>
+          Límite: $${b.LIMITE_DESCARGA || 0}
+        </td>
+        <td>${selected ? '<span class="badge badge-ok">ACTIVA</span>' : '<span class="badge">INACTIVA</span>'}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaBilleteras").innerHTML = html;
+}
+
+async function seleccionarBilletera() {
+  const idBilletera = document.getElementById("selectBilletera").value;
+
+  const r = await api({
+    action: "seleccionarbilletera",
+    operador: operador.nombre,
+    usuario: operador.usuario,
+    idBilletera
+  });
+
+  msg("billeteraMsg", r.ok ? "Billetera activada correctamente." : r.error, r.ok);
+
+  if (r.ok) cargarBilleteras();
+}
+
+async function cargarSolicitudes() {
+  const tipoSolicitud = document.getElementById("filtroTipo").value;
+  const estado = document.getElementById("filtroEstado").value;
+
+  msg("solicitudesMsg", "Cargando solicitudes...");
+
+  const r = await api({
+    action: "listarsolicitudesoperador",
+    usuario: operador.usuario,
+    operador: operador.nombre,
+    pcOperativa,
+    tipoSolicitud,
+    estado
+  });
+
+  if (!r.ok) {
+    msg("solicitudesMsg", r.error || "No se pudieron cargar solicitudes.", false);
+    return;
+  }
+
+  solicitudes = r.solicitudes || [];
+  msg("solicitudesMsg", `Solicitudes encontradas: ${solicitudes.length}`, true);
+  renderSolicitudes();
+}
+
+function estadoBadge(estado) {
+  const e = String(estado || "");
+  if (["APROBADA_MANUAL", "ACREDITADA", "PAGADA"].includes(e)) return `<span class="badge badge-ok">${e}</span>`;
+  if (["RECHAZADA", "ERROR"].includes(e)) return `<span class="badge badge-danger">${e}</span>`;
+  return `<span class="badge badge-warn">${e}</span>`;
+}
+
+function renderSolicitudes() {
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
           <th>Tipo</th>
           <th>Usuario</th>
           <th>Nombre</th>
           <th>Monto</th>
-          <th>PC</th>
           <th>Billetera</th>
           <th>Estado</th>
+          <th>Operador</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
   `;
 
-  solicitudes.forEach(s => {
+  solicitudes.slice().reverse().forEach(s => {
     const safe = encodeURIComponent(JSON.stringify(s));
-
     html += `
       <tr>
+        <td>${s.FECHA_CREACION || ""}</td>
         <td>${s.TIPO_SOLICITUD || ""}</td>
         <td><b>${s.USUARIO || ""}</b></td>
         <td>${s.NOMBRE_COMPLETO || ""}</td>
-        <td>$${s.MONTO_DECLARADO || ""}</td>
-        <td>${s.PC || ""}</td>
-        <td>${s.BILLETERA_NOMBRE || ""}</td>
-        <td>${s.ESTADO || ""}</td>
+        <td>
+          Declarado: $${s.MONTO_DECLARADO || ""}<br>
+          Real: $${s.MONTO_REAL || ""}
+        </td>
+        <td>${s.BILLETERA_NOMBRE || ""}<br><span class="small">${s.METODO_BILLETERA || ""}</span></td>
+        <td>${estadoBadge(s.ESTADO)}<br><span class="small">${s.VERIFICACION || ""}</span></td>
+        <td>
+          Tomó: ${s.QUIEN_TOMO || "-"}<br>
+          Aprobó: ${s.QUIEN_APROBO || "-"}
+        </td>
         <td>
           <button class="miniBtn primary" onclick="verSolicitud('${safe}')">Ver</button>
+          <button class="miniBtn secondary" onclick="abrirChat('${safe}')">Chat</button>
         </td>
       </tr>
     `;
   });
 
   html += `</tbody></table>`;
-  document.getElementById("tablaPendientes").innerHTML = html;
+  document.getElementById("tablaSolicitudes").innerHTML = html;
 }
 
 function verSolicitud(encoded) {
   solicitudSeleccionada = JSON.parse(decodeURIComponent(encoded));
+  document.getElementById("detalleModal").classList.remove("hidden");
+  document.getElementById("detalleModal").classList.remove("minimized");
 
-  document.getElementById("detalleCard").classList.remove("hidden");
-  document.getElementById("chatCard").classList.remove("hidden");
-
-  document.getElementById("detalleMontoReal").value = solicitudSeleccionada.MONTO_DECLARADO || "";
+  document.getElementById("modalTitle").innerText = `${solicitudSeleccionada.TIPO_SOLICITUD} · ${solicitudSeleccionada.USUARIO}`;
+  document.getElementById("detalleMontoReal").value = solicitudSeleccionada.MONTO_REAL || solicitudSeleccionada.MONTO_DECLARADO || "";
   document.getElementById("detalleOperationId").value = solicitudSeleccionada.OPERATION_ID || "";
   document.getElementById("detalleObs").value = solicitudSeleccionada.OBS || "";
 
   document.getElementById("detalleSolicitud").innerHTML = `
     <span class="badge">ID: ${solicitudSeleccionada.ID}</span>
-    <span class="badge">Tipo: ${solicitudSeleccionada.TIPO_SOLICITUD}</span>
-    <span class="badge">Estado: ${solicitudSeleccionada.ESTADO}</span>
     <span class="badge">PC: ${solicitudSeleccionada.PC}</span>
+    ${estadoBadge(solicitudSeleccionada.ESTADO)}
     <br><br>
     <b>Usuario:</b> ${solicitudSeleccionada.USUARIO}<br>
     <b>Nombre:</b> ${solicitudSeleccionada.NOMBRE_COMPLETO}<br>
@@ -530,9 +771,10 @@ function verSolicitud(encoded) {
     <b>Método:</b> ${solicitudSeleccionada.METODO_BILLETERA}<br>
     <b>Fecha:</b> ${solicitudSeleccionada.FECHA_CREACION}<br>
   `;
+}
 
-  cargarChat();
-  window.scrollTo({ top: document.getElementById("detalleCard").offsetTop - 10, behavior: "smooth" });
+function toggleModalMin() {
+  document.getElementById("detalleModal").classList.toggle("minimized");
 }
 
 async function tomarSolicitud() {
@@ -541,65 +783,78 @@ async function tomarSolicitud() {
   const r = await api({
     action: "tomarsolicitud",
     operador: operador.nombre,
+    usuario: operador.usuario,
     solicitudId: solicitudSeleccionada.ID
   });
 
   msg("detalleMsg", r.ok ? "Solicitud tomada." : r.error, r.ok);
-  await cargarPendientes();
+  await cargarSolicitudes();
 }
 
 async function aprobarSolicitud() {
   if (!solicitudSeleccionada) return;
 
-  const montoReal = document.getElementById("detalleMontoReal").value;
-  const observaciones = document.getElementById("detalleObs").value;
-
   const r = await api({
     action: "aprobarsolicitud",
     operador: operador.nombre,
+    usuario: operador.usuario,
     solicitudId: solicitudSeleccionada.ID,
-    montoReal,
-    observaciones
+    montoReal: document.getElementById("detalleMontoReal").value,
+    observaciones: document.getElementById("detalleObs").value
   });
 
   msg("detalleMsg", r.ok ? "Solicitud aprobada." : r.error, r.ok);
-  await cargarPendientes();
+  await cargarSolicitudes();
 }
 
 async function rechazarSolicitud() {
   if (!solicitudSeleccionada) return;
-
-  const observaciones = document.getElementById("detalleObs").value;
-
   if (!confirm("¿Seguro querés rechazar esta solicitud?")) return;
 
   const r = await api({
     action: "rechazarsolicitud",
     operador: operador.nombre,
+    usuario: operador.usuario,
     solicitudId: solicitudSeleccionada.ID,
-    observaciones
+    observaciones: document.getElementById("detalleObs").value
   });
 
   msg("detalleMsg", r.ok ? "Solicitud rechazada." : r.error, r.ok);
-  await cargarPendientes();
+  await cargarSolicitudes();
 }
 
 async function cerrarRetiro() {
   if (!solicitudSeleccionada) return;
 
-  const operationId = document.getElementById("detalleOperationId").value;
-  const observaciones = document.getElementById("detalleObs").value;
-
   const r = await api({
     action: "cerrarretiro",
     operador: operador.nombre,
+    usuario: operador.usuario,
     solicitudId: solicitudSeleccionada.ID,
-    operationId,
-    observaciones
+    operationId: document.getElementById("detalleOperationId").value,
+    observaciones: document.getElementById("detalleObs").value
   });
 
   msg("detalleMsg", r.ok ? "Retiro cerrado como pagado." : r.error, r.ok);
-  await cargarPendientes();
+  await cargarSolicitudes();
+}
+
+function abrirChat(encoded) {
+  solicitudSeleccionada = JSON.parse(decodeURIComponent(encoded));
+  abrirChatSeleccionado();
+}
+
+function abrirChatDesdeModal() {
+  if (!solicitudSeleccionada) return;
+  abrirChatSeleccionado();
+}
+
+function abrirChatSeleccionado() {
+  mostrarVista("chat");
+  document.getElementById("chatEmpty").classList.add("hidden");
+  document.getElementById("chatPanel").classList.remove("hidden");
+  document.getElementById("chatTitulo").innerText = `Chat · ${solicitudSeleccionada.USUARIO} · ${solicitudSeleccionada.ID}`;
+  cargarChat();
 }
 
 async function cargarChat() {
@@ -628,9 +883,9 @@ async function cargarChat() {
 
   mensajes.forEach(m => {
     const div = document.createElement("div");
-    div.className = "chatMsg";
+    div.className = "chat-msg";
     div.innerHTML = `
-      <div class="chatMeta">${m.FECHA || ""} · ${m.EMISOR || ""} · ${m.TIPO_EMISOR || ""}</div>
+      <div class="chat-meta">${m.FECHA || ""} · ${m.EMISOR || ""} · ${m.TIPO_EMISOR || ""}</div>
       <div>${m.MENSAJE || ""}</div>
       ${m.IMAGEN_URL ? `<div><a href="${m.IMAGEN_URL}" target="_blank">Ver imagen</a></div>` : ""}
     `;
@@ -668,7 +923,7 @@ async function enviarMensaje() {
 }
 
 setInterval(() => {
-  if (operador) cargarPendientes();
+  if (operador && pcOperativa) cargarSolicitudes();
 }, 60000);
 </script>
 </body>
