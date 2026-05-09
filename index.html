@@ -440,6 +440,22 @@ async function api(params) {
   }
 }
 
+async function cambiarEstadoBilletera(idBilletera, estadoBilletera) {
+  const r = await api({
+    action: "actualizarestadobilletera",
+    operador: operador.nombre,
+    usuario: operador.usuario,
+    idBilletera,
+    estadoBilletera
+  });
+
+  msg("billeteraMsg", r.ok ? "Estado actualizado." : r.error, r.ok);
+
+  if (r.ok) {
+    await cargarBilleteras();
+  }
+}
+  
 function msg(id, text, ok = null) {
   const el = document.getElementById(id);
   if (!el) return;
