@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Administrativo</title>
+
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { margin: 0; background: #0f1115; color: #fff; }
+    .container { max-width: 1250px; margin: auto; padding: 18px; }
+    .card { background: #1c1d22; border: 1px solid #30323a; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+    h1, h2, h3 { margin-top: 0; }
+    input, select, textarea, button {
+      width: 100%; padding: 11px; border-radius: 8px; border: none; margin: 5px 0 10px; font-size: 14px;
+    }
+    input, select, textarea { background: #fff; color: #111; }
+    textarea { min-height: 70px; resize: vertical; }
+    button { cursor: pointer; font-weight: bold; background: #e8e8e8; color: #111; }
+    .primary { background: #4c6fff; color: #fff; }
+    .success { background: #12b76a; color: #fff; }
+    .danger { background: #f04438; color: #fff; }
+    .secondary { background: #667085; color: #fff; }
+    .warning { background: #fdb022; color: #111; }
+    .hidden { display: none; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .row button { flex: 1; min-width: 140px; }
+    .badge { display: inline-block; padding: 7px 10px; border-radius: 999px; background: #2d2e35; margin: 4px 4px 4px 0; font-size: 13px; }
+    .small { color: #98a2b3; font-size: 13px; }
+    .msg { color: #d0d5dd; white-space: pre-wrap; font-size: 14px; }
+    .okBox { background: #123322; border-left: 5px solid #12b76a; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    .errBox { background: #3a1717; border-left: 5px solid #f04438; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border-bottom: 1px solid #333640; padding: 9px; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #252731; }
+    tr:hover { background: #22242c; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tabs button { width: auto; padding: 10px 14px; }
+    .activeTab { background: #4c6fff !important; color: #fff !important; }
+    .miniBtn { padding: 7px; font-size: 12px; margin: 2px 0; }
+    @media (max-width: 700px) {
+      .container { padding: 10px; }
+      th, td { font-size: 11px; padding: 6px; }
+      .row button { min-width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <div id="loginCard" class="card">
+    <h1>Panel Administrativo</h1>
+    <p class="small">Ingreso solo para usuarios ADMIN</p>
+
+    <label>Usuario admin</label>
+    <input id="loginUsuario" placeholder="admin">
+
+    <label>Clave</label>
+    <input id="loginClave" type="password" placeholder="clave">
+
+    <button class="primary" onclick="login()">Ingresar</button>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+
+  <div id="app" class="hidden">
+
+    <div class="card">
+      <h2>Administración</h2>
+      <div id="adminInfo"></div>
+      <div class="row">
+        <button class="secondary" onclick="refrescarTodo()">Refrescar todo</button>
+        <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button id="tabSolicitudes" class="activeTab" onclick="mostrarTab('solicitudes')">Solicitudes</button>
+      <button id="tabOperadores" onclick="mostrarTab('operadores')">Operadores</button>
+      <button id="tabBilleteras" onclick="mostrarTab('billeteras')">Billeteras</button>
+      <button id="tabLogs" onclick="mostrarTab('logs')">Logs</button>
+    </div>
+
+    <div id="viewSolicitudes" class="card">
+      <h3>Solicitudes</h3>
+
+      <div class="grid">
+        <div>
+          <label>PC</label>
+          <select id="filtroPc">
+            <option value="">Todas</option>
+            <option value="CHINO">CHINO</option>
+            <option value="ALV">ALV</option>
+            <option value="SAN">SAN</option>
+            <option value="EYF">EYF</option>
+            <option value="X">X</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Tipo</label>
+          <select id="filtroTipo">
+            <option value="">Todos</option>
+            <option value="CARGA">CARGA</option>
+            <option value="RETIRO">RETIRO</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Estado</label>
+          <select id="filtroEstado">
+            <option value="">Todos</option>
+            <option value="PENDIENTE_PAGO">PENDIENTE_PAGO</option>
+            <option value="PENDIENTE_APROBACION">PENDIENTE_APROBACION</option>
+            <option value="APROBADA_MANUAL">APROBADA_MANUAL</option>
+            <option value="RECHAZADA">RECHAZADA</option>
+            <option value="PAGADA">PAGADA</option>
+            <option value="ACREDITADA">ACREDITADA</option>
+            <option value="ERROR">ERROR</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="primary" onclick="cargarSolicitudes()">Buscar solicitudes</button>
+      <div id="solicitudesMsg" class="msg"></div>
+      <div id="tablaSolicitudes"></div>
+    </div>
+
+    <div id="viewOperadores" class="card hidden">
+      <h3>Crear operador</h3>
+
+      <div class="grid">
+        <div>
+          <label>Nombre</label>
+          <input id="opNombre" placeholder="Ej: Brenda">
+        </div>
+        <div>
+          <label>Usuario login</label>
+          <input id="opUsuario" placeholder="brenda">
+        </div>
+        <div>
+          <label>Clave</label>
+          <input id="opClave" placeholder="1234">
+        </div>
+        <div>
+          <label>Rol</label>
+          <select id="opRol">
+            <option value="OPERADOR">OPERADOR</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div>
+          <label>PC</label>
+          <select id="opPc">
+            <option value="CHINO">CHINO</option>
+            <option value="ALV">ALV</option>
+            <option value="SAN">SAN</option>
+            <option value="EYF">EYF</option>
+            <option value="X">X</option>
+            <option value="TODAS">TODAS</option>
+          </select>
+        </div>
+        <div>
+          <label>Turno</label>
+          <select id="opTurno">
+            <option value="TM">TM</option>
+            <option value="TT">TT</option>
+            <option value="TN">TN</option>
+            <option value="FULL">FULL</option>
+          </select>
+        </div>
+      </div>
+
+      <h4>Permisos</h4>
+      <div class="grid">
+        <div><label>Elegir billetera</label><select id="opPermBilletera"><option>SI</option><option>NO</option></select></div>
+        <div><label>Aprobar manual</label><select id="opPermAprobar"><option>SI</option><option>NO</option></select></div>
+        <div><label>Rechazar</label><select id="opPermRechazar"><option>SI</option><option>NO</option></select></div>
+        <div><label>Cambiar clave</label><select id="opPermClave"><option>SI</option><option>NO</option></select></div>
+      </div>
+
+      <button class="success" onclick="crearOperador()">Crear operador</button>
+      <div id="operadoresMsg" class="msg"></div>
+
+      <hr>
+      <h3>Operadores actuales</h3>
+      <button class="secondary" onclick="cargarConfig()">Actualizar configuración</button>
+      <div id="tablaOperadores"></div>
+    </div>
+
+    <div id="viewBilleteras" class="card hidden">
+      <h3>Crear billetera</h3>
+
+      <div class="grid">
+        <div>
+          <label>PC</label>
+          <select id="bilPc">
+            <option value="CHINO">CHINO</option>
+            <option value="ALV">ALV</option>
+            <option value="SAN">SAN</option>
+            <option value="EYF">EYF</option>
+            <option value="X">X</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo</label>
+          <select id="bilTipo">
+            <option value="MP_AUTO">MP_AUTO</option>
+            <option value="MP_MANUAL">MP_MANUAL</option>
+            <option value="NJX">NJX</option>
+            <option value="BANCO">BANCO</option>
+            <option value="OTRA">OTRA</option>
+          </select>
+        </div>
+        <div>
+          <label>Nombre visible / apellido titular</label>
+          <input id="bilNombre" placeholder="ALTAMIRANO">
+        </div>
+        <div>
+          <label>Titular</label>
+          <input id="bilTitular" placeholder="Nombre titular">
+        </div>
+        <div>
+          <label>Alias</label>
+          <input id="bilAlias" placeholder="alias.mp">
+        </div>
+        <div>
+          <label>CVU / CBU</label>
+          <input id="bilCvu" placeholder="000000...">
+        </div>
+        <div>
+          <label>Validación</label>
+          <select id="bilValidacion">
+            <option value="AUTO">AUTO</option>
+            <option value="MANUAL">MANUAL</option>
+          </select>
+        </div>
+        <div>
+          <label>Rotación</label>
+          <select id="bilRotacion">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+          </select>
+        </div>
+        <div>
+          <label>Saldo inicial</label>
+          <input id="bilSaldoInicial" type="number" value="0">
+        </div>
+        <div>
+          <label>Límite descarga</label>
+          <input id="bilLimite" type="number" value="0">
+        </div>
+        <div>
+          <label>Máx por día</label>
+          <input id="bilMaxDia" type="number" value="0">
+        </div>
+        <div>
+          <label>Máx por hora</label>
+          <input id="bilMaxHora" type="number" value="0">
+        </div>
+      </div>
+
+      <button class="success" onclick="crearBilletera()">Crear billetera</button>
+      <div id="billeterasMsg" class="msg"></div>
+
+      <hr>
+      <h3>Billeteras actuales</h3>
+      <button class="secondary" onclick="cargarConfig()">Actualizar configuración</button>
+      <div id="tablaBilleteras"></div>
+    </div>
+
+    <div id="viewLogs" class="card hidden">
+      <h3>Logs del sistema</h3>
+      <div class="grid">
+        <div>
+          <label>PC</label>
+          <select id="logPc">
+            <option value="">Todas</option>
+            <option value="CHINO">CHINO</option>
+            <option value="ALV">ALV</option>
+            <option value="SAN">SAN</option>
+            <option value="EYF">EYF</option>
+            <option value="X">X</option>
+          </select>
+        </div>
+      </div>
+      <button class="primary" onclick="cargarLogs()">Cargar logs</button>
+      <div id="logsMsg" class="msg"></div>
+      <div id="tablaLogs"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwgb1UoFi3YYbb2b9hvK-TIZBYJbmqdq1wF1mEAHBdwHzcsOTZ5ylWurauH3g1jShid/exec";
+
+let admin = JSON.parse(localStorage.getItem("admin_core") || "null");
+let config = { operadores: [], billeteras: [], pcs: [] };
+
+window.onload = () => {
+  if (admin) mostrarApp();
+};
+
+async function api(params) {
+  const url = API_URL + "?" + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  const text = await res.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error(text);
+    return { ok: false, error: "Respuesta inválida de API" };
+  }
+}
+
+function msg(id, text, ok = null) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = text || "";
+  if (ok === true) el.className = "okBox";
+  else if (ok === false) el.className = "errBox";
+  else el.className = "msg";
+}
+
+async function login() {
+  const usuario = document.getElementById("loginUsuario").value.trim();
+  const clave = document.getElementById("loginClave").value.trim();
+
+  if (!usuario || !clave) {
+    msg("loginMsg", "Completá usuario y clave.", false);
+    return;
+  }
+
+  const r = await api({ action: "login", usuario, clave });
+
+  if (!r.ok) {
+    msg("loginMsg", r.error || "Error de login.", false);
+    return;
+  }
+
+  if (String(r.operador.rol).toUpperCase() !== "ADMIN") {
+    msg("loginMsg", "Este usuario no es ADMIN.", false);
+    return;
+  }
+
+  admin = r.operador;
+  localStorage.setItem("admin_core", JSON.stringify(admin));
+  mostrarApp();
+}
+
+function mostrarApp() {
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  document.getElementById("adminInfo").innerHTML = `
+    <span class="badge"><b>${admin.nombre}</b></span>
+    <span class="badge">Rol: ${admin.rol}</span>
+    <span class="badge">PC: ${admin.pc}</span>
+  `;
+
+  refrescarTodo();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("admin_core");
+  admin = null;
+  location.reload();
+}
+
+function mostrarTab(tab) {
+  ["solicitudes", "operadores", "billeteras", "logs"].forEach(t => {
+    document.getElementById("view" + cap(t)).classList.add("hidden");
+    document.getElementById("tab" + cap(t)).classList.remove("activeTab");
+  });
+
+  document.getElementById("view" + cap(tab)).classList.remove("hidden");
+  document.getElementById("tab" + cap(tab)).classList.add("activeTab");
+}
+
+function cap(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+async function refrescarTodo() {
+  await cargarConfig();
+  await cargarSolicitudes();
+}
+
+async function cargarConfig() {
+  const r = await api({ action: "getconfig" });
+
+  if (!r.ok) return;
+
+  config = r;
+
+  renderOperadores();
+  renderBilleteras();
+}
+
+function renderOperadores() {
+  const ops = config.operadores || [];
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>PC</th>
+          <th>Turno</th>
+          <th>Permisos</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  ops.forEach(o => {
+    html += `
+      <tr>
+        <td>${o.NOMBRE || ""}</td>
+        <td>${o.USUARIO || ""}</td>
+        <td>${o.ROL || ""}</td>
+        <td>${o.PC || ""}</td>
+        <td>${o.TURNO || ""}</td>
+        <td>
+          Billetera: ${o.PUEDE_ELEGIR_BILLETERA || ""}<br>
+          Aprobar: ${o.PUEDE_APROBAR_MANUAL || ""}<br>
+          Rechazar: ${o.PUEDE_RECHAZAR || ""}<br>
+          Clave: ${o.PUEDE_CAMBIAR_CLAVE || ""}
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaOperadores").innerHTML = html;
+}
+
+function renderBilleteras() {
+  const bills = config.billeteras || [];
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>PC</th>
+          <th>Tipo</th>
+          <th>Alias/CVU</th>
+          <th>Saldo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  bills.forEach(b => {
+    html += `
+      <tr>
+        <td><b>${b.NOMBRE_VISIBLE || ""}</b><br>${b.TITULAR || ""}</td>
+        <td>${b.PC || ""}</td>
+        <td>${b.TIPO || ""}<br>Validación: ${b.VALIDACION || ""}</td>
+        <td>${b.ALIAS || ""}<br>${b.CVU_CBU || ""}</td>
+        <td>
+          Inicial: ${b.SALDO_INICIAL || 0}<br>
+          Estimado: ${b.SALDO_ESTIMADO || 0}<br>
+          Real: ${b.SALDO_REAL || 0}<br>
+          Límite: ${b.LIMITE_DESCARGA || 0}
+        </td>
+        <td>
+          Activa: ${b.ACTIVA || ""}<br>
+          Rotación: ${b.ROTACION || ""}
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaBilleteras").innerHTML = html;
+}
+
+async function cargarSolicitudes() {
+  const pc = document.getElementById("filtroPc")?.value || "";
+  const tipoSolicitud = document.getElementById("filtroTipo")?.value || "";
+  const estado = document.getElementById("filtroEstado")?.value || "";
+
+  msg("solicitudesMsg", "Cargando solicitudes...");
+
+  const r = await api({
+    action: "listarsolicitudes",
+    usuario: admin.usuario,
+    pc,
+    tipoSolicitud,
+    estado
+  });
+
+  if (!r.ok) {
+    msg("solicitudesMsg", r.error || "No se pudieron cargar solicitudes.", false);
+    return;
+  }
+
+  const solicitudes = r.solicitudes || [];
+  msg("solicitudesMsg", `Solicitudes encontradas: ${solicitudes.length}`, true);
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>PC</th>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Monto</th>
+          <th>Billetera</th>
+          <th>Estado</th>
+          <th>Operador</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  solicitudes.reverse().forEach(s => {
+    html += `
+      <tr>
+        <td>${s.FECHA_CREACION || ""}</td>
+        <td>${s.TIPO_SOLICITUD || ""}</td>
+        <td>${s.PC || ""}</td>
+        <td><b>${s.USUARIO || ""}</b></td>
+        <td>${s.NOMBRE_COMPLETO || ""}</td>
+        <td>
+          Declarado: $${s.MONTO_DECLARADO || ""}<br>
+          Real: $${s.MONTO_REAL || ""}
+        </td>
+        <td>${s.BILLETERA_NOMBRE || ""}<br>${s.METODO_BILLETERA || ""}</td>
+        <td>${s.ESTADO || ""}<br>${s.VERIFICACION || ""}</td>
+        <td>
+          Tomó: ${s.QUIEN_TOMO || ""}<br>
+          Aprobó: ${s.QUIEN_APROBO || ""}
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaSolicitudes").innerHTML = html;
+}
+
+async function crearOperador() {
+  const r = await api({
+    action: "crearoperador",
+    usuario: admin.usuario,
+    nombreCompleto: document.getElementById("opNombre").value.trim(),
+    usuarioNuevo: document.getElementById("opUsuario").value.trim(),
+    nuevaClave: document.getElementById("opClave").value.trim(),
+    rol: document.getElementById("opRol").value,
+    pc: document.getElementById("opPc").value,
+    turno: document.getElementById("opTurno").value,
+    puedeElegirBilletera: document.getElementById("opPermBilletera").value,
+    puedeAprobarManual: document.getElementById("opPermAprobar").value,
+    puedeRechazar: document.getElementById("opPermRechazar").value,
+    puedeCambiarClave: document.getElementById("opPermClave").value
+  });
+
+  msg("operadoresMsg", r.ok ? "Operador creado correctamente." : r.error, r.ok);
+  if (r.ok) cargarConfig();
+}
+
+async function crearBilletera() {
+  const r = await api({
+    action: "crearbilletera",
+    usuario: admin.usuario,
+    pc: document.getElementById("bilPc").value,
+    tipoBilletera: document.getElementById("bilTipo").value,
+    nombreVisible: document.getElementById("bilNombre").value.trim(),
+    titular: document.getElementById("bilTitular").value.trim(),
+    alias: document.getElementById("bilAlias").value.trim(),
+    cvu: document.getElementById("bilCvu").value.trim(),
+    validacion: document.getElementById("bilValidacion").value,
+    rotacion: document.getElementById("bilRotacion").value,
+    saldoInicial: document.getElementById("bilSaldoInicial").value,
+    limiteDescarga: document.getElementById("bilLimite").value,
+    maxPorDia: document.getElementById("bilMaxDia").value,
+    maxPorHora: document.getElementById("bilMaxHora").value
+  });
+
+  msg("billeterasMsg", r.ok ? "Billetera creada correctamente." : r.error, r.ok);
+  if (r.ok) cargarConfig();
+}
+
+async function cargarLogs() {
+  const pc = document.getElementById("logPc").value;
+
+  msg("logsMsg", "Cargando logs...");
+
+  const r = await api({
+    action: "listarlogs",
+    usuario: admin.usuario,
+    pc
+  });
+
+  if (!r.ok) {
+    msg("logsMsg", r.error || "No se pudieron cargar logs.", false);
+    return;
+  }
+
+  const logs = r.logs || [];
+  msg("logsMsg", `Logs encontrados: ${logs.length}`, true);
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Usuario</th>
+          <th>PC</th>
+          <th>Acción</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  logs.forEach(l => {
+    html += `
+      <tr>
+        <td>${l.FECHA || ""}</td>
+        <td>${l.TIPO || ""}</td>
+        <td>${l.USUARIO || ""}</td>
+        <td>${l.PC || ""}</td>
+        <td>${l.ACCION || ""}</td>
+        <td>${l.DETALLE || ""}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaLogs").innerHTML = html;
+}
+</script>
+</body>
+</html>
