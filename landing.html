@@ -19,33 +19,16 @@
       width: 100%;
       max-width: 680px;
       margin: auto;
-      padding: 24px 18px 34px;
+      padding: 22px 16px 34px;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-
-    .logo-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #16f3a8, #0aa3ff);
-      display: grid;
-      place-items: center;
-      color: #061018;
-      font-weight: 900;
-      font-size: 17px;
-      box-shadow: 0 0 28px rgba(22,243,168,.35);
-    }
-
-    .logo-text {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: .5px;
+    .logo-img {
+      width: 280px;
+      max-width: 82%;
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      filter: drop-shadow(0 0 16px rgba(34, 255, 170, .25));
     }
 
     h1 {
@@ -68,7 +51,6 @@
       padding: 20px;
       margin-bottom: 18px;
       box-shadow: 0 18px 55px rgba(0,0,0,.28);
-      backdrop-filter: blur(8px);
     }
 
     .transfer-card {
@@ -213,9 +195,53 @@
       margin-top: 16px;
     }
 
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .success-box {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(145deg,#0c2d24,#111827);
+      border: 1px solid rgba(38,255,169,.3);
+      border-radius: 28px;
+      padding: 34px 24px;
+      text-align: center;
+      animation: popIn .25s ease;
+    }
+
+    .success-icon {
+      font-size: 62px;
+      margin-bottom: 12px;
+    }
+
+    .success-box h2 {
+      margin: 0 0 10px;
+      font-size: 34px;
+    }
+
+    .success-box p {
+      color: #d0d7e2;
+      margin-bottom: 24px;
+      font-size: 18px;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
     @media (max-width: 520px) {
-      .wrap { padding: 20px 14px 30px; }
-      h1 { font-size: 39px; }
+      .wrap { padding: 18px 14px 30px; }
+      .logo-img { width: 250px; margin-bottom: 14px; }
+      h1 { font-size: 38px; }
       .sub { font-size: 18px; }
       .card { padding: 18px; border-radius: 22px; }
       .big-data { font-size: 22px; }
@@ -226,13 +252,7 @@
 <body>
   <div class="wrap">
 
-    <div class="logo">
-      <div class="logo-mark">300</div>
-      <div>
-        <div class="logo-text">BET300</div>
-        <div class="mini" style="text-align:left;margin:0;">Cargas rápidas</div>
-      </div>
-    </div>
+    <img src="logo-bet300.png" class="logo-img" alt="BET300">
 
     <h1>Cargar transferencia</h1>
     <div class="sub">Ingresá tus datos y el monto. Te avisamos cuando la carga esté confirmada.</div>
@@ -277,17 +297,44 @@
 
   </div>
 
+  <div id="successModal" class="success-modal hidden">
+    <div class="success-box">
+      <div class="success-icon">✅</div>
+      <h2>¡Fichas cargadas!</h2>
+      <p>Tu carga fue acreditada correctamente.</p>
+      <button onclick="irPlataforma()">🎮 INGRESAR A LA PLATAFORMA</button>
+    </div>
+  </div>
+
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyY5y_iUlHhKiGOzRZebwobkHIFmgXfKPDidS3tx3gXJhCrNvHQC79csQsgQPDqz_w/exec";
-const WHATSAPP_NUMERO = "54911XXXXXXXX";
+const API_URL = "https://script.google.com/macros/s/AKfycbwd8WNkgUYnMRV_0UJxXIHRfJsZhnB2-quzwAeIMhtnanbRiI_lBMQ14FWaPFxZBEfi/exec";
+
+const WHATSAPP_POR_PC = {
+  CHINO: "54911XXXXXXXX",
+  ALV: "54911XXXXXXXX",
+  X: "54911XXXXXXXX",
+  SAN: "54911XXXXXXXX",
+  EYF: "54911XXXXXXXX"
+};
+
+const LINKS_PLATAFORMA = {
+  CHINO: "https://...",
+  ALV: "https://...",
+  X: "https://...",
+  SAN: "https://...",
+  EYF: "https://..."
+};
 
 const params = new URLSearchParams(window.location.search);
 const PC = (params.get("pc") || "CHINO").toUpperCase();
 
 let billeteraActiva = null;
+let solicitudActual = null;
+let intervaloEstado = null;
 
 window.onload = async () => {
   prepararWhatsapp();
+  recuperarSolicitudPendiente();
   await cargarBilletera();
 };
 
@@ -304,15 +351,21 @@ async function api(params) {
   }
 }
 
+function getWhatsappNumero() {
+  return WHATSAPP_POR_PC[PC] || WHATSAPP_POR_PC.CHINO;
+}
+
 function prepararWhatsapp() {
+  const numero = getWhatsappNumero();
+
   const crearTxt = encodeURIComponent("Hola, quiero crear usuario.");
   const ayudaTxt = encodeURIComponent("Hola, necesito ayuda para cargar.");
 
   document.getElementById("btnCrearUsuario").href =
-    `https://wa.me/${WHATSAPP_NUMERO}?text=${crearTxt}`;
+    `https://wa.me/${numero}?text=${crearTxt}`;
 
   document.getElementById("btnContactar").href =
-    `https://wa.me/${WHATSAPP_NUMERO}?text=${ayudaTxt}`;
+    `https://wa.me/${numero}?text=${ayudaTxt}`;
 }
 
 async function cargarBilletera() {
@@ -324,16 +377,30 @@ async function cargarBilletera() {
     return;
   }
 
-  const billeteras = r.billeteras;
+  const billeteras = r.billeteras.filter(b =>
+    String(b.ACTIVA || "").toUpperCase() === "SI"
+  );
+
+  if (billeteras.length === 0) {
+    document.getElementById("cvuBox").innerText = "No disponible";
+    document.getElementById("titularBox").innerText = "Consultar por WhatsApp";
+    return;
+  }
 
   billeteraActiva =
     billeteras.find(b => String(b.SELECCIONADA_MANUAL || "").toUpperCase() === "SI") ||
     billeteras[0];
 
-  document.getElementById("cvuBox").innerText = billeteraActiva.CVU_CBU || billeteraActiva.ALIAS || "Consultar";
-  document.getElementById("titularBox").innerText = billeteraActiva.TITULAR || billeteraActiva.NOMBRE_VISIBLE || "Consultar";
+  document.getElementById("cvuBox").innerText =
+    billeteraActiva.CVU_CBU || billeteraActiva.ALIAS || "Consultar";
+
+  document.getElementById("titularBox").innerText =
+    billeteraActiva.TITULAR || billeteraActiva.NOMBRE_VISIBLE || "Consultar";
+
   document.getElementById("bancoBox").innerText =
-    String(billeteraActiva.TIPO || "").includes("MP") ? "Mercado Pago" : billeteraActiva.TIPO || "Billetera";
+    String(billeteraActiva.TIPO || "").includes("MP")
+      ? "Mercado Pago"
+      : billeteraActiva.TIPO || "Billetera";
 }
 
 function copiarCvu() {
@@ -383,6 +450,9 @@ async function crearSolicitud() {
     return;
   }
 
+  solicitudActual = r.solicitud.id;
+  localStorage.setItem("solicitud_actual_" + PC, solicitudActual);
+
   mostrarResultado(
     `✅ Solicitud enviada correctamente.<br><br>
     <b>ID:</b> ${r.solicitud.id}<br>
@@ -391,9 +461,55 @@ async function crearSolicitud() {
     true
   );
 
+  iniciarEscuchaEstado();
+
   document.getElementById("usuarioJugador").value = "";
   document.getElementById("nombreCompleto").value = "";
   document.getElementById("monto").value = "";
+}
+
+function recuperarSolicitudPendiente() {
+  const guardada = localStorage.getItem("solicitud_actual_" + PC);
+
+  if (guardada) {
+    solicitudActual = guardada;
+    iniciarEscuchaEstado();
+  }
+}
+
+function iniciarEscuchaEstado() {
+  if (intervaloEstado) clearInterval(intervaloEstado);
+
+  intervaloEstado = setInterval(async () => {
+    if (!solicitudActual) return;
+
+    const r = await api({
+      action: "consultarestadosolicitud",
+      solicitudId: solicitudActual
+    });
+
+    if (!r.ok) return;
+
+    const estado = String(r.solicitud.estado || "");
+
+    if (
+      estado === "APROBADA_MANUAL" ||
+      estado === "ACREDITADA" ||
+      estado === "PAGADA"
+    ) {
+      clearInterval(intervaloEstado);
+      localStorage.removeItem("solicitud_actual_" + PC);
+      document.getElementById("successModal").classList.remove("hidden");
+    }
+  }, 5000);
+}
+
+function irPlataforma() {
+  const url = LINKS_PLATAFORMA[PC];
+
+  if (url) {
+    window.location.href = url;
+  }
 }
 
 function mostrarResultado(texto, ok) {
