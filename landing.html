@@ -483,7 +483,21 @@ const LINKS_PLATAFORMA = {
 };
 
 const params = new URLSearchParams(window.location.search);
-const PC = (params.get("pc") || "P1").toUpperCase();
+
+const PC_ALIASES = {
+  CHINO: "P1",
+  ALV: "P2",
+  SAN: "P3",
+  EYF: "P4",
+  X: "P5"
+};
+
+function normalizarPC(valor) {
+  const raw = String(valor || "P1").trim().toUpperCase();
+  return PC_ALIASES[raw] || raw;
+}
+
+const PC = normalizarPC(params.get("pc") || "P1");
 
 const LS_USER = "bet300_user_" + PC;
 const LS_SOLICITUD = "solicitud_actual_" + PC;
@@ -514,7 +528,7 @@ async function api(params) {
 }
 
 function getWhatsappNumero() {
-  return WHATSAPP_POR_PC[PC] || WHATSAPP_POR_PC.CHINO;
+  return WHATSAPP_POR_PC[PC] || WHATSAPP_POR_PC.P1;
 }
 
 function prepararWhatsapp() {
@@ -782,7 +796,7 @@ function iniciarEscuchaEstado() {
 }
 
 function irPlataforma() {
-  const url = LINKS_PLATAFORMA[PC];
+  const url = LINKS_PLATAFORMA[PC] || LINKS_PLATAFORMA.P1;
 
   if (url) {
     window.location.href = url;
