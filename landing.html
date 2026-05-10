@@ -467,23 +467,23 @@ button:disabled{
 const API_URL = "https://script.google.com/macros/s/AKfycbz9qiYgSGgxuoyAfcM3FpW-nhxH-QtkXhMjg3fnVu2U1sCw2e0O-fbzcpU9HK-HTQbz/exec";
 
 const WHATSAPP_POR_PC = {
-  CHINO: "5491127140155",
-  ALV: "5491157718506",
-  X: "5492235181171",
-  SAN: "5492233391195",
-  EYF: "5491166587968"
+  P1: "5492235181171",
+  P2: "5491157718506",
+  P3: "5491127140155",
+  P4: "5492233391195",
+  P5: "5491166587968"
 };
 
 const LINKS_PLATAFORMA = {
-  CHINO: "https://www.bet-300.pw/",
-  ALV: "https://www.bet-300.pw/",
-  X: "https://www.bet-300.pw/",
-  SAN: "https://www.bet-300.pw/",
-  EYF: "https://www.bet-300.pw/"
+  P1: "https://www.bet-300.pw/",
+  P2: "https://www.bet-300.pw/",
+  P3: "https://www.bet-300.pw/",
+  P4: "https://www.bet-300.pw/",
+  P5: "https://www.bet-300.pw/"
 };
 
 const params = new URLSearchParams(window.location.search);
-const PC = (params.get("pc") || "CHINO").toUpperCase();
+const PC = (params.get("pc") || "P1").toUpperCase();
 
 const LS_USER = "bet300_user_" + PC;
 const LS_SOLICITUD = "solicitud_actual_" + PC;
