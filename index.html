@@ -826,21 +826,48 @@ setInterval(()=>{
   }
 },30000);
 
-async function cargarAgentes(){
-  if(!pcOperativa) return;
+function getAgentes_(d) {
 
-  const r = await api({
-    action: "getagentes",
-    pc: normalizarPC(pcOperativa)
-  });
+  const pc = normalizarPc_(d.pc || d.pcOperativa || '');
 
-  if(!r.ok){
-    msg("agenteMsg", r.error || "No se pudieron cargar los agentes.", false);
-    return;
+  const sh = SpreadsheetApp
+    .openById(SPREADSHEET_ID)
+    .getSheetByName('CONFIG_AGENTES');
+
+  const data = sh.getDataRange().getValues();
+
+  const agentes = [];
+
+  for (let i = 1; i < data.length; i++) {
+
+    const row = data[i];
+
+    const agentePc = normalizarPc_(row[1]);
+    const activo = String(row[4] || '')
+      .trim()
+      .toUpperCase();
+
+    if (
+      agentePc === pc &&
+      activo === 'SI'
+    ) {
+
+      agentes.push({
+        agenteId: row[0],
+        pc: agentePc,
+        nombre: row[2],
+        saldo: Number(row[3] || 0),
+        activo
+      });
+
+    }
+
   }
 
-  agentes = r.agentes || [];
-  renderAgentes();
+  return {
+    ok: true,
+    agentes
+  };
 }
 
 function renderAgentes(){
