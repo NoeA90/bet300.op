@@ -101,6 +101,7 @@ tr:hover{background:#22242c}
     <button id="navInicio" class="nav-btn active" onclick="mostrarVista('inicio')">🏠 Inicio</button>
     <button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
     <button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button>
+    <button id="navAgentes" class="nav-btn" onclick="mostrarVista('agentes')">🎮 Agente / Fichas</button>
     <button id="navChat" class="nav-btn" onclick="mostrarVista('chat')">💬 Chat</button>
     <button id="navClave" class="nav-btn" onclick="mostrarVista('clave')">🔐 Cambiar clave</button>
 
@@ -194,6 +195,42 @@ tr:hover{background:#22242c}
       </div>
     </section>
 
+    <section id="viewAgentes" class="hidden">
+      <div class="card">
+        <h2>🎮 Agente / Fichas</h2>
+        <p class="small">Control operativo del saldo de fichas del agente de esta PC.</p>
+        <div id="agenteMsg" class="msg"></div>
+        <div id="agenteBox">
+          <div class="small">Cargando agentes...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Registrar operación manual</h3>
+        <p class="small">Usá esto cuando el operador tenga que asentar una carga/retiro fuera del flujo normal.</p>
+        <div class="grid">
+          <div>
+            <label>Agente</label>
+            <select id="manualAgenteId"></select>
+          </div>
+          <div>
+            <label>Tipo</label>
+            <select id="manualTipo">
+              <option value="CARGA">CARGA - resta fichas</option>
+              <option value="RETIRO">RETIRO - suma fichas</option>
+            </select>
+          </div>
+          <div>
+            <label>Monto</label>
+            <input id="manualMonto" type="number" placeholder="Ej: 5000">
+          </div>
+        </div>
+        <label>Observación</label>
+        <textarea id="manualObs" placeholder="Ej: operación manual por ajuste de turno"></textarea>
+        <button class="primary" onclick="registrarOperacionManualAgente()">Registrar operación manual</button>
+      </div>
+    </section>
+
     <section id="viewChat" class="hidden">
       <div class="card">
         <h2>Chat</h2>
@@ -281,7 +318,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycby0lUM1Pa5M_3VWreq7quA8
 
 const PCS_VALIDAS = ["P1", "P2", "P3", "P4", "P5"];
 const PC_MAP = {
-  x: "P1",
+  X: "P1",
   ALV: "P2",
   CHINO: "P3",
   SAN: "P4",
@@ -297,6 +334,7 @@ let operador = JSON.parse(localStorage.getItem("operador_core_v5") || "null");
 let pcOperativa = normalizarPC(localStorage.getItem("pc_operativa_core_v5") || "");
 let billeteras = [];
 let solicitudes = [];
+let agentes = []; 
 let solicitudSeleccionada = null;
 
 window.onload = () => {
@@ -412,7 +450,7 @@ function cerrarSesion(){
 }
 
 function mostrarVista(vista){
-  ["Inicio","Solicitudes","Billeteras","Chat","Clave"].forEach(v=>{
+  ["Inicio","Solicitudes","Billeteras","Agentes","Chat","Clave"].forEach(v=>{
     document.getElementById("view"+v).classList.add("hidden");
     document.getElementById("nav"+v).classList.remove("active");
   });
@@ -425,6 +463,7 @@ async function refrescarTodo(){
   if(!pcOperativa)return;
   await cargarBilleteras();
   await cargarSolicitudes();
+  await cargarAgentes();
 }
 
 async function cargarBilleteras(){
@@ -783,8 +822,138 @@ setInterval(()=>{
   if(operador&&pcOperativa){
     cargarSolicitudes();
     cargarBilleteras();
+    cargarAgentes();
   }
 },30000);
+
+async function cargarAgentes(){
+  if(!pcOperativa) return;
+
+  const r = await api({
+    action: "getagentes",
+    pc: normalizarPC(pcOperativa)
+  });
+
+  if(!r.ok){
+    msg("agenteMsg", r.error || "No se pudieron cargar los agentes.", false);
+    return;
+  }
+
+  agentes = r.agentes || [];
+  renderAgentes();
+}
+
+function renderAgentes(){
+  const box = document.getElementById("agenteBox");
+  const sel = document.getElementById("manualAgenteId");
+
+  if(!box) return;
+
+  if(sel){
+    sel.innerHTML = "";
+  }
+
+  if(!agentes.length){
+    box.innerHTML = `<div class="errBox">No hay agentes activos configurados para ${pcOperativa}.</div>`;
+    return;
+  }
+
+  if(sel){
+    agentes.forEach(a=>{
+      const opt = document.createElement("option");
+      opt.value = a.agenteId;
+      opt.textContent = `${a.nombre} · ${money(a.saldo)}`;
+      sel.appendChild(opt);
+    });
+  }
+
+  box.innerHTML = agentes.map(a=>`
+    <div class="card" style="background:#1f222b;border-color:#343844;">
+      <div class="row" style="align-items:center;justify-content:space-between;">
+        <div>
+          <h3 style="margin:0 0 6px;">${a.nombre || "Agente"}</h3>
+          <span class="badge">${a.pc || pcOperativa}</span>
+          <span class="badge badge-ok">ACTIVO</span>
+        </div>
+        <div style="text-align:right;">
+          <div class="small">Saldo fichas</div>
+          <div class="stat-num">${money(a.saldo)}</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <button class="success" onclick="ajustarAgente('${a.agenteId}','SUMA')">+ Ajustar fichas</button>
+        <button class="danger" onclick="ajustarAgente('${a.agenteId}','RESTA')">- Ajustar fichas</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function ajustarAgente(agenteId, tipo){
+  const monto = prompt(
+    tipo === "SUMA"
+      ? "Monto a SUMAR al saldo de fichas"
+      : "Monto a RESTAR del saldo de fichas"
+  );
+
+  if(!monto) return;
+
+  const obs = prompt("Motivo / observación del ajuste", "Ajuste manual de fichas") || "";
+
+  const r = await api({
+    action: "ajustarsaldoagente",
+    agenteId,
+    tipo,
+    monto,
+    operador: operador.nombre,
+    obs
+  });
+
+  if(!r.ok){
+    alert(r.error || "Error al ajustar agente");
+    return;
+  }
+
+  alert("Saldo actualizado.\nNuevo saldo: " + money(r.saldoNuevo));
+  await cargarAgentes();
+}
+
+async function registrarOperacionManualAgente(){
+  const agenteId = document.getElementById("manualAgenteId").value;
+  const tipo = document.getElementById("manualTipo").value;
+  const monto = document.getElementById("manualMonto").value;
+  const obs = document.getElementById("manualObs").value;
+
+  if(!agenteId){
+    msg("agenteMsg", "Seleccioná un agente.", false);
+    return;
+  }
+
+  if(!monto || Number(monto) <= 0){
+    msg("agenteMsg", "Ingresá un monto válido.", false);
+    return;
+  }
+
+  const r = await api({
+    action: "registraroperacionmanual",
+    agenteId,
+    tipo,
+    monto,
+    operador: operador.nombre,
+    obs
+  });
+
+  if(!r.ok){
+    msg("agenteMsg", r.error || "No se pudo registrar.", false);
+    return;
+  }
+
+  msg("agenteMsg", "Operación manual registrada. Nuevo saldo: " + money(r.saldoNuevo), true);
+  document.getElementById("manualMonto").value = "";
+  document.getElementById("manualObs").value = "";
+  await cargarAgentes();
+}
+
 </script>
 
 </body>
