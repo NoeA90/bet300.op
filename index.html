@@ -279,8 +279,22 @@ tr:hover{background:#22242c}
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzUQ7N60sUsAK0OGAK66BWXVxLItYtj4TDUKJcsZM1e-jwOA4QoNwoPMor_W38a--Hx/exec";
 
+const PCS_VALIDAS = ["P1", "P2", "P3", "P4", "P5"];
+const PC_MAP = {
+  CHINO: "P1",
+  ALV: "P2",
+  SAN: "P3",
+  EYF: "P4",
+  X: "P5"
+};
+
+function normalizarPC(pc){
+  const v = String(pc || "").trim().toUpperCase();
+  return PC_MAP[v] || v;
+}
+
 let operador = JSON.parse(localStorage.getItem("operador_core_v5") || "null");
-let pcOperativa = localStorage.getItem("pc_operativa_core_v5") || "";
+let pcOperativa = normalizarPC(localStorage.getItem("pc_operativa_core_v5") || "");
 let billeteras = [];
 let solicitudes = [];
 let solicitudSeleccionada = null;
@@ -333,7 +347,7 @@ async function login(){
     pcOperativa="";
     localStorage.removeItem("pc_operativa_core_v5");
   }else{
-    pcOperativa=operador.pcOperativa||operador.pc;
+    pcOperativa=normalizarPC(operador.pcOperativa||operador.pc);
     localStorage.setItem("pc_operativa_core_v5",pcOperativa);
   }
 
@@ -359,7 +373,7 @@ function renderOperador(){
     <span class="badge"><b>${operador.nombre}</b></span>
     <span class="badge">Rol: ${operador.rol}</span>
     <span class="badge">Tipo: ${operador.tipoOperador}</span>
-    <span class="badge">PC: ${pcOperativa || operador.pc}</span>
+    <span class="badge">PC: ${pcOperativa || normalizarPC(operador.pc)}</span>
     <span class="badge">Turno: ${operador.turno}</span>
   `;
 }
@@ -368,18 +382,24 @@ function prepararSelectorFranquero(){
   document.getElementById("franqueroBox").classList.remove("hidden");
   const sel=document.getElementById("pcOperativaSelect");
   sel.innerHTML="";
-  (operador.pcsDisponibles||[]).forEach(pc=>{
+
+  const pcs = (operador.pcsDisponibles && operador.pcsDisponibles.length)
+    ? operador.pcsDisponibles.map(normalizarPC)
+    : PCS_VALIDAS;
+
+  [...new Set(pcs)].forEach(pc=>{
     const opt=document.createElement("option");
-    opt.value=pc; opt.textContent=pc;
+    opt.value=pc;
+    opt.textContent=pc;
     sel.appendChild(opt);
   });
 }
 
 async function confirmarPcOperativa(){
-  const pc=document.getElementById("pcOperativaSelect").value;
+  const pc=normalizarPC(document.getElementById("pcOperativaSelect").value);
   const r=await api({action:"validarpcoperativa",usuario:operador.usuario,pcOperativa:pc});
   if(!r.ok){msg("pcOperativaMsg",r.error,false);return;}
-  pcOperativa=r.pcOperativa;
+  pcOperativa=normalizarPC(r.pcOperativa);
   localStorage.setItem("pc_operativa_core_v5",pcOperativa);
   renderOperador();
   refrescarTodo();
@@ -408,7 +428,7 @@ async function refrescarTodo(){
 }
 
 async function cargarBilleteras(){
-  const r=await api({action:"getbilleteras",pc:pcOperativa});
+  const r=await api({action:"getbilleteras",pc:normalizarPC(pcOperativa)});
   if(!r.ok){msg("billeteraMsg",r.error,false);return;}
   billeteras=r.billeteras||[];
   renderSidebarWallets();
@@ -552,7 +572,7 @@ async function guardarAjusteSaldo(){
 async function cargarSolicitudes(){
   const tipoSolicitud=document.getElementById("filtroTipo")?.value||"";
   const estado=document.getElementById("filtroEstado")?.value||"";
-  const r=await api({action:"listarsolicitudesoperador",usuario:operador.usuario,operador:operador.nombre,pcOperativa,tipoSolicitud,estado});
+  const r=await api({action:"listarsolicitudesoperador",usuario:operador.usuario,operador:operador.nombre,pcOperativa:normalizarPC(pcOperativa),tipoSolicitud,estado});
   if(!r.ok){msg("solicitudesMsg",r.error,false);return;}
   solicitudes=r.solicitudes||[];
   solicitudes=filtrarPorFechaHora(solicitudes);
