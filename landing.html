@@ -1,289 +1,393 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BET300 - Landing</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BET300 - Landing</title>
 
-  <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
 
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #083b37 0%, #07131f 42%, #080a10 100%);
-      color: #f4f7fb;
-      min-height: 100vh;
-    }
-
-    .wrap {
-      width: 100%;
-      max-width: 680px;
-      margin: auto;
-      padding: 22px 16px 34px;
-    }
-
-    .logo-img {
-      width: 280px;
-      max-width: 82%;
-      height: auto;
-      display: block;
-      margin: 0 auto 18px;
-      filter: drop-shadow(0 0 16px rgba(34, 255, 170, .25));
-    }
-
-    h1 {
-      font-size: 42px;
-      line-height: 1.05;
-      margin: 10px 0 12px;
-    }
-
-    .sub {
-      font-size: 19px;
-      color: #cbd5e1;
-      line-height: 1.45;
-      margin-bottom: 28px;
-    }
-
-    .card {
-      background: rgba(18, 24, 35, .86);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 18px 55px rgba(0,0,0,.28);
-    }
-
-    .transfer-card {
-      border-color: rgba(38, 255, 169, .28);
-      background: linear-gradient(145deg, rgba(9, 70, 67, .92), rgba(13, 30, 46, .88));
-    }
-
-    .green-title {
-      color: #39f59c;
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 22px;
-    }
-
-    .label {
-      color: #cbd5e1;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .big-data {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      word-break: break-all;
-      margin-bottom: 18px;
-    }
-
-    .line {
-      font-size: 18px;
-      margin: 8px 0;
-      color: #dbe5ef;
-    }
-
-    .warn {
-      margin-top: 16px;
-      color: #f9d36b;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    input, button {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 17px;
-      font-size: 18px;
-      margin-top: 8px;
-      margin-bottom: 18px;
-    }
-
-    input {
-      background: #090c13;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,.14);
-      outline: none;
-    }
-
-    input::placeholder { color: #6f7684; }
-
-    button {
-      font-weight: 900;
-      cursor: pointer;
-      color: #08110f;
-      background: linear-gradient(135deg, #24f2a0, #13c77e);
-      box-shadow: 0 10px 30px rgba(19,199,126,.22);
-    }
-
-    button:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-    }
-
-    .copy-btn {
-      background: rgba(255,255,255,.12);
-      color: #fff;
-      box-shadow: none;
-      margin: 0;
-      padding: 13px;
-      font-size: 15px;
-      width: auto;
-      min-width: 100px;
-    }
-
-    .data-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      justify-content: space-between;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .wa {
-      text-decoration: none;
-      display: block;
-      text-align: center;
-      border-radius: 16px;
-      padding: 16px;
-      font-size: 17px;
-      font-weight: 900;
-      color: white;
-      background: linear-gradient(135deg, #ff7a66, #ff9b55);
-      box-shadow: 0 10px 35px rgba(255,122,102,.25);
-    }
-
-    .wa.secondary {
-      background: rgba(255,255,255,.12);
-      box-shadow: none;
-    }
-
-    .result {
-      display: none;
-      padding: 16px;
-      border-radius: 16px;
-      margin-top: 12px;
-      line-height: 1.45;
-    }
-
-    .ok {
-      display: block;
-      background: rgba(22, 163, 74, .18);
-      border: 1px solid rgba(22, 163, 74, .45);
-    }
-
-    .err {
-      display: block;
-      background: rgba(239, 68, 68, .18);
-      border: 1px solid rgba(239, 68, 68, .45);
-    }
-
-    .mini {
-      font-size: 13px;
-      color: #94a3b8;
-      text-align: center;
-      margin-top: 16px;
-    }
-
-    .success-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.82);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 20px;
-    }
-
-    .success-box {
-      width: 100%;
-      max-width: 420px;
-      background: linear-gradient(145deg,#0c2d24,#111827);
-      border: 1px solid rgba(38,255,169,.3);
-      border-radius: 28px;
-      padding: 34px 24px;
-      text-align: center;
-      animation: popIn .25s ease;
-    }
-
-    .success-icon {
-      font-size: 62px;
-      margin-bottom: 12px;
-    }
-
-    .success-box h2 {
-      margin: 0 0 10px;
-      font-size: 34px;
-    }
-
-    .success-box p {
-      color: #d0d7e2;
-      margin-bottom: 24px;
-      font-size: 18px;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    @media (max-width: 520px) {
-      .wrap { padding: 18px 14px 30px; }
-      .logo-img { width: 250px; margin-bottom: 14px; }
-      h1 { font-size: 38px; }
-      .sub { font-size: 18px; }
-      .card { padding: 18px; border-radius: 22px; }
-      .big-data { font-size: 22px; }
-    }
-    .close-modal {
-  width: auto;
-  position: absolute;
-  right: 16px;
-  top: 12px;
-  background: transparent;
-  color: white;
-  box-shadow: none;
-  font-size: 28px;
-  padding: 0;
-  margin: 0;
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#12352f 0%,#07131f 45%,#080a10 100%);
+  color:#f4f7fb;
 }
 
-.success-box {
-  position: relative;
+.hidden{display:none!important}
+
+.wrap{
+  width:100%;
+  max-width:680px;
+  margin:auto;
+  padding:22px 16px 34px;
 }
-.success-modal.hidden {
-  display: none !important;
+
+.logo-img{
+  width:270px;
+  max-width:84%;
+  height:auto;
+  display:block;
+  margin:0 auto 18px;
+  filter:drop-shadow(0 0 18px rgba(212,175,55,.25));
 }
-.hidden {
-  display: none !important;
+
+.card{
+  background:rgba(18,24,35,.88);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.28);
 }
-    
-  </style>
+
+h1{
+  font-size:38px;
+  line-height:1.05;
+  margin:8px 0 12px;
+}
+
+.sub,.muted{
+  color:#cbd5e1;
+  font-size:18px;
+  line-height:1.45;
+  margin-bottom:22px;
+}
+
+label{
+  color:#cbd5e1;
+  font-weight:700;
+  margin-bottom:6px;
+  display:block;
+}
+
+input,button{
+  width:100%;
+  border:none;
+  border-radius:16px;
+  padding:17px;
+  font-size:18px;
+  margin-top:8px;
+  margin-bottom:18px;
+}
+
+input{
+  background:#090c13;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.14);
+  outline:none;
+}
+
+input::placeholder{color:#6f7684}
+
+button{
+  font-weight:900;
+  cursor:pointer;
+  color:#08110f;
+  background:linear-gradient(135deg,#d4af37,#f7d774);
+  box-shadow:0 10px 30px rgba(212,175,55,.18);
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.transfer-card{
+  border-color:rgba(212,175,55,.35);
+  background:linear-gradient(145deg,rgba(45,35,12,.92),rgba(13,30,46,.88));
+}
+
+.gold-title{
+  color:#d4af37;
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:22px;
+}
+
+.data-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.big-data{
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:1px;
+  word-break:break-all;
+  margin-bottom:12px;
+}
+
+.copy-btn{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  box-shadow:none;
+  margin:0;
+  padding:13px;
+  font-size:15px;
+  width:auto;
+  min-width:100px;
+}
+
+.line{
+  font-size:18px;
+  margin:8px 0;
+  color:#dbe5ef;
+}
+
+.warn{
+  margin-top:16px;
+  color:#f9d36b;
+  font-size:17px;
+  font-weight:800;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+.wa{
+  text-decoration:none;
+  display:block;
+  text-align:center;
+  border-radius:16px;
+  padding:16px;
+  font-size:17px;
+  font-weight:900;
+  color:white;
+  background:linear-gradient(135deg,#ff7a66,#ff9b55);
+  box-shadow:0 10px 35px rgba(255,122,102,.25);
+}
+
+.wa.secondary{
+  background:rgba(255,255,255,.12);
+  box-shadow:none;
+}
+
+.result{
+  display:none;
+  padding:16px;
+  border-radius:16px;
+  margin-top:12px;
+  line-height:1.45;
+}
+
+.ok{
+  display:block;
+  background:rgba(22,163,74,.18);
+  border:1px solid rgba(22,163,74,.45);
+}
+
+.err{
+  display:block;
+  background:rgba(239,68,68,.18);
+  border:1px solid rgba(239,68,68,.45);
+}
+
+.mini{
+  font-size:13px;
+  color:#94a3b8;
+  text-align:center;
+  margin-top:16px;
+}
+
+.step-box{
+  margin-top:18px;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;
+  padding:16px;
+}
+
+.step{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:14px;
+  opacity:.55;
+}
+
+.step:last-child{margin-bottom:0}
+
+.step.active{
+  opacity:1;
+}
+
+.step.done{
+  opacity:1;
+}
+
+.step-dot{
+  width:30px;
+  height:30px;
+  min-width:30px;
+  border-radius:999px;
+  background:#2d3748;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+.step.done .step-dot{
+  background:#12b76a;
+}
+
+.step.active .step-dot{
+  background:#d4af37;
+  color:#07131f;
+  animation:pulse 1.2s infinite;
+}
+
+.step-title{
+  font-weight:900;
+  font-size:16px;
+}
+
+.step-text{
+  color:#cbd5e1;
+  font-size:14px;
+  margin-top:3px;
+}
+
+.loader{
+  width:18px;
+  height:18px;
+  border:3px solid rgba(255,255,255,.25);
+  border-top-color:#d4af37;
+  border-radius:50%;
+  display:inline-block;
+  animation:spin .8s linear infinite;
+  vertical-align:middle;
+  margin-right:8px;
+}
+
+.success-modal.hidden{display:none!important}
+
+.success-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:20px;
+}
+
+.success-box{
+  width:100%;
+  max-width:420px;
+  background:linear-gradient(145deg,#0c2d24,#111827);
+  border:1px solid rgba(38,255,169,.3);
+  border-radius:28px;
+  padding:34px 24px;
+  text-align:center;
+  animation:popIn .25s ease;
+  position:relative;
+}
+
+.close-modal{
+  width:auto;
+  position:absolute;
+  right:16px;
+  top:12px;
+  background:transparent;
+  color:white;
+  box-shadow:none;
+  font-size:28px;
+  padding:0;
+  margin:0;
+}
+
+.success-icon{
+  font-size:62px;
+  margin-bottom:12px;
+}
+
+.success-box h2{
+  margin:0 0 10px;
+  font-size:34px;
+}
+
+.success-box p{
+  color:#d0d7e2;
+  margin-bottom:24px;
+  font-size:18px;
+}
+
+.change-data{
+  background:transparent;
+  color:#d4af37;
+  box-shadow:none;
+  padding:8px;
+  margin-top:2px;
+  font-size:15px;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(212,175,55,.55)}
+  70%{box-shadow:0 0 0 12px rgba(212,175,55,0)}
+  100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+@keyframes popIn{
+  from{transform:scale(.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@media(max-width:520px){
+  .wrap{padding:18px 14px 30px}
+  .logo-img{width:245px;margin-bottom:14px}
+  h1{font-size:34px}
+  .sub,.muted{font-size:17px}
+  .card{padding:18px;border-radius:22px}
+  .big-data{font-size:22px}
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
 
-    <img src="logo-bet300.svg.BET" class="logo-img" alt="BET300">
+<div class="wrap">
 
+  <img src="logo-bet300.svg.BET" class="logo-img" alt="BET300">
+
+  <div class="card" id="registroCard">
+    <h1>Identificá tu cuenta</h1>
+    <p class="muted">Completá tus datos para continuar con la carga.</p>
+
+    <label>Usuario *</label>
+    <input id="regUsuario" placeholder="ej: maurito564">
+
+    <label>Nombre completo *</label>
+    <input id="regNombre" placeholder="ej: Mauro Pérez">
+
+    <label>WhatsApp *</label>
+    <input id="regTelefono" placeholder="ej: 1133344455">
+
+    <button id="btnContinuar" onclick="continuarRegistro()">Continuar</button>
+
+    <div id="registroMsg" class="result"></div>
+  </div>
+
+  <div class="card hidden" id="cargaCard">
     <h1>Cargar transferencia</h1>
-    <div class="sub">Ingresá tus datos y el monto. Te avisamos cuando la carga esté confirmada.</div>
+    <p class="muted">Transferí al dato indicado y luego enviá tu solicitud.</p>
 
     <div class="card transfer-card">
-      <div class="green-title">💳 Datos para transferir</div>
+      <div class="gold-title">💳 Datos para transferir</div>
 
-      <span class="label">CBU / CVU</span>
+      <span class="label">CBU / CVU / Alias</span>
       <div class="data-row">
         <div id="cvuBox" class="big-data">Cargando...</div>
         <button class="copy-btn" onclick="copiarCvu()">Copiar</button>
@@ -294,46 +398,74 @@
       <div class="warn">⚠️ Monto mínimo: $2.000</div>
     </div>
 
-    <div class="card">
-      <label class="label">Usuario *</label>
-      <input id="usuarioJugador" placeholder="ej: maurito564" />
+    <div id="datosUsuarioBox" class="ok">
+      Usuario identificado.
+    </div>
 
-      <label class="label">Nombre completo *</label>
-      <input id="nombreCompleto" placeholder="ej: Mauro Pérez" />
+    <button class="change-data" onclick="cambiarDatos()">Cambiar mis datos</button>
 
-      <label class="label">Monto a cargar *</label>
-      <input id="monto" type="number" placeholder="ej: 5000" />
+    <label>Monto a cargar *</label>
+    <input id="monto" type="number" placeholder="ej: 5000">
 
-      <button id="btnEnviar" onclick="crearSolicitud()">Enviar solicitud</button>
+    <button id="btnEnviar" onclick="crearSolicitud()">Enviar solicitud</button>
 
-      <div id="resultado" class="result"></div>
+    <div id="resultado" class="result"></div>
 
-      <div class="actions">
-        <a id="btnCrearUsuario" class="wa" target="_blank">👤 Crear usuario</a>
-        <a id="btnContactar" class="wa secondary" target="_blank">💬 Necesito ayuda</a>
+    <div id="estadoEspera" class="step-box hidden">
+      <div id="step1" class="step done">
+        <div class="step-dot">✓</div>
+        <div>
+          <div class="step-title">Solicitud enviada</div>
+          <div class="step-text">Recibimos tu pedido de carga.</div>
+        </div>
+      </div>
+
+      <div id="step2" class="step active">
+        <div class="step-dot">2</div>
+        <div>
+          <div class="step-title"><span class="loader"></span>Esperando verificación</div>
+          <div class="step-text">Un operador está revisando la transferencia.</div>
+        </div>
+      </div>
+
+      <div id="step3" class="step">
+        <div class="step-dot">3</div>
+        <div>
+          <div class="step-title">Fichas acreditadas</div>
+          <div class="step-text">Cuando se apruebe, te avisamos automáticamente.</div>
+        </div>
+      </div>
+
+      <div class="mini">
+        No cierres esta ventana. Si demora más de lo habitual, podés contactarnos por WhatsApp.
       </div>
     </div>
 
-    <div class="mini">
-      Guardá el comprobante de transferencia hasta que se confirme la carga.
+    <div class="actions">
+      <a id="btnCrearUsuario" class="wa" target="_blank">👤 Crear usuario</a>
+      <a id="btnContactar" class="wa secondary" target="_blank">💬 Necesito ayuda</a>
     </div>
-
   </div>
 
-  <div id="successModal" class="success-modal hidden">
+  <div class="mini">
+    Guardá el comprobante de transferencia hasta que se confirme la carga.
+  </div>
+
+</div>
+
+<div id="successModal" class="success-modal hidden">
   <div class="success-box">
     <button class="close-modal" onclick="cerrarModalExito()">×</button>
-
     <div class="success-icon">✅</div>
     <h2>¡Fichas cargadas!</h2>
     <p>Tu carga fue acreditada correctamente.</p>
-
     <button onclick="irPlataforma()">🎮 INGRESAR A LA PLATAFORMA</button>
   </div>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycby8W41JkJ-QROI3DrFLDBX2NCfHH1fF7S_s_BGTtuo7vSRJ2-Udd2opSVAtSGwHvcc/exec"
+const API_URL = "https://script.google.com/macros/s/AKfycbz9qiYgSGgxuoyAfcM3FpW-nhxH-QtkXhMjg3fnVu2U1sCw2e0O-fbzcpU9HK-HTQbz/exec";
+
 const WHATSAPP_POR_PC = {
   CHINO: "5491127140155",
   ALV: "5491157718506",
@@ -353,12 +485,17 @@ const LINKS_PLATAFORMA = {
 const params = new URLSearchParams(window.location.search);
 const PC = (params.get("pc") || "CHINO").toUpperCase();
 
+const LS_USER = "bet300_user_" + PC;
+const LS_SOLICITUD = "solicitud_actual_" + PC;
+
 let billeteraActiva = null;
 let solicitudActual = null;
 let intervaloEstado = null;
+let userData = null;
 
 window.onload = async () => {
   prepararWhatsapp();
+  cargarUsuarioGuardado();
   recuperarSolicitudPendiente();
   await cargarBilletera();
 };
@@ -393,12 +530,95 @@ function prepararWhatsapp() {
     `https://wa.me/${numero}?text=${ayudaTxt}`;
 }
 
+function cargarUsuarioGuardado() {
+  const raw = localStorage.getItem(LS_USER);
+
+  if (!raw) return;
+
+  try {
+    userData = JSON.parse(raw);
+
+    if (userData.usuario && userData.nombre && userData.telefono) {
+      mostrarCarga();
+    }
+  } catch (e) {}
+}
+
+function mostrarCarga() {
+  document.getElementById("registroCard").classList.add("hidden");
+  document.getElementById("cargaCard").classList.remove("hidden");
+
+  document.getElementById("datosUsuarioBox").innerHTML = `
+    <b>Usuario:</b> ${userData.usuario}<br>
+    <b>Nombre:</b> ${userData.nombre}<br>
+    <b>WhatsApp:</b> ${userData.telefono}
+  `;
+}
+
+function cambiarDatos() {
+  localStorage.removeItem(LS_USER);
+  userData = null;
+
+  document.getElementById("registroCard").classList.remove("hidden");
+  document.getElementById("cargaCard").classList.add("hidden");
+
+  document.getElementById("regUsuario").value = "";
+  document.getElementById("regNombre").value = "";
+  document.getElementById("regTelefono").value = "";
+}
+
+async function continuarRegistro() {
+  const usuario = document.getElementById("regUsuario").value.trim();
+  const nombre = document.getElementById("regNombre").value.trim();
+  const telefono = document.getElementById("regTelefono").value.trim();
+
+  if (!usuario || !nombre || !telefono) {
+    mostrarRegistroMsg("Completá usuario, nombre y WhatsApp.", false);
+    return;
+  }
+
+  if (telefono.replace(/\D/g, "").length < 8) {
+    mostrarRegistroMsg("Revisá el número de WhatsApp.", false);
+    return;
+  }
+
+  document.getElementById("btnContinuar").disabled = true;
+  document.getElementById("btnContinuar").innerText = "Guardando...";
+
+  const r = await api({
+    action: "registrarcontacto",
+    pc: PC,
+    usuarioJugador: usuario,
+    nombreCompleto: nombre,
+    telefono
+  });
+
+  document.getElementById("btnContinuar").disabled = false;
+  document.getElementById("btnContinuar").innerText = "Continuar";
+
+  if (!r.ok) {
+    mostrarRegistroMsg(r.error || "No se pudo registrar.", false);
+    return;
+  }
+
+  userData = { usuario, nombre, telefono };
+  localStorage.setItem(LS_USER, JSON.stringify(userData));
+  mostrarCarga();
+}
+
+function mostrarRegistroMsg(texto, ok) {
+  const box = document.getElementById("registroMsg");
+  box.innerHTML = texto;
+  box.className = "result " + (ok ? "ok" : "err");
+}
+
 async function cargarBilletera() {
   const r = await api({ action: "getbilleteras", pc: PC });
 
   if (!r.ok || !r.billeteras || r.billeteras.length === 0) {
     document.getElementById("cvuBox").innerText = "No disponible";
     document.getElementById("titularBox").innerText = "Consultar por WhatsApp";
+    billeteraActiva = null;
     return;
   }
 
@@ -409,6 +629,7 @@ async function cargarBilletera() {
   if (billeteras.length === 0) {
     document.getElementById("cvuBox").innerText = "No disponible";
     document.getElementById("titularBox").innerText = "Consultar por WhatsApp";
+    billeteraActiva = null;
     return;
   }
 
@@ -435,12 +656,15 @@ function copiarCvu() {
 }
 
 async function crearSolicitud() {
-  const usuarioJugador = document.getElementById("usuarioJugador").value.trim();
-  const nombreCompleto = document.getElementById("nombreCompleto").value.trim();
   const monto = Number(document.getElementById("monto").value || 0);
 
-  if (!usuarioJugador || !nombreCompleto || !monto) {
-    mostrarResultado("Completá usuario, nombre completo y monto.", false);
+  if (!userData || !userData.usuario || !userData.nombre || !userData.telefono) {
+    mostrarResultado("Primero completá tus datos.", false);
+    return;
+  }
+
+  if (!monto) {
+    mostrarResultado("Completá el monto a cargar.", false);
     return;
   }
 
@@ -462,8 +686,9 @@ async function crearSolicitud() {
     pc: PC,
     idBilletera: billeteraActiva.ID_BILLETERA,
     tipoSolicitud: "CARGA",
-    usuarioJugador,
-    nombreCompleto,
+    usuarioJugador: userData.usuario,
+    nombreCompleto: userData.nombre,
+    telefono: userData.telefono,
     monto
   });
 
@@ -476,28 +701,44 @@ async function crearSolicitud() {
   }
 
   solicitudActual = r.solicitud.id;
-  localStorage.setItem("solicitud_actual_" + PC, solicitudActual);
+  localStorage.setItem(LS_SOLICITUD, solicitudActual);
 
   mostrarResultado(
     `✅ Solicitud enviada correctamente.<br><br>
     <b>ID:</b> ${r.solicitud.id}<br>
     <b>Estado:</b> ${r.solicitud.estado}<br><br>
-    Te avisamos cuando la carga esté confirmada.`,
+    Estamos verificando tu transferencia.`,
     true
   );
 
+  mostrarEstadoEspera();
   iniciarEscuchaEstado();
 
-  document.getElementById("usuarioJugador").value = "";
-  document.getElementById("nombreCompleto").value = "";
   document.getElementById("monto").value = "";
 }
 
+function mostrarEstadoEspera() {
+  document.getElementById("estadoEspera").classList.remove("hidden");
+
+  document.getElementById("step1").className = "step done";
+  document.getElementById("step2").className = "step active";
+  document.getElementById("step3").className = "step";
+}
+
+function completarEstado() {
+  document.getElementById("estadoEspera").classList.remove("hidden");
+
+  document.getElementById("step1").className = "step done";
+  document.getElementById("step2").className = "step done";
+  document.getElementById("step3").className = "step done";
+}
+
 function recuperarSolicitudPendiente() {
-  const guardada = localStorage.getItem("solicitud_actual_" + PC);
+  const guardada = localStorage.getItem(LS_SOLICITUD);
 
   if (guardada) {
     solicitudActual = guardada;
+    mostrarEstadoEspera();
     iniciarEscuchaEstado();
   }
 }
@@ -523,8 +764,19 @@ function iniciarEscuchaEstado() {
       estado === "PAGADA"
     ) {
       clearInterval(intervaloEstado);
-      localStorage.removeItem("solicitud_actual_" + PC);
+      completarEstado();
+      localStorage.removeItem(LS_SOLICITUD);
       document.getElementById("successModal").classList.remove("hidden");
+
+      if (navigator.vibrate) {
+        navigator.vibrate([160, 80, 160]);
+      }
+    }
+
+    if (estado === "RECHAZADA" || estado === "ERROR") {
+      clearInterval(intervaloEstado);
+      localStorage.removeItem(LS_SOLICITUD);
+      mostrarResultado("La solicitud no pudo ser aprobada. Contactanos por WhatsApp.", false);
     }
   }, 5000);
 }
@@ -537,11 +789,18 @@ function irPlataforma() {
   }
 }
 
+function cerrarModalExito() {
+  document.getElementById("successModal").classList.add("hidden");
+  solicitudActual = null;
+  localStorage.removeItem(LS_SOLICITUD);
+}
+
 function mostrarResultado(texto, ok) {
   const box = document.getElementById("resultado");
   box.innerHTML = texto;
   box.className = "result " + (ok ? "ok" : "err");
 }
 </script>
+
 </body>
 </html>
