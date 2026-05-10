@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PANEL Admin</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#0f1115;color:#fff}.hidden{display:none!important}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.sidebar{background:#15161b;border-right:1px solid #30323a;padding:18px;height:100vh;position:sticky;top:0;overflow-y:auto}
+.main{padding:18px}.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card,.card{background:#1c1d22;border:1px solid #30323a;border-radius:16px;padding:18px;margin-bottom:16px}.login-card{width:100%;max-width:430px}
+.logo{width:210px;max-width:90%;display:block;margin:0 auto 16px;filter:drop-shadow(0 0 18px rgba(212,175,55,.25))}
+.small{color:#98a2b3;font-size:13px}
+input,select,textarea,button{width:100%;padding:11px;border-radius:8px;border:none;margin:5px 0 10px;font-size:14px}
+input,select,textarea{background:#fff;color:#111}textarea{min-height:80px;resize:vertical}
+button{cursor:pointer;font-weight:bold;background:#e8e8e8;color:#111}
+.primary{background:#4c6fff;color:#fff}.success{background:#12b76a;color:#fff}.danger{background:#f04438;color:#fff}.secondary{background:#667085;color:#fff}.warning{background:#fdb022;color:#111}
+.nav-btn{background:transparent;color:#d0d5dd;text-align:left;border:1px solid transparent;margin:4px 0}
+.nav-btn:hover,.nav-btn.active{background:#232631;border-color:#3b3f4a;color:#fff}
+.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#2d2e35;margin:4px 4px 4px 0;font-size:13px}
+.badge-ok{background:#123322;color:#b7f7cf}.badge-warn{background:#3d2d10;color:#ffe0a3}.badge-danger{background:#3a1717;color:#ffd0d0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.row{display:flex;flex-wrap:wrap;gap:8px}.row button{flex:1;min-width:130px}
+.msg{color:#d0d5dd;font-size:14px;white-space:pre-wrap}.okBox{background:#123322;border-left:5px solid #12b76a;padding:12px;border-radius:10px;margin-top:10px}.errBox{background:#3a1717;border-left:5px solid #f04438;padding:12px;border-radius:10px;margin-top:10px}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1px solid #333640;padding:9px;text-align:left;vertical-align:top;font-size:13px}th{background:#252731}tr:hover{background:#22242c}
+.miniBtn{padding:7px;font-size:12px;margin:2px 0}.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:#232631;border:1px solid #343844;border-radius:14px;padding:16px}.stat-num{font-size:28px;font-weight:900}
+.modal{position:fixed;right:18px;bottom:18px;width:min(650px,calc(100vw - 36px));max-height:90vh;background:#1c1d22;border:1px solid #424651;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.45);z-index:50;overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;background:#252731;padding:12px}.modal-body{padding:14px;max-height:78vh;overflow-y:auto}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}th,td{font-size:11px;padding:6px}.row button{min-width:100%}}
+</style>
+</head>
+
+<body>
+
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <img src="logo-nodo.png" class="logo" alt="BET300">
+    <h1>CORE Admin</h1>
+    <p class="small">Ingreso ADMIN / ENCARGADO</p>
+    <label>Usuario</label><input id="loginUsuario" placeholder="admin">
+    <label>Clave</label><input id="loginClave" type="password" placeholder="clave">
+    <button class="primary" onclick="login()">Ingresar</button>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+</div>
+
+<div id="appView" class="layout hidden">
+  <aside class="sidebar">
+    <img src="logo-nodo.png" class="logo" alt="BET300">
+    <div class="card">
+      <div id="adminBox"></div>
+      <button class="secondary" onclick="refrescarTodo()">Refrescar</button>
+      <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+
+    <button id="navDashboard" class="nav-btn active" onclick="mostrarVista('dashboard')">📊 Dashboard</button>
+    <button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
+    <button id="navOperadores" class="nav-btn" onclick="mostrarVista('operadores')">👤 Operadores</button>
+    <button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button>
+    <button id="navConciliacion" class="nav-btn" onclick="mostrarVista('conciliacion')">🔎 Conciliación</button>
+    <button id="navLogs" class="nav-btn" onclick="mostrarVista('logs')">🧾 Logs</button>
+
+    <div class="card">
+      <h4>Resumen</h4>
+      <div id="sideResumen" class="small">Cargando...</div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <section id="viewDashboard">
+  <div class="card">
+    <h2>Dashboard financiero</h2>
+    <p class="small">Resumen por oficina, fecha y saldos de billeteras.</p>
+
+    <div class="grid">
+      <div>
+        <label>PC / Oficina</label>
+        <select id="dashPc" onchange="renderDashboard()">
+          <option value="">Todas</option>
+          <option>P1</option>
+          <option>P2</option>
+          <option>P3</option>
+          <option>P4</option>
+          <option>P5</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Fecha desde</label>
+        <input id="dashFechaDesde" type="date" onchange="renderDashboard()">
+      </div>
+
+      <div>
+        <label>Fecha hasta</label>
+        <input id="dashFechaHasta" type="date" onchange="renderDashboard()">
+      </div>
+    </div>
+
+    <button class="secondary" onclick="resetDashboardHoy()">Ver hoy 00 a 00</button>
+
+    <div id="dashboardStats" class="stat-grid"></div>
+  </div>
+
+  <div class="card">
+    <h3>Resumen por PC</h3>
+    <div id="tablaResumenPc"></div>
+  </div>
+
+  <div class="card">
+    <h3>Saldos de billeteras</h3>
+    <div id="tablaDashboardBilleteras"></div>
+  </div>
+</section>
+
+    <section id="viewSolicitudes" class="hidden">
+      <div class="card">
+        <h2>Solicitudes</h2>
+        <div class="grid">
+          <div><label>PC</label><select id="filtroPc"><option value="">Todas</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select></div>
+          <div><label>Tipo</label><select id="filtroTipo"><option value="">Todos</option><option>CARGA</option><option>RETIRO</option></select></div>
+          <div><label>Estado</label><select id="filtroEstado"><option value="">Todos</option><option>PENDIENTE_PAGO</option><option>PENDIENTE_APROBACION</option><option>APROBADA_MANUAL</option><option>RECHAZADA</option><option>PAGADA</option><option>ACREDITADA</option><option>ERROR</option></select></div>
+        </div>
+        <button class="primary" onclick="cargarSolicitudes()">Buscar</button>
+        <div id="solicitudesMsg" class="msg"></div>
+        <div id="tablaSolicitudes"></div>
+      </div>
+    </section>
+
+    <section id="viewOperadores" class="hidden">
+      <div class="card">
+        <h2>Crear operador</h2>
+        <div class="grid">
+          <div><label>Nombre</label><input id="opNombre"></div>
+          <div><label>Usuario</label><input id="opUsuario"></div>
+          <div><label>Clave</label><input id="opClave"></div>
+          <div><label>Rol</label><select id="opRol"><option>OPERADOR</option><option>ENCARGADO</option><option>ADMIN</option></select></div>
+          <div><label>PC</label><select id="opPc"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option><option>TODAS</option></select></div>
+          <div><label>Tipo operador</label><select id="opTipoOperador"><option>FIJO</option><option>FRANQUERO</option></select></div>
+          <div><label>Turno</label><select id="opTurno"><option>FULL</option><option>TM</option><option>TT</option><option>TN</option></select></div>
+        </div>
+        <h4>Permisos</h4>
+        <div class="grid">
+          <div><label>Elegir billetera</label><select id="opPermBilletera"><option>SI</option><option>NO</option></select></div>
+          <div><label>Aprobar manual</label><select id="opPermAprobar"><option>SI</option><option>NO</option></select></div>
+          <div><label>Rechazar</label><select id="opPermRechazar"><option>SI</option><option>NO</option></select></div>
+          <div><label>Cambiar clave</label><select id="opPermClave"><option>SI</option><option>NO</option></select></div>
+        </div>
+        <button class="success" onclick="crearOperador()">Crear operador</button>
+        <div id="operadoresMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Operadores</h2>
+        <div id="tablaOperadores"></div>
+      </div>
+    </section>
+
+    <section id="viewBilleteras" class="hidden">
+      <div class="card">
+        <h2>Crear billetera</h2>
+        <div class="grid">
+          <div><label>PC</label><select id="bilPc"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select></div>
+          <div><label>Tipo</label><select id="bilTipo"><option>MP_AUTO</option><option>MP_MANUAL</option><option>NJX</option><option>BANCO</option><option>OTRA</option></select></div>
+          <div><label>Nombre visible</label><input id="bilNombre"></div>
+          <div><label>Titular</label><input id="bilTitular"></div>
+          <div><label>Alias</label><input id="bilAlias"></div>
+          <div><label>CVU / CBU</label><input id="bilCvu"></div>
+          <div><label>Validación</label><select id="bilValidacion"><option>AUTO</option><option>MANUAL</option></select></div>
+          <div><label>Rotación</label><select id="bilRotacion"><option>SI</option><option>NO</option></select></div>
+          <div><label>Saldo inicial</label><input id="bilSaldoInicial" type="number" value="0"></div>
+          <div><label>Límite descarga</label><input id="bilLimite" type="number" value="0"></div>
+          <div><label>Máx por día</label><input id="bilMaxDia" type="number" value="0"></div>
+          <div><label>Máx por hora</label><input id="bilMaxHora" type="number" value="0"></div>
+        </div>
+        <button class="success" onclick="crearBilletera()">Crear billetera</button>
+        <div id="billeterasMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Billeteras</h2>
+        <div id="tablaBilleteras"></div>
+      </div>
+    </section>
+
+    <section id="viewConciliacion" class="hidden">
+      <div class="card">
+        <h2>Conciliación Agentes</h2>
+        <p class="small">Carga manual/API de operaciones y cotejo contra solicitudes aprobadas.</p>
+
+        <h3>Registrar operación Agentes</h3>
+        <div class="grid">
+          <div><label>Usuario jugador</label><input id="agUsuario" placeholder="usuario"></div>
+          <div><label>Tipo</label><select id="agTipo"><option>CARGA</option><option>RETIRO</option></select></div>
+          <div><label>Monto</label><input id="agMonto" type="number" placeholder="5000"></div>
+          <div><label>Operador</label><input id="agOperador" placeholder="opcional"></div>
+          <div><label>Origen</label><select id="agOrigen"><option>MANUAL</option><option>CSV</option><option>API</option></select></div>
+        </div>
+        <label>Observaciones</label>
+        <textarea id="agObs" placeholder="Opcional"></textarea>
+        <button class="success" onclick="registrarOperacionAgente()">Registrar operación</button>
+        <div id="agentesMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Acciones de conciliación</h3>
+        <div class="row">
+          <button class="primary" onclick="conciliarSolicitudes()">Conciliar solicitudes</button>
+          <button class="secondary" onclick="listarOperacionesAgentes()">Ver operaciones Agentes</button>
+        </div>
+        <div id="conciliacionMsg" class="msg"></div>
+        <div id="tablaAgentes"></div>
+      </div>
+    </section>
+
+    <section id="viewLogs" class="hidden">
+      <div class="card">
+        <h2>Logs</h2>
+        <label>PC</label>
+        <select id="logPc"><option value="">Todas</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select>
+        <button class="primary" onclick="cargarLogs()">Cargar logs</button>
+        <div id="logsMsg" class="msg"></div>
+        <div id="tablaLogs"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="modalOperador" class="modal hidden">
+  <div class="modal-head"><b>Editar operador</b><button class="miniBtn danger" onclick="cerrarModalOperador()">Cerrar</button></div>
+  <div class="modal-body">
+    <input id="editOpId" type="hidden">
+    <div class="grid">
+      <div><label>Nombre</label><input id="editOpNombre"></div>
+      <div><label>Usuario</label><input id="editOpUsuario"></div>
+      <div><label>Nueva clave</label><input id="editOpClave" placeholder="Dejar vacío si no cambia"></div>
+      <div><label>Rol</label><select id="editOpRol"><option>OPERADOR</option><option>ENCARGADO</option><option>ADMIN</option></select></div>
+      <div><label>PC</label><select id="editOpPc"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option><option>TODAS</option></select></div>
+      <div><label>Tipo operador</label><select id="editOpTipo"><option>FIJO</option><option>FRANQUERO</option></select></div>
+      <div><label>Turno</label><select id="editOpTurno"><option>FULL</option><option>TM</option><option>TT</option><option>TN</option></select></div>
+      <div><label>Activo</label><select id="editOpActivo"><option>SI</option><option>NO</option></select></div>
+    </div>
+    <h4>Permisos</h4>
+    <div class="grid">
+      <div><label>Elegir billetera</label><select id="editOpBilletera"><option>SI</option><option>NO</option></select></div>
+      <div><label>Aprobar manual</label><select id="editOpAprobar"><option>SI</option><option>NO</option></select></div>
+      <div><label>Rechazar</label><select id="editOpRechazar"><option>SI</option><option>NO</option></select></div>
+      <div><label>Cambiar clave</label><select id="editOpCambiarClave"><option>SI</option><option>NO</option></select></div>
+    </div>
+    <button class="primary" onclick="guardarOperador()">Guardar cambios</button>
+    <div id="editOperadorMsg" class="msg"></div>
+  </div>
+</div>
+
+<div id="modalBilletera" class="modal hidden">
+  <div class="modal-head"><b>Editar billetera</b><button class="miniBtn danger" onclick="cerrarModalBilletera()">Cerrar</button></div>
+  <div class="modal-body">
+    <input id="editBilId" type="hidden">
+    <div class="grid">
+      <div><label>PC</label><select id="editBilPc"><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option></select></div>
+      <div><label>Tipo</label><select id="editBilTipo"><option>MP_AUTO</option><option>MP_MANUAL</option><option>NJX</option><option>BANCO</option><option>OTRA</option></select></div>
+      <div><label>Nombre visible</label><input id="editBilNombre"></div>
+      <div><label>Titular</label><input id="editBilTitular"></div>
+      <div><label>Alias</label><input id="editBilAlias"></div>
+      <div><label>CVU / CBU</label><input id="editBilCvu"></div>
+      <div><label>Activa</label><select id="editBilActiva"><option>SI</option><option>NO</option></select></div>
+      <div><label>Validación</label><select id="editBilValidacion"><option>AUTO</option><option>MANUAL</option></select></div>
+      <div><label>Rotación</label><select id="editBilRotacion"><option>SI</option><option>NO</option></select></div>
+      <div><label>Saldo inicial</label><input id="editBilSaldoInicial" type="number"></div>
+      <div><label>Saldo estimado</label><input id="editBilSaldoEstimado" type="number"></div>
+      <div><label>Saldo real</label><input id="editBilSaldoReal" type="number"></div>
+      <div><label>Límite descarga</label><input id="editBilLimite" type="number"></div>
+      <div><label>Máx por día</label><input id="editBilMaxDia" type="number"></div>
+      <div><label>Máx por hora</label><input id="editBilMaxHora" type="number"></div>
+    </div>
+    <button class="primary" onclick="guardarBilletera()">Guardar cambios</button>
+    <div id="editBilleteraMsg" class="msg"></div>
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbz9qiYgSGgxuoyAfcM3FpW-nhxH-QtkXhMjg3fnVu2U1sCw2e0O-fbzcpU9HK-HTQbz/exec";
+const PCS = ["P1", "P2", "P3", "P4", "P5"];
+
+let admin = JSON.parse(localStorage.getItem("admin_core_v5") || "null");
+let config = {operadores:[], billeteras:[], pcs:[]};
+let solicitudes = [];
+
+window.onload = () => { fillPcSelects(); if(admin) mostrarApp(); };
+
+async function api(params){
+  const url = API_URL + "?" + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  const text = await res.text();
+  try { return JSON.parse(text); } catch(e){ console.error(text); return {ok:false,error:"Respuesta inválida de API"}; }
+}
+
+
+function fillPcSelects(){
+  const idsConTodas = ["dashPc", "filtroPc", "logPc"];
+  const idsNormales = ["opPc", "bilPc", "editOpPc", "editBilPc"];
+
+  idsConTodas.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.dataset.filledPc === "1") return;
+    el.innerHTML = '<option value="">Todas</option>' + PCS.map(pc => `<option>${pc}</option>`).join("");
+    el.dataset.filledPc = "1";
+  });
+
+  idsNormales.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.dataset.filledPc === "1") return;
+    const extraTodas = (id === "opPc" || id === "editOpPc") ? '<option>TODAS</option>' : '';
+    el.innerHTML = PCS.map(pc => `<option>${pc}</option>`).join("") + extraTodas;
+    el.dataset.filledPc = "1";
+  });
+}
+
+function val(id){return document.getElementById(id)?.value||""}
+function set(id,v){const el=document.getElementById(id); if(el) el.value=v||""}
+function money(n){return "$"+Number(n||0).toLocaleString("es-AR")}
+function formatFecha(f){const d=new Date(f); if(isNaN(d))return f||""; return d.toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit"})+" · "+d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}
+function msg(id,text,ok=null){const el=document.getElementById(id); if(!el)return; el.innerHTML=text||""; el.className=ok===true?"okBox":ok===false?"errBox":"msg"}
+
+async function login(){
+  const r=await api({action:"login",usuario:val("loginUsuario").trim(),clave:val("loginClave").trim()});
+  if(!r.ok){msg("loginMsg",r.error,false);return}
+  if(!["ADMIN","ENCARGADO"].includes(String(r.operador.rol).toUpperCase())){msg("loginMsg","Este panel es solo ADMIN / ENCARGADO.",false);return}
+  admin=r.operador; localStorage.setItem("admin_core_v5",JSON.stringify(admin)); mostrarApp();
+}
+
+function mostrarApp(){
+  fillPcSelects();
+  document.getElementById("loginView").classList.add("hidden");
+  document.getElementById("appView").classList.remove("hidden");
+  document.getElementById("adminBox").innerHTML=`<span class="badge"><b>${admin.nombre}</b></span><span class="badge">Rol: ${admin.rol}</span><span class="badge">PC: ${admin.pc}</span>`;
+  if(admin.rol==="ENCARGADO") limitarSelectsEncargado();
+  refrescarTodo();
+  setTimeout(resetDashboardHoy, 300);
+}
+
+function limitarSelectsEncargado(){
+  ["filtroPc","opPc","bilPc","logPc","editOpPc","editBilPc"].forEach(id=>{const el=document.getElementById(id); if(!el)return; el.innerHTML=`<option value="${admin.pc}">${admin.pc}</option>`; el.value=admin.pc});
+  const rol=document.getElementById("opRol"); if(rol) rol.innerHTML=`<option>OPERADOR</option><option>ENCARGADO</option>`;
+  const erol=document.getElementById("editOpRol"); if(erol) erol.innerHTML=`<option>OPERADOR</option><option>ENCARGADO</option>`;
+}
+
+function cerrarSesion(){localStorage.removeItem("admin_core_v5");location.reload()}
+
+function mostrarVista(vista){
+  ["Dashboard","Solicitudes","Operadores","Billeteras","Conciliacion","Logs"].forEach(v=>{
+    document.getElementById("view"+v).classList.add("hidden");
+    document.getElementById("nav"+v).classList.remove("active");
+  });
+  const cap=vista.charAt(0).toUpperCase()+vista.slice(1);
+  document.getElementById("view"+cap).classList.remove("hidden");
+  document.getElementById("nav"+cap).classList.add("active");
+}
+
+async function refrescarTodo(){await cargarConfig();await cargarSolicitudes();await cargarLogs(false);renderDashboard()}
+
+async function cargarConfig(){
+  const r=await api({action:"getconfig",usuario:admin.usuario});
+  if(!r.ok)return;
+  config=r; renderOperadores(); renderBilleteras(); renderDashboard();
+}
+
+async function cargarSolicitudes(){
+  const r=await api({action:"listarsolicitudes",usuario:admin.usuario,pc:val("filtroPc"),tipoSolicitud:val("filtroTipo"),estado:val("filtroEstado")});
+  if(!r.ok){msg("solicitudesMsg",r.error,false);return}
+  solicitudes=r.solicitudes||[];
+  msg("solicitudesMsg",`Solicitudes encontradas: ${solicitudes.length}`,true);
+  renderSolicitudes(); renderDashboard();
+}
+
+function estadoBadge(e){e=String(e||""); if(["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(e))return `<span class="badge badge-ok">${e}</span>`; if(["RECHAZADA","ERROR"].includes(e))return `<span class="badge badge-danger">${e}</span>`; return `<span class="badge badge-warn">${e}</span>`}
+
+function renderSolicitudes(){
+  let html=`<table><thead><tr><th>Fecha</th><th>Tipo</th><th>PC</th><th>Usuario</th><th>Nombre</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Operador</th></tr></thead><tbody>`;
+  solicitudes.slice().reverse().forEach(s=>{
+    html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}</td><td>${s.TIPO_SOLICITUD||""}</td><td>${s.PC||""}</td><td><b>${s.USUARIO||""}</b></td><td>${s.NOMBRE_COMPLETO||""}</td><td>Declarado: ${money(s.MONTO_DECLARADO)}<br>Real: ${money(s.MONTO_REAL)}</td><td>${s.BILLETERA_NOMBRE||""}<br>${s.METODO_BILLETERA||""}</td><td>${estadoBadge(s.ESTADO)}<br>${s.VERIFICACION||""}</td><td>Tomó: ${s.QUIEN_TOMO||"-"}<br>Aprobó: ${s.QUIEN_APROBO||"-"}</td></tr>`;
+  });
+  html+=`</tbody></table>`;
+  document.getElementById("tablaSolicitudes").innerHTML=html;
+}
+
+function renderDashboard(){
+  const ops = config.operadores || [];
+  const billsAll = config.billeteras || [];
+
+  const pcFiltro = val("dashPc");
+  const fechaDesde = val("dashFechaDesde");
+  const fechaHasta = val("dashFechaHasta");
+
+  let solicitudesFiltradas = solicitudes.slice();
+
+  if (pcFiltro) {
+    solicitudesFiltradas = solicitudesFiltradas.filter(s =>
+      String(s.PC || "").toUpperCase() === String(pcFiltro).toUpperCase()
+    );
+  }
+
+  if (fechaDesde) {
+    const desde = new Date(fechaDesde + "T00:00:00");
+    solicitudesFiltradas = solicitudesFiltradas.filter(s => {
+      const d = new Date(s.FECHA_CREACION);
+      return !isNaN(d) && d >= desde;
+    });
+  }
+
+  if (fechaHasta) {
+    const hasta = new Date(fechaHasta + "T23:59:59");
+    solicitudesFiltradas = solicitudesFiltradas.filter(s => {
+      const d = new Date(s.FECHA_CREACION);
+      return !isNaN(d) && d <= hasta;
+    });
+  }
+
+  const cargasOk = solicitudesFiltradas.filter(s =>
+    String(s.TIPO_SOLICITUD) === "CARGA" &&
+    ["APROBADA_MANUAL", "ACREDITADA", "PAGADA"].includes(String(s.ESTADO))
+  );
+
+  const retirosOk = solicitudesFiltradas.filter(s =>
+    String(s.TIPO_SOLICITUD) === "RETIRO" &&
+    ["PAGADA", "APROBADA_MANUAL", "ACREDITADA"].includes(String(s.ESTADO))
+  );
+
+  const pendientes = solicitudesFiltradas.filter(s =>
+    String(s.ESTADO || "").includes("PENDIENTE")
+  );
+
+  const totalCargas = cargasOk.reduce((a, s) =>
+    a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+  );
+
+  const totalRetiros = retirosOk.reduce((a, s) =>
+    a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+  );
+
+  const cantCargas = cargasOk.length;
+  const cantRetiros = retirosOk.length;
+  const totalOperaciones = cantCargas + cantRetiros;
+  const neto = totalCargas - totalRetiros;
+
+  let bills = billsAll.slice();
+
+  if (pcFiltro) {
+    bills = bills.filter(b =>
+      String(b.PC || "").toUpperCase() === String(pcFiltro).toUpperCase()
+    );
+  }
+
+  const activas = bills.filter(b =>
+    String(b.ACTIVA || "").toUpperCase() === "SI"
+  );
+
+  const saldoTotal = bills.reduce((a, b) =>
+    a + Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0), 0
+  );
+
+  document.getElementById("dashboardStats").innerHTML = `
+    <div class="stat">
+      <div class="stat-num">${money(totalCargas)}</div>
+      <div class="small">Total cargas</div>
+      <span class="badge badge-ok">${cantCargas} cargas</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${money(totalRetiros)}</div>
+      <div class="small">Total retiros</div>
+      <span class="badge badge-danger">${cantRetiros} retiros</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${money(neto)}</div>
+      <div class="small">Venta neta</div>
+      <span class="badge ${neto >= 0 ? "badge-ok" : "badge-danger"}">
+        ${neto >= 0 ? "POSITIVO" : "NEGATIVO"}
+      </span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${totalOperaciones}</div>
+      <div class="small">Operaciones</div>
+      <span class="badge">Cargas + retiros</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${money(saldoTotal)}</div>
+      <div class="small">Saldo billeteras</div>
+      <span class="badge badge-warn">${activas.length} activas</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${pendientes.length}</div>
+      <div class="small">Pendientes actuales</div>
+      <span class="badge badge-warn">Por resolver</span>
+    </div>
+  `;
+
+  renderResumenPorPc(solicitudesFiltradas, billsAll);
+  renderDashboardBilleteras(bills);
+  renderSideResumen(totalCargas, totalRetiros, neto, totalOperaciones, saldoTotal);
+}
+
+function renderResumenPorPc(solicitudesBase, billeterasBase) {
+  const pcs = PCS;
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>PC</th>
+          <th>Cargas</th>
+          <th>Retiros</th>
+          <th>Neto</th>
+          <th>Operaciones</th>
+          <th>Saldo billeteras</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  pcs.forEach(pc => {
+    const solPc = solicitudesBase.filter(s =>
+      String(s.PC || "").toUpperCase() === pc
+    );
+
+    const cargas = solPc.filter(s =>
+      String(s.TIPO_SOLICITUD) === "CARGA" &&
+      ["APROBADA_MANUAL", "ACREDITADA", "PAGADA"].includes(String(s.ESTADO))
+    );
+
+    const retiros = solPc.filter(s =>
+      String(s.TIPO_SOLICITUD) === "RETIRO" &&
+      ["PAGADA", "APROBADA_MANUAL", "ACREDITADA"].includes(String(s.ESTADO))
+    );
+
+    const totalCargas = cargas.reduce((a, s) =>
+      a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+    );
+
+    const totalRetiros = retiros.reduce((a, s) =>
+      a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+    );
+
+    const saldo = billeterasBase
+      .filter(b => String(b.PC || "").toUpperCase() === pc)
+      .reduce((a, b) => a + Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0), 0);
+
+    const neto = totalCargas - totalRetiros;
+
+    html += `
+      <tr>
+        <td><b>${pc}</b></td>
+        <td>${money(totalCargas)}<br><span class="small">${cargas.length} cargas</span></td>
+        <td>${money(totalRetiros)}<br><span class="small">${retiros.length} retiros</span></td>
+        <td>
+          <b>${money(neto)}</b><br>
+          <span class="badge ${neto >= 0 ? "badge-ok" : "badge-danger"}">
+            ${neto >= 0 ? "POSITIVO" : "NEGATIVO"}
+          </span>
+        </td>
+        <td>${cargas.length + retiros.length}</td>
+        <td>${money(saldo)}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaResumenPc").innerHTML = html;
+}
+
+function renderDashboardBilleteras(bills) {
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Billetera</th>
+          <th>PC</th>
+          <th>Estado</th>
+          <th>En uso</th>
+          <th>Saldo real</th>
+          <th>Límite</th>
+          <th>Alerta</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  bills.forEach(b => {
+    const activa = String(b.ACTIVA || "").toUpperCase() === "SI";
+    const enUso = String(b.SELECCIONADA_MANUAL || "").toUpperCase() === "SI";
+
+    const saldo = Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0);
+    const limite = Number(b.LIMITE_DESCARGA || 0);
+
+    let alerta = `<span class="badge badge-ok">OK</span>`;
+
+    if (limite > 0 && saldo >= limite) {
+      alerta = `<span class="badge badge-danger">DESCARGAR</span>`;
+    } else if (limite > 0 && saldo >= limite * 0.8) {
+      alerta = `<span class="badge badge-warn">CERCA DEL LÍMITE</span>`;
+    }
+
+    html += `
+      <tr>
+        <td><b>${b.NOMBRE_VISIBLE || ""}</b><br><span class="small">${b.TITULAR || ""}</span></td>
+        <td>${b.PC || ""}</td>
+        <td>${activa ? '<span class="badge badge-ok">ACTIVA</span>' : '<span class="badge badge-danger">INACTIVA</span>'}</td>
+        <td>${enUso ? '<span class="badge badge-warn">EN USO</span>' : '-'}</td>
+        <td><b>${money(saldo)}</b></td>
+        <td>${money(limite)}</td>
+        <td>${alerta}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaDashboardBilleteras").innerHTML = html;
+}
+
+function renderSideResumen(cargas, retiros, neto, operaciones, saldo) {
+  document.getElementById("sideResumen").innerHTML = `
+    Rol: <b>${admin?.rol || ""}</b><br>
+    PC: <b>${admin?.pc || ""}</b><br><br>
+    Cargas: <b>${money(cargas)}</b><br>
+    Retiros: <b>${money(retiros)}</b><br>
+    Neto: <b>${money(neto)}</b><br>
+    Operaciones: <b>${operaciones}</b><br>
+    Saldo billeteras: <b>${money(saldo)}</b>
+  `;
+}
+
+function resetDashboardHoy() {
+  const hoy = new Date();
+  const yyyy = hoy.getFullYear();
+  const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+  const dd = String(hoy.getDate()).padStart(2, "0");
+  const fecha = `${yyyy}-${mm}-${dd}`;
+
+  document.getElementById("dashFechaDesde").value = fecha;
+  document.getElementById("dashFechaHasta").value = fecha;
+  document.getElementById("dashPc").value = "";
+
+  renderDashboard();
+}
+  
+function renderOperadores(){
+  let html=`<table><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>PC</th><th>Tipo</th><th>Turno</th><th>Activo</th><th>Permisos</th><th>Acción</th></tr></thead><tbody>`;
+  (config.operadores||[]).forEach(o=>{
+    const safe=encodeURIComponent(JSON.stringify(o));
+    html+=`<tr><td>${o.NOMBRE||""}</td><td>${o.USUARIO||""}</td><td>${o.ROL||""}</td><td>${o.PC||""}</td><td>${o.TIPO_OPERADOR||""}</td><td>${o.TURNO||""}</td><td>${o.ACTIVO||""}</td><td>Billetera: ${o.PUEDE_ELEGIR_BILLETERA||""}<br>Aprobar: ${o.PUEDE_APROBAR_MANUAL||""}<br>Rechazar: ${o.PUEDE_RECHAZAR||""}<br>Clave: ${o.PUEDE_CAMBIAR_CLAVE||""}</td><td><button class="miniBtn primary" onclick="abrirEditarOperador('${safe}')">Editar</button></td></tr>`;
+  });
+  html+=`</tbody></table>`;
+  document.getElementById("tablaOperadores").innerHTML=html;
+}
+
+function renderBilleteras(){
+  let html=`<table><thead><tr><th>Nombre</th><th>PC</th><th>Tipo</th><th>Alias/CVU</th><th>Saldo</th><th>Estado</th><th>Acción</th></tr></thead><tbody>`;
+  (config.billeteras||[]).forEach(b=>{
+    const activa=String(b.ACTIVA||"").toUpperCase()==="SI", uso=String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI", safe=encodeURIComponent(JSON.stringify(b));
+    html+=`<tr><td><b>${b.NOMBRE_VISIBLE||""}</b><br>${b.TITULAR||""}</td><td>${b.PC||""}</td><td>${b.TIPO||""}<br>${b.VALIDACION||""}</td><td>${b.ALIAS||""}<br>${b.CVU_CBU||""}</td><td>Real: <b>${money(b.SALDO_REAL)}</b><br>Estimado: ${money(b.SALDO_ESTIMADO)}<br>Límite: ${money(b.LIMITE_DESCARGA)}</td><td>${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}${uso?'<span class="badge badge-warn">EN USO</span>':''}</td><td><button class="miniBtn primary" onclick="abrirEditarBilletera('${safe}')">Editar</button><button class="miniBtn success" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button><button class="miniBtn danger" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Desactivar</button></td></tr>`;
+  });
+  html+=`</tbody></table>`;
+  document.getElementById("tablaBilleteras").innerHTML=html;
+}
+
+async function crearOperador(){
+  const r=await api({action:"crearoperador",usuario:admin.usuario,nombreCompleto:val("opNombre"),usuarioNuevo:val("opUsuario"),nuevaClave:val("opClave"),rol:val("opRol"),pc:val("opPc"),tipoOperador:val("opTipoOperador"),turno:val("opTurno"),puedeElegirBilletera:val("opPermBilletera"),puedeAprobarManual:val("opPermAprobar"),puedeRechazar:val("opPermRechazar"),puedeCambiarClave:val("opPermClave")});
+  msg("operadoresMsg",r.ok?"Operador creado.":r.error,r.ok); if(r.ok)cargarConfig();
+}
+
+async function crearBilletera(){
+  const r=await api({action:"crearbilletera",usuario:admin.usuario,pc:val("bilPc"),tipoBilletera:val("bilTipo"),nombreVisible:val("bilNombre"),titular:val("bilTitular"),alias:val("bilAlias"),cvu:val("bilCvu"),validacion:val("bilValidacion"),rotacion:val("bilRotacion"),saldoInicial:val("bilSaldoInicial"),limiteDescarga:val("bilLimite"),maxPorDia:val("bilMaxDia"),maxPorHora:val("bilMaxHora")});
+  msg("billeterasMsg",r.ok?"Billetera creada.":r.error,r.ok); if(r.ok)cargarConfig();
+}
+
+function abrirEditarOperador(encoded){
+  const o=JSON.parse(decodeURIComponent(encoded));
+  set("editOpId",o.OPERADOR_ID);set("editOpNombre",o.NOMBRE);set("editOpUsuario",o.USUARIO);set("editOpClave","");
+  set("editOpRol",o.ROL);set("editOpPc",o.PC);set("editOpTipo",o.TIPO_OPERADOR||"FIJO");set("editOpTurno",o.TURNO);set("editOpActivo",o.ACTIVO||"SI");
+  set("editOpBilletera",o.PUEDE_ELEGIR_BILLETERA||"SI");set("editOpAprobar",o.PUEDE_APROBAR_MANUAL||"SI");set("editOpRechazar",o.PUEDE_RECHAZAR||"SI");set("editOpCambiarClave",o.PUEDE_CAMBIAR_CLAVE||"SI");
+  document.getElementById("modalOperador").classList.remove("hidden");
+}
+function cerrarModalOperador(){document.getElementById("modalOperador").classList.add("hidden")}
+
+async function guardarOperador(){
+  const params={action:"actualizaroperador",usuario:admin.usuario,operadorId:val("editOpId"),nombreCompleto:val("editOpNombre"),usuarioNuevo:val("editOpUsuario"),rol:val("editOpRol"),pc:val("editOpPc"),tipoOperador:val("editOpTipo"),turno:val("editOpTurno"),activo:val("editOpActivo"),puedeElegirBilletera:val("editOpBilletera"),puedeAprobarManual:val("editOpAprobar"),puedeRechazar:val("editOpRechazar"),puedeCambiarClave:val("editOpCambiarClave")};
+  if(val("editOpClave")) params.nuevaClave=val("editOpClave");
+  const r=await api(params); msg("editOperadorMsg",r.ok?"Operador actualizado.":r.error,r.ok); if(r.ok){await cargarConfig();setTimeout(cerrarModalOperador,700)}
+}
+
+function abrirEditarBilletera(encoded){
+  const b=JSON.parse(decodeURIComponent(encoded));
+  set("editBilId",b.ID_BILLETERA);set("editBilPc",b.PC);set("editBilTipo",b.TIPO);set("editBilNombre",b.NOMBRE_VISIBLE);set("editBilTitular",b.TITULAR);set("editBilAlias",b.ALIAS);set("editBilCvu",b.CVU_CBU);set("editBilActiva",b.ACTIVA||"SI");set("editBilValidacion",b.VALIDACION);set("editBilRotacion",b.ROTACION);set("editBilSaldoInicial",b.SALDO_INICIAL||0);set("editBilSaldoEstimado",b.SALDO_ESTIMADO||0);set("editBilSaldoReal",b.SALDO_REAL||0);set("editBilLimite",b.LIMITE_DESCARGA||0);set("editBilMaxDia",b.MAX_POR_DIA||0);set("editBilMaxHora",b.MAX_POR_HORA||0);
+  document.getElementById("modalBilletera").classList.remove("hidden");
+}
+function cerrarModalBilletera(){document.getElementById("modalBilletera").classList.add("hidden")}
+
+async function guardarBilletera(){
+  const r=await api({action:"actualizarbilletera",usuario:admin.usuario,idBilletera:val("editBilId"),pc:val("editBilPc"),tipoBilletera:val("editBilTipo"),nombreVisible:val("editBilNombre"),titular:val("editBilTitular"),alias:val("editBilAlias"),cvu:val("editBilCvu"),activo:val("editBilActiva"),validacion:val("editBilValidacion"),rotacion:val("editBilRotacion"),saldoInicial:val("editBilSaldoInicial"),saldoEstimado:val("editBilSaldoEstimado"),saldoReal:val("editBilSaldoReal"),limiteDescarga:val("editBilLimite"),maxPorDia:val("editBilMaxDia"),maxPorHora:val("editBilMaxHora")});
+  msg("editBilleteraMsg",r.ok?"Billetera actualizada.":r.error,r.ok); if(r.ok){await cargarConfig();setTimeout(cerrarModalBilletera,700)}
+}
+
+async function cambiarEstadoBilletera(idBilletera,estadoBilletera){
+  const r=await api({action:"actualizarestadobilletera",usuario:admin.usuario,idBilletera,estadoBilletera});
+  msg("billeterasMsg",r.ok?"Estado actualizado.":r.error,r.ok); if(r.ok)cargarConfig();
+}
+
+async function registrarOperacionAgente(){
+  const r=await api({action:"registraroperacionagente",usuario:admin.usuario,usuarioJugador:val("agUsuario"),tipoSolicitud:val("agTipo"),monto:val("agMonto"),operador:val("agOperador"),origen:val("agOrigen"),observaciones:val("agObs")});
+  msg("agentesMsg",r.ok?"Operación registrada: "+r.operacionId:r.error,r.ok); if(r.ok)listarOperacionesAgentes();
+}
+
+async function listarOperacionesAgentes(){
+  const r=await api({action:"listaroperacionesagentes",usuario:admin.usuario});
+  if(!r.ok){msg("conciliacionMsg",r.error,false);return}
+  let html=`<table><thead><tr><th>Fecha</th><th>Usuario</th><th>Tipo</th><th>Monto</th><th>Operador</th><th>Origen</th><th>Conciliada</th><th>Solicitud</th></tr></thead><tbody>`;
+  (r.operaciones||[]).forEach(o=>html+=`<tr><td>${formatFecha(o.FECHA)}</td><td>${o.USUARIO||""}</td><td>${o.TIPO||""}</td><td>${money(o.MONTO)}</td><td>${o.OPERADOR||""}</td><td>${o.ORIGEN||""}</td><td>${o.CONCILIADA||""}</td><td>${o.SOLICITUD_ID||""}</td></tr>`);
+  html+=`</tbody></table>`;
+  document.getElementById("tablaAgentes").innerHTML=html;
+}
+
+async function conciliarSolicitudes(){
+  const r=await api({action:"conciliarsolicitudes",usuario:admin.usuario});
+  msg("conciliacionMsg",r.ok?`Conciliadas: ${r.conciliadas} · Diferencias: ${r.diferencias}`:r.error,r.ok);
+  if(r.ok)listarOperacionesAgentes();
+}
+
+async function cargarLogs(show=true){
+  const r=await api({action:"listarlogs",usuario:admin.usuario,pc:val("logPc")});
+  if(!r.ok){if(show)msg("logsMsg",r.error,false);return}
+  if(show)msg("logsMsg",`Logs: ${(r.logs||[]).length}`,true);
+  let html=`<table><thead><tr><th>Fecha</th><th>Tipo</th><th>Usuario</th><th>PC</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>`;
+  (r.logs||[]).forEach(l=>html+=`<tr><td>${formatFecha(l.FECHA)}</td><td>${l.TIPO||""}</td><td>${l.USUARIO||""}</td><td>${l.PC||""}</td><td>${l.ACCION||""}</td><td>${l.DETALLE||""}</td></tr>`);
+  html+=`</tbody></table>`;
+  document.getElementById("tablaLogs").innerHTML=html;
+}
+</script>
+</body>
+</html>
