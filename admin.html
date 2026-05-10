@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CORE Admin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BET300 CORE Admin</title>
 <style>
 *{box-sizing:border-box;font-family:Arial,sans-serif}
 body{margin:0;background:#0f1115;color:#fff}.hidden{display:none!important}
-.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
 .sidebar{background:#15161b;border-right:1px solid #30323a;padding:18px;height:100vh;position:sticky;top:0;overflow-y:auto}
 .main{padding:18px}.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-card,.card{background:#1c1d22;border:1px solid #30323a;border-radius:16px;padding:18px;margin-bottom:16px}
-.login-card{width:100%;max-width:430px}.brand{font-size:24px;font-weight:900}.small{color:#98a2b3;font-size:13px}
+.login-card,.card{background:#1c1d22;border:1px solid #30323a;border-radius:16px;padding:18px;margin-bottom:16px}.login-card{width:100%;max-width:430px}
+.logo{width:210px;max-width:90%;display:block;margin:0 auto 16px;filter:drop-shadow(0 0 18px rgba(212,175,55,.25))}
+.small{color:#98a2b3;font-size:13px}
 input,select,textarea,button{width:100%;padding:11px;border-radius:8px;border:none;margin:5px 0 10px;font-size:14px}
 input,select,textarea{background:#fff;color:#111}textarea{min-height:80px;resize:vertical}
-button{cursor:pointer;font-weight:bold;background:#e8e8e8;color:#111}.primary{background:#4c6fff;color:#fff}.success{background:#12b76a;color:#fff}.danger{background:#f04438;color:#fff}.secondary{background:#667085;color:#fff}.warning{background:#fdb022;color:#111}
-.nav-btn{background:transparent;color:#d0d5dd;text-align:left;border:1px solid transparent;margin:4px 0}.nav-btn:hover,.nav-btn.active{background:#232631;border-color:#3b3f4a;color:#fff}
-.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#2d2e35;margin:4px 4px 4px 0;font-size:13px}.badge-ok{background:#123322;color:#b7f7cf}.badge-warn{background:#3d2d10;color:#ffe0a3}.badge-danger{background:#3a1717;color:#ffd0d0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.row{display:flex;flex-wrap:wrap;gap:8px}.row button{flex:1;min-width:130px}
+button{cursor:pointer;font-weight:bold;background:#e8e8e8;color:#111}
+.primary{background:#4c6fff;color:#fff}.success{background:#12b76a;color:#fff}.danger{background:#f04438;color:#fff}.secondary{background:#667085;color:#fff}.warning{background:#fdb022;color:#111}
+.nav-btn{background:transparent;color:#d0d5dd;text-align:left;border:1px solid transparent;margin:4px 0}
+.nav-btn:hover,.nav-btn.active{background:#232631;border-color:#3b3f4a;color:#fff}
+.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#2d2e35;margin:4px 4px 4px 0;font-size:13px}
+.badge-ok{background:#123322;color:#b7f7cf}.badge-warn{background:#3d2d10;color:#ffe0a3}.badge-danger{background:#3a1717;color:#ffd0d0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.row{display:flex;flex-wrap:wrap;gap:8px}.row button{flex:1;min-width:130px}
 .msg{color:#d0d5dd;font-size:14px;white-space:pre-wrap}.okBox{background:#123322;border-left:5px solid #12b76a;padding:12px;border-radius:10px;margin-top:10px}.errBox{background:#3a1717;border-left:5px solid #f04438;padding:12px;border-radius:10px;margin-top:10px}
-table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1px solid #333640;padding:9px;text-align:left;vertical-align:top;font-size:13px}th{background:#252731}tr:hover{background:#22242c}.miniBtn{padding:7px;font-size:12px;margin:2px 0}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.stat{background:#232631;border:1px solid #343844;border-radius:14px;padding:16px}.stat-num{font-size:30px;font-weight:800}
-.modal{position:fixed;right:18px;bottom:18px;width:min(620px,calc(100vw - 36px));max-height:90vh;background:#1c1d22;border:1px solid #424651;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.45);z-index:50;overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;background:#252731;padding:12px}.modal-body{padding:14px;max-height:78vh;overflow-y:auto}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1px solid #333640;padding:9px;text-align:left;vertical-align:top;font-size:13px}th{background:#252731}tr:hover{background:#22242c}
+.miniBtn{padding:7px;font-size:12px;margin:2px 0}.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:#232631;border:1px solid #343844;border-radius:14px;padding:16px}.stat-num{font-size:28px;font-weight:900}
+.modal{position:fixed;right:18px;bottom:18px;width:min(650px,calc(100vw - 36px));max-height:90vh;background:#1c1d22;border:1px solid #424651;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.45);z-index:50;overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;background:#252731;padding:12px}.modal-body{padding:14px;max-height:78vh;overflow-y:auto}
 @media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}th,td{font-size:11px;padding:6px}.row button{min-width:100%}}
 </style>
 </head>
+
 <body>
 
 <div id="loginView" class="login-wrap">
   <div class="login-card">
+    <img src="logo-bet300.png" class="logo" alt="BET300">
     <h1>CORE Admin</h1>
     <p class="small">Ingreso ADMIN / ENCARGADO</p>
     <label>Usuario</label><input id="loginUsuario" placeholder="admin">
@@ -40,25 +46,44 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1p
 
 <div id="appView" class="layout hidden">
   <aside class="sidebar">
-    <div class="brand">CORE Admin</div>
-    <div class="small">Administración</div>
-    <div class="card" style="margin-top:14px;">
+    <img src="logo-bet300.png" class="logo" alt="BET300">
+    <div class="card">
       <div id="adminBox"></div>
       <button class="secondary" onclick="refrescarTodo()">Refrescar</button>
       <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
     </div>
+
     <button id="navDashboard" class="nav-btn active" onclick="mostrarVista('dashboard')">📊 Dashboard</button>
     <button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
     <button id="navOperadores" class="nav-btn" onclick="mostrarVista('operadores')">👤 Operadores</button>
     <button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button>
+    <button id="navConciliacion" class="nav-btn" onclick="mostrarVista('conciliacion')">🔎 Conciliación</button>
     <button id="navLogs" class="nav-btn" onclick="mostrarVista('logs')">🧾 Logs</button>
-    <div class="card"><h4>Resumen</h4><div id="sideResumen" class="small">Cargando...</div></div>
+
+    <div class="card">
+      <h4>Resumen</h4>
+      <div id="sideResumen" class="small">Cargando...</div>
+    </div>
   </aside>
 
   <main class="main">
+
     <section id="viewDashboard">
-      <div class="card"><h2>Dashboard</h2><div id="dashboardStats" class="stat-grid"></div></div>
-      <div class="card"><h3>Últimas solicitudes</h3><div id="tablaDashboardSolicitudes"></div></div>
+      <div class="card">
+        <h2>Dashboard financiero</h2>
+        <p class="small">Resumen general por PC, saldos y solicitudes.</p>
+        <div id="dashboardStats" class="stat-grid"></div>
+      </div>
+
+      <div class="card">
+        <h3>Alertas de billeteras</h3>
+        <div id="alertasBilleteras" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Últimas solicitudes</h3>
+        <div id="tablaDashboardSolicitudes"></div>
+      </div>
     </section>
 
     <section id="viewSolicitudes" class="hidden">
@@ -131,15 +156,47 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1p
       </div>
     </section>
 
+    <section id="viewConciliacion" class="hidden">
+      <div class="card">
+        <h2>Conciliación Agentes</h2>
+        <p class="small">Carga manual/API de operaciones y cotejo contra solicitudes aprobadas.</p>
+
+        <h3>Registrar operación Agentes</h3>
+        <div class="grid">
+          <div><label>Usuario jugador</label><input id="agUsuario" placeholder="usuario"></div>
+          <div><label>Tipo</label><select id="agTipo"><option>CARGA</option><option>RETIRO</option></select></div>
+          <div><label>Monto</label><input id="agMonto" type="number" placeholder="5000"></div>
+          <div><label>Operador</label><input id="agOperador" placeholder="opcional"></div>
+          <div><label>Origen</label><select id="agOrigen"><option>MANUAL</option><option>CSV</option><option>API</option></select></div>
+        </div>
+        <label>Observaciones</label>
+        <textarea id="agObs" placeholder="Opcional"></textarea>
+        <button class="success" onclick="registrarOperacionAgente()">Registrar operación</button>
+        <div id="agentesMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Acciones de conciliación</h3>
+        <div class="row">
+          <button class="primary" onclick="conciliarSolicitudes()">Conciliar solicitudes</button>
+          <button class="secondary" onclick="listarOperacionesAgentes()">Ver operaciones Agentes</button>
+        </div>
+        <div id="conciliacionMsg" class="msg"></div>
+        <div id="tablaAgentes"></div>
+      </div>
+    </section>
+
     <section id="viewLogs" class="hidden">
       <div class="card">
         <h2>Logs</h2>
-        <label>PC</label><select id="logPc"><option value="">Todas</option><option>CHINO</option><option>ALV</option><option>X</option><option>SAN</option><option>EYF</option></select>
+        <label>PC</label>
+        <select id="logPc"><option value="">Todas</option><option>CHINO</option><option>ALV</option><option>X</option><option>SAN</option><option>EYF</option></select>
         <button class="primary" onclick="cargarLogs()">Cargar logs</button>
         <div id="logsMsg" class="msg"></div>
         <div id="tablaLogs"></div>
       </div>
     </section>
+
   </main>
 </div>
 
@@ -196,9 +253,9 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1p
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycby8W41JkJ-QROI3DrFLDBX2NCfHH1fF7S_s_BGTtuo7vSRJ2-Udd2opSVAtSGwHvcc/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz9qiYgSGgxuoyAfcM3FpW-nhxH-QtkXhMjg3fnVu2U1sCw2e0O-fbzcpU9HK-HTQbz/exec";
 
-let admin = JSON.parse(localStorage.getItem("admin_core_v4") || "null");
+let admin = JSON.parse(localStorage.getItem("admin_core_v5") || "null");
 let config = {operadores:[], billeteras:[], pcs:[]};
 let solicitudes = [];
 
@@ -211,20 +268,17 @@ async function api(params){
   try { return JSON.parse(text); } catch(e){ console.error(text); return {ok:false,error:"Respuesta inválida de API"}; }
 }
 
-function msg(id,text,ok=null){
-  const el=document.getElementById(id); if(!el)return;
-  el.innerHTML=text||""; el.className=ok===true?"okBox":ok===false?"errBox":"msg";
-}
+function val(id){return document.getElementById(id)?.value||""}
+function set(id,v){const el=document.getElementById(id); if(el) el.value=v||""}
+function money(n){return "$"+Number(n||0).toLocaleString("es-AR")}
+function formatFecha(f){const d=new Date(f); if(isNaN(d))return f||""; return d.toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit"})+" · "+d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}
+function msg(id,text,ok=null){const el=document.getElementById(id); if(!el)return; el.innerHTML=text||""; el.className=ok===true?"okBox":ok===false?"errBox":"msg"}
 
 async function login(){
-  const usuario=document.getElementById("loginUsuario").value.trim();
-  const clave=document.getElementById("loginClave").value.trim();
-  const r=await api({action:"login",usuario,clave});
-  if(!r.ok){msg("loginMsg",r.error,false);return;}
-  if(!["ADMIN","ENCARGADO"].includes(String(r.operador.rol).toUpperCase())){msg("loginMsg","Este panel es solo ADMIN / ENCARGADO.",false);return;}
-  admin=r.operador;
-  localStorage.setItem("admin_core_v4",JSON.stringify(admin));
-  mostrarApp();
+  const r=await api({action:"login",usuario:val("loginUsuario").trim(),clave:val("loginClave").trim()});
+  if(!r.ok){msg("loginMsg",r.error,false);return}
+  if(!["ADMIN","ENCARGADO"].includes(String(r.operador.rol).toUpperCase())){msg("loginMsg","Este panel es solo ADMIN / ENCARGADO.",false);return}
+  admin=r.operador; localStorage.setItem("admin_core_v5",JSON.stringify(admin)); mostrarApp();
 }
 
 function mostrarApp(){
@@ -236,20 +290,15 @@ function mostrarApp(){
 }
 
 function limitarSelectsEncargado(){
-  ["filtroPc","opPc","bilPc","logPc","editOpPc","editBilPc"].forEach(id=>{
-    const el=document.getElementById(id); if(!el)return;
-    el.innerHTML=`<option value="${admin.pc}">${admin.pc}</option>`; el.value=admin.pc;
-  });
-  const rol=document.getElementById("opRol");
-  if(rol) rol.innerHTML=`<option>OPERADOR</option><option>ENCARGADO</option>`;
-  const erol=document.getElementById("editOpRol");
-  if(erol) erol.innerHTML=`<option>OPERADOR</option><option>ENCARGADO</option>`;
+  ["filtroPc","opPc","bilPc","logPc","editOpPc","editBilPc"].forEach(id=>{const el=document.getElementById(id); if(!el)return; el.innerHTML=`<option value="${admin.pc}">${admin.pc}</option>`; el.value=admin.pc});
+  const rol=document.getElementById("opRol"); if(rol) rol.innerHTML=`<option>OPERADOR</option><option>ENCARGADO</option>`;
+  const erol=document.getElementById("editOpRol"); if(erol) erol.innerHTML=`<option>OPERADOR</option><option>ENCARGADO</option>`;
 }
 
-function cerrarSesion(){localStorage.removeItem("admin_core_v4");location.reload();}
+function cerrarSesion(){localStorage.removeItem("admin_core_v5");location.reload()}
 
 function mostrarVista(vista){
-  ["Dashboard","Solicitudes","Operadores","Billeteras","Logs"].forEach(v=>{
+  ["Dashboard","Solicitudes","Operadores","Billeteras","Conciliacion","Logs"].forEach(v=>{
     document.getElementById("view"+v).classList.add("hidden");
     document.getElementById("nav"+v).classList.remove("active");
   });
@@ -258,38 +307,28 @@ function mostrarVista(vista){
   document.getElementById("nav"+cap).classList.add("active");
 }
 
-async function refrescarTodo(){await cargarConfig();await cargarSolicitudes();await cargarLogs(false);renderDashboard();}
+async function refrescarTodo(){await cargarConfig();await cargarSolicitudes();await cargarLogs(false);renderDashboard()}
 
 async function cargarConfig(){
   const r=await api({action:"getconfig",usuario:admin.usuario});
   if(!r.ok)return;
-  config=r;
-  renderOperadores();
-  renderBilleteras();
-}
-
-function estadoBadge(e){
-  e=String(e||"");
-  if(["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(e))return `<span class="badge badge-ok">${e}</span>`;
-  if(["RECHAZADA","ERROR"].includes(e))return `<span class="badge badge-danger">${e}</span>`;
-  return `<span class="badge badge-warn">${e}</span>`;
+  config=r; renderOperadores(); renderBilleteras(); renderDashboard();
 }
 
 async function cargarSolicitudes(){
-  const pc=document.getElementById("filtroPc")?.value||"";
-  const tipoSolicitud=document.getElementById("filtroTipo")?.value||"";
-  const estado=document.getElementById("filtroEstado")?.value||"";
-  const r=await api({action:"listarsolicitudes",usuario:admin.usuario,pc,tipoSolicitud,estado});
-  if(!r.ok){msg("solicitudesMsg",r.error,false);return;}
+  const r=await api({action:"listarsolicitudes",usuario:admin.usuario,pc:val("filtroPc"),tipoSolicitud:val("filtroTipo"),estado:val("filtroEstado")});
+  if(!r.ok){msg("solicitudesMsg",r.error,false);return}
   solicitudes=r.solicitudes||[];
   msg("solicitudesMsg",`Solicitudes encontradas: ${solicitudes.length}`,true);
   renderSolicitudes(); renderDashboard();
 }
 
+function estadoBadge(e){e=String(e||""); if(["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(e))return `<span class="badge badge-ok">${e}</span>`; if(["RECHAZADA","ERROR"].includes(e))return `<span class="badge badge-danger">${e}</span>`; return `<span class="badge badge-warn">${e}</span>`}
+
 function renderSolicitudes(){
   let html=`<table><thead><tr><th>Fecha</th><th>Tipo</th><th>PC</th><th>Usuario</th><th>Nombre</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Operador</th></tr></thead><tbody>`;
   solicitudes.slice().reverse().forEach(s=>{
-    html+=`<tr><td>${s.FECHA_CREACION||""}</td><td>${s.TIPO_SOLICITUD||""}</td><td>${s.PC||""}</td><td><b>${s.USUARIO||""}</b></td><td>${s.NOMBRE_COMPLETO||""}</td><td>Declarado: $${s.MONTO_DECLARADO||""}<br>Real: $${s.MONTO_REAL||""}</td><td>${s.BILLETERA_NOMBRE||""}<br>${s.METODO_BILLETERA||""}</td><td>${estadoBadge(s.ESTADO)}<br>${s.VERIFICACION||""}</td><td>Tomó: ${s.QUIEN_TOMO||"-"}<br>Aprobó: ${s.QUIEN_APROBO||"-"}</td></tr>`;
+    html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}</td><td>${s.TIPO_SOLICITUD||""}</td><td>${s.PC||""}</td><td><b>${s.USUARIO||""}</b></td><td>${s.NOMBRE_COMPLETO||""}</td><td>Declarado: ${money(s.MONTO_DECLARADO)}<br>Real: ${money(s.MONTO_REAL)}</td><td>${s.BILLETERA_NOMBRE||""}<br>${s.METODO_BILLETERA||""}</td><td>${estadoBadge(s.ESTADO)}<br>${s.VERIFICACION||""}</td><td>Tomó: ${s.QUIEN_TOMO||"-"}<br>Aprobó: ${s.QUIEN_APROBO||"-"}</td></tr>`;
   });
   html+=`</tbody></table>`;
   document.getElementById("tablaSolicitudes").innerHTML=html;
@@ -297,19 +336,27 @@ function renderSolicitudes(){
 
 function renderDashboard(){
   const ops=config.operadores||[], bills=config.billeteras||[];
+  const activas=bills.filter(b=>String(b.ACTIVA||"").toUpperCase()==="SI");
+  const saldoTotal=activas.reduce((a,b)=>a+Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0),0);
   const pendientes=solicitudes.filter(s=>String(s.ESTADO||"").includes("PENDIENTE")).length;
-  const ok=solicitudes.filter(s=>["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(String(s.ESTADO))).length;
-  const err=solicitudes.filter(s=>["RECHAZADA","ERROR"].includes(String(s.ESTADO))).length;
+  const cargasOk=solicitudes.filter(s=>String(s.TIPO_SOLICITUD)==="CARGA" && ["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(String(s.ESTADO))).reduce((a,s)=>a+Number(s.MONTO_REAL||s.MONTO_DECLARADO||0),0);
+  const retirosOk=solicitudes.filter(s=>String(s.TIPO_SOLICITUD)==="RETIRO" && ["PAGADA"].includes(String(s.ESTADO))).reduce((a,s)=>a+Number(s.MONTO_REAL||s.MONTO_DECLARADO||0),0);
   document.getElementById("dashboardStats").innerHTML=`
+    <div class="stat"><div class="stat-num">${money(saldoTotal)}</div><div class="small">Saldo total billeteras</div></div>
+    <div class="stat"><div class="stat-num">${money(cargasOk)}</div><div class="small">Cargas aprobadas</div></div>
+    <div class="stat"><div class="stat-num">${money(retirosOk)}</div><div class="small">Retiros pagados</div></div>
+    <div class="stat"><div class="stat-num">${money(cargasOk-retirosOk)}</div><div class="small">Neto operativo</div></div>
     <div class="stat"><div class="stat-num">${ops.length}</div><div class="small">Operadores</div></div>
-    <div class="stat"><div class="stat-num">${bills.length}</div><div class="small">Billeteras</div></div>
-    <div class="stat"><div class="stat-num">${pendientes}</div><div class="small">Pendientes</div></div>
-    <div class="stat"><div class="stat-num">${ok}</div><div class="small">Aprobadas/Pagadas</div></div>
-    <div class="stat"><div class="stat-num">${err}</div><div class="small">Rechazadas/Error</div></div>`;
-  document.getElementById("sideResumen").innerHTML=`Rol: <b>${admin.rol}</b><br>PC: <b>${admin.pc}</b><br>Operadores: <b>${ops.length}</b><br>Billeteras: <b>${bills.length}</b><br>Solicitudes: <b>${solicitudes.length}</b>`;
-  let ult=solicitudes.slice().reverse().slice(0,8);
+    <div class="stat"><div class="stat-num">${pendientes}</div><div class="small">Pendientes</div></div>`;
+  document.getElementById("sideResumen").innerHTML=`Rol: <b>${admin?.rol||""}</b><br>PC: <b>${admin?.pc||""}</b><br>Operadores: <b>${ops.length}</b><br>Billeteras: <b>${bills.length}</b><br>Solicitudes: <b>${solicitudes.length}</b>`;
+
+  let alertas="";
+  bills.forEach(b=>{const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0), lim=Number(b.LIMITE_DESCARGA||0); if(lim>0&&saldo>=lim)alertas+=`🔴 ${b.PC} · ${b.NOMBRE_VISIBLE}: descargar. Saldo ${money(saldo)} / límite ${money(lim)}<br>`; else if(lim>0&&saldo>=lim*.8)alertas+=`🟡 ${b.PC} · ${b.NOMBRE_VISIBLE}: cerca del límite. Saldo ${money(saldo)}<br>`});
+  document.getElementById("alertasBilleteras").innerHTML=alertas||"Sin alertas por ahora.";
+
+  let ult=solicitudes.slice().reverse().slice(0,10);
   let html=`<table><thead><tr><th>Fecha</th><th>PC</th><th>Usuario</th><th>Monto</th><th>Estado</th></tr></thead><tbody>`;
-  ult.forEach(s=>html+=`<tr><td>${s.FECHA_CREACION||""}</td><td>${s.PC||""}</td><td>${s.USUARIO||""}</td><td>$${s.MONTO_DECLARADO||""}</td><td>${estadoBadge(s.ESTADO)}</td></tr>`);
+  ult.forEach(s=>html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}</td><td>${s.PC||""}</td><td>${s.USUARIO||""}</td><td>${money(s.MONTO_DECLARADO)}</td><td>${estadoBadge(s.ESTADO)}</td></tr>`);
   html+=`</tbody></table>`;
   document.getElementById("tablaDashboardSolicitudes").innerHTML=html;
 }
@@ -327,10 +374,8 @@ function renderOperadores(){
 function renderBilleteras(){
   let html=`<table><thead><tr><th>Nombre</th><th>PC</th><th>Tipo</th><th>Alias/CVU</th><th>Saldo</th><th>Estado</th><th>Acción</th></tr></thead><tbody>`;
   (config.billeteras||[]).forEach(b=>{
-    const activa=String(b.ACTIVA||"").toUpperCase()==="SI";
-    const uso=String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI";
-    const safe=encodeURIComponent(JSON.stringify(b));
-    html+=`<tr><td><b>${b.NOMBRE_VISIBLE||""}</b><br>${b.TITULAR||""}</td><td>${b.PC||""}</td><td>${b.TIPO||""}<br>${b.VALIDACION||""}</td><td>${b.ALIAS||""}<br>${b.CVU_CBU||""}</td><td>Estimado: $${b.SALDO_ESTIMADO||0}<br>Real: $${b.SALDO_REAL||0}<br>Límite: $${b.LIMITE_DESCARGA||0}</td><td>${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}${uso?'<span class="badge badge-warn">EN USO</span>':''}</td><td><button class="miniBtn primary" onclick="abrirEditarBilletera('${safe}')">Editar</button><button class="miniBtn success" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button><button class="miniBtn danger" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Desactivar</button></td></tr>`;
+    const activa=String(b.ACTIVA||"").toUpperCase()==="SI", uso=String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI", safe=encodeURIComponent(JSON.stringify(b));
+    html+=`<tr><td><b>${b.NOMBRE_VISIBLE||""}</b><br>${b.TITULAR||""}</td><td>${b.PC||""}</td><td>${b.TIPO||""}<br>${b.VALIDACION||""}</td><td>${b.ALIAS||""}<br>${b.CVU_CBU||""}</td><td>Real: <b>${money(b.SALDO_REAL)}</b><br>Estimado: ${money(b.SALDO_ESTIMADO)}<br>Límite: ${money(b.LIMITE_DESCARGA)}</td><td>${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}${uso?'<span class="badge badge-warn">EN USO</span>':''}</td><td><button class="miniBtn primary" onclick="abrirEditarBilletera('${safe}')">Editar</button><button class="miniBtn success" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button><button class="miniBtn danger" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Desactivar</button></td></tr>`;
   });
   html+=`</tbody></table>`;
   document.getElementById("tablaBilleteras").innerHTML=html;
@@ -353,15 +398,12 @@ function abrirEditarOperador(encoded){
   set("editOpBilletera",o.PUEDE_ELEGIR_BILLETERA||"SI");set("editOpAprobar",o.PUEDE_APROBAR_MANUAL||"SI");set("editOpRechazar",o.PUEDE_RECHAZAR||"SI");set("editOpCambiarClave",o.PUEDE_CAMBIAR_CLAVE||"SI");
   document.getElementById("modalOperador").classList.remove("hidden");
 }
-
-function cerrarModalOperador(){document.getElementById("modalOperador").classList.add("hidden");}
+function cerrarModalOperador(){document.getElementById("modalOperador").classList.add("hidden")}
 
 async function guardarOperador(){
   const params={action:"actualizaroperador",usuario:admin.usuario,operadorId:val("editOpId"),nombreCompleto:val("editOpNombre"),usuarioNuevo:val("editOpUsuario"),rol:val("editOpRol"),pc:val("editOpPc"),tipoOperador:val("editOpTipo"),turno:val("editOpTurno"),activo:val("editOpActivo"),puedeElegirBilletera:val("editOpBilletera"),puedeAprobarManual:val("editOpAprobar"),puedeRechazar:val("editOpRechazar"),puedeCambiarClave:val("editOpCambiarClave")};
   if(val("editOpClave")) params.nuevaClave=val("editOpClave");
-  const r=await api(params);
-  msg("editOperadorMsg",r.ok?"Operador actualizado.":r.error,r.ok);
-  if(r.ok){await cargarConfig();setTimeout(cerrarModalOperador,700);}
+  const r=await api(params); msg("editOperadorMsg",r.ok?"Operador actualizado.":r.error,r.ok); if(r.ok){await cargarConfig();setTimeout(cerrarModalOperador,700)}
 }
 
 function abrirEditarBilletera(encoded){
@@ -369,34 +411,47 @@ function abrirEditarBilletera(encoded){
   set("editBilId",b.ID_BILLETERA);set("editBilPc",b.PC);set("editBilTipo",b.TIPO);set("editBilNombre",b.NOMBRE_VISIBLE);set("editBilTitular",b.TITULAR);set("editBilAlias",b.ALIAS);set("editBilCvu",b.CVU_CBU);set("editBilActiva",b.ACTIVA||"SI");set("editBilValidacion",b.VALIDACION);set("editBilRotacion",b.ROTACION);set("editBilSaldoInicial",b.SALDO_INICIAL||0);set("editBilSaldoEstimado",b.SALDO_ESTIMADO||0);set("editBilSaldoReal",b.SALDO_REAL||0);set("editBilLimite",b.LIMITE_DESCARGA||0);set("editBilMaxDia",b.MAX_POR_DIA||0);set("editBilMaxHora",b.MAX_POR_HORA||0);
   document.getElementById("modalBilletera").classList.remove("hidden");
 }
-
-function cerrarModalBilletera(){document.getElementById("modalBilletera").classList.add("hidden");}
+function cerrarModalBilletera(){document.getElementById("modalBilletera").classList.add("hidden")}
 
 async function guardarBilletera(){
   const r=await api({action:"actualizarbilletera",usuario:admin.usuario,idBilletera:val("editBilId"),pc:val("editBilPc"),tipoBilletera:val("editBilTipo"),nombreVisible:val("editBilNombre"),titular:val("editBilTitular"),alias:val("editBilAlias"),cvu:val("editBilCvu"),activo:val("editBilActiva"),validacion:val("editBilValidacion"),rotacion:val("editBilRotacion"),saldoInicial:val("editBilSaldoInicial"),saldoEstimado:val("editBilSaldoEstimado"),saldoReal:val("editBilSaldoReal"),limiteDescarga:val("editBilLimite"),maxPorDia:val("editBilMaxDia"),maxPorHora:val("editBilMaxHora")});
-  msg("editBilleteraMsg",r.ok?"Billetera actualizada.":r.error,r.ok);
-  if(r.ok){await cargarConfig();setTimeout(cerrarModalBilletera,700);}
+  msg("editBilleteraMsg",r.ok?"Billetera actualizada.":r.error,r.ok); if(r.ok){await cargarConfig();setTimeout(cerrarModalBilletera,700)}
 }
 
 async function cambiarEstadoBilletera(idBilletera,estadoBilletera){
   const r=await api({action:"actualizarestadobilletera",usuario:admin.usuario,idBilletera,estadoBilletera});
-  msg("billeterasMsg",r.ok?"Estado actualizado.":r.error,r.ok);
-  if(r.ok)cargarConfig();
+  msg("billeterasMsg",r.ok?"Estado actualizado.":r.error,r.ok); if(r.ok)cargarConfig();
+}
+
+async function registrarOperacionAgente(){
+  const r=await api({action:"registraroperacionagente",usuario:admin.usuario,usuarioJugador:val("agUsuario"),tipoSolicitud:val("agTipo"),monto:val("agMonto"),operador:val("agOperador"),origen:val("agOrigen"),observaciones:val("agObs")});
+  msg("agentesMsg",r.ok?"Operación registrada: "+r.operacionId:r.error,r.ok); if(r.ok)listarOperacionesAgentes();
+}
+
+async function listarOperacionesAgentes(){
+  const r=await api({action:"listaroperacionesagentes",usuario:admin.usuario});
+  if(!r.ok){msg("conciliacionMsg",r.error,false);return}
+  let html=`<table><thead><tr><th>Fecha</th><th>Usuario</th><th>Tipo</th><th>Monto</th><th>Operador</th><th>Origen</th><th>Conciliada</th><th>Solicitud</th></tr></thead><tbody>`;
+  (r.operaciones||[]).forEach(o=>html+=`<tr><td>${formatFecha(o.FECHA)}</td><td>${o.USUARIO||""}</td><td>${o.TIPO||""}</td><td>${money(o.MONTO)}</td><td>${o.OPERADOR||""}</td><td>${o.ORIGEN||""}</td><td>${o.CONCILIADA||""}</td><td>${o.SOLICITUD_ID||""}</td></tr>`);
+  html+=`</tbody></table>`;
+  document.getElementById("tablaAgentes").innerHTML=html;
+}
+
+async function conciliarSolicitudes(){
+  const r=await api({action:"conciliarsolicitudes",usuario:admin.usuario});
+  msg("conciliacionMsg",r.ok?`Conciliadas: ${r.conciliadas} · Diferencias: ${r.diferencias}`:r.error,r.ok);
+  if(r.ok)listarOperacionesAgentes();
 }
 
 async function cargarLogs(show=true){
-  const pc=document.getElementById("logPc")?.value||"";
-  const r=await api({action:"listarlogs",usuario:admin.usuario,pc});
-  if(!r.ok){if(show)msg("logsMsg",r.error,false);return;}
+  const r=await api({action:"listarlogs",usuario:admin.usuario,pc:val("logPc")});
+  if(!r.ok){if(show)msg("logsMsg",r.error,false);return}
   if(show)msg("logsMsg",`Logs: ${(r.logs||[]).length}`,true);
   let html=`<table><thead><tr><th>Fecha</th><th>Tipo</th><th>Usuario</th><th>PC</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>`;
-  (r.logs||[]).forEach(l=>html+=`<tr><td>${l.FECHA||""}</td><td>${l.TIPO||""}</td><td>${l.USUARIO||""}</td><td>${l.PC||""}</td><td>${l.ACCION||""}</td><td>${l.DETALLE||""}</td></tr>`);
+  (r.logs||[]).forEach(l=>html+=`<tr><td>${formatFecha(l.FECHA)}</td><td>${l.TIPO||""}</td><td>${l.USUARIO||""}</td><td>${l.PC||""}</td><td>${l.ACCION||""}</td><td>${l.DETALLE||""}</td></tr>`);
   html+=`</tbody></table>`;
   document.getElementById("tablaLogs").innerHTML=html;
 }
-
-function val(id){return document.getElementById(id)?.value||""}
-function set(id,v){const el=document.getElementById(id); if(el) el.value=v||""}
 </script>
 </body>
 </html>
