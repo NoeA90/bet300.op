@@ -314,7 +314,7 @@ tr:hover{background:#22242c}
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyKgWlb6w0War24Ylnljx0Dlqal_mWyw9mP7Cg2SI1uqL_h1eWLWEkXousCA5qIILZB/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzqQdwSkDvj-02PT-0TgaVmRBmmk_XvuPdI03ZboW1KtD4Kh-nPEJsvhX1tF-YRpdW9/exec";
 
 const PCS_VALIDAS = ["P1", "P2", "P3", "P4", "P5"];
 const PC_MAP = {
@@ -325,6 +325,7 @@ const PC_MAP = {
   EYF: "P5"
 };
 
+  
 function normalizarPC(pc){
   const v = String(pc || "").trim().toUpperCase();
   return PC_MAP[v] || v;
