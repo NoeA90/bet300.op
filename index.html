@@ -454,9 +454,15 @@ function mostrarVista(vista){
     document.getElementById("view"+v).classList.add("hidden");
     document.getElementById("nav"+v).classList.remove("active");
   });
-  const cap=vista.charAt(0).toUpperCase()+vista.slice(1);
+
+  const cap = vista.charAt(0).toUpperCase() + vista.slice(1);
+
   document.getElementById("view"+cap).classList.remove("hidden");
   document.getElementById("nav"+cap).classList.add("active");
+
+  if (vista === "agentes") {
+    cargarAgentes();
+  }
 }
 
 async function refrescarTodo(){
@@ -826,17 +832,26 @@ setInterval(()=>{
   }
 },30000);
 
-async function cargarAgentes() {
+async function cargarAgentes(){
+  document.getElementById("agenteBox").innerHTML = "Cargando agentes...";
 
   const r = await api({
-    action:'getagentes',
+    action: "getagentes",
     pc: pcOperativa
   });
 
-  console.log(r);
+  console.log("GET AGENTES:", r);
 
+  if (!r.ok) {
+    document.getElementById("agenteBox").innerHTML = `
+      <div class="errBox">${r.error || "Error cargando agentes."}</div>
+    `;
+    return;
+  }
+
+  agentes = r.agentes || [];
+  renderAgentes();
 }
-
 
 
 function renderAgentes(){
