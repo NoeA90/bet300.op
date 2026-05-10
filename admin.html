@@ -69,22 +69,49 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border-bottom:1p
   <main class="main">
 
     <section id="viewDashboard">
-      <div class="card">
-        <h2>Dashboard financiero</h2>
-        <p class="small">Resumen general por PC, saldos y solicitudes.</p>
-        <div id="dashboardStats" class="stat-grid"></div>
+  <div class="card">
+    <h2>Dashboard financiero</h2>
+    <p class="small">Resumen por oficina, fecha y saldos de billeteras.</p>
+
+    <div class="grid">
+      <div>
+        <label>PC / Oficina</label>
+        <select id="dashPc" onchange="renderDashboard()">
+          <option value="">Todas</option>
+          <option>CHINO</option>
+          <option>ALV</option>
+          <option>X</option>
+          <option>SAN</option>
+          <option>EYF</option>
+        </select>
       </div>
 
-      <div class="card">
-        <h3>Alertas de billeteras</h3>
-        <div id="alertasBilleteras" class="msg"></div>
+      <div>
+        <label>Fecha desde</label>
+        <input id="dashFechaDesde" type="date" onchange="renderDashboard()">
       </div>
 
-      <div class="card">
-        <h3>Últimas solicitudes</h3>
-        <div id="tablaDashboardSolicitudes"></div>
+      <div>
+        <label>Fecha hasta</label>
+        <input id="dashFechaHasta" type="date" onchange="renderDashboard()">
       </div>
-    </section>
+    </div>
+
+    <button class="secondary" onclick="resetDashboardHoy()">Ver hoy 00 a 00</button>
+
+    <div id="dashboardStats" class="stat-grid"></div>
+  </div>
+
+  <div class="card">
+    <h3>Resumen por PC</h3>
+    <div id="tablaResumenPc"></div>
+  </div>
+
+  <div class="card">
+    <h3>Saldos de billeteras</h3>
+    <div id="tablaDashboardBilleteras"></div>
+  </div>
+</section>
 
     <section id="viewSolicitudes" class="hidden">
       <div class="card">
@@ -287,6 +314,7 @@ function mostrarApp(){
   document.getElementById("adminBox").innerHTML=`<span class="badge"><b>${admin.nombre}</b></span><span class="badge">Rol: ${admin.rol}</span><span class="badge">PC: ${admin.pc}</span>`;
   if(admin.rol==="ENCARGADO") limitarSelectsEncargado();
   refrescarTodo();
+  setTimeout(resetDashboardHoy, 300);
 }
 
 function limitarSelectsEncargado(){
@@ -335,32 +363,268 @@ function renderSolicitudes(){
 }
 
 function renderDashboard(){
-  const ops=config.operadores||[], bills=config.billeteras||[];
-  const activas=bills.filter(b=>String(b.ACTIVA||"").toUpperCase()==="SI");
-  const saldoTotal=activas.reduce((a,b)=>a+Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0),0);
-  const pendientes=solicitudes.filter(s=>String(s.ESTADO||"").includes("PENDIENTE")).length;
-  const cargasOk=solicitudes.filter(s=>String(s.TIPO_SOLICITUD)==="CARGA" && ["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(String(s.ESTADO))).reduce((a,s)=>a+Number(s.MONTO_REAL||s.MONTO_DECLARADO||0),0);
-  const retirosOk=solicitudes.filter(s=>String(s.TIPO_SOLICITUD)==="RETIRO" && ["PAGADA"].includes(String(s.ESTADO))).reduce((a,s)=>a+Number(s.MONTO_REAL||s.MONTO_DECLARADO||0),0);
-  document.getElementById("dashboardStats").innerHTML=`
-    <div class="stat"><div class="stat-num">${money(saldoTotal)}</div><div class="small">Saldo total billeteras</div></div>
-    <div class="stat"><div class="stat-num">${money(cargasOk)}</div><div class="small">Cargas aprobadas</div></div>
-    <div class="stat"><div class="stat-num">${money(retirosOk)}</div><div class="small">Retiros pagados</div></div>
-    <div class="stat"><div class="stat-num">${money(cargasOk-retirosOk)}</div><div class="small">Neto operativo</div></div>
-    <div class="stat"><div class="stat-num">${ops.length}</div><div class="small">Operadores</div></div>
-    <div class="stat"><div class="stat-num">${pendientes}</div><div class="small">Pendientes</div></div>`;
-  document.getElementById("sideResumen").innerHTML=`Rol: <b>${admin?.rol||""}</b><br>PC: <b>${admin?.pc||""}</b><br>Operadores: <b>${ops.length}</b><br>Billeteras: <b>${bills.length}</b><br>Solicitudes: <b>${solicitudes.length}</b>`;
+  const ops = config.operadores || [];
+  const billsAll = config.billeteras || [];
 
-  let alertas="";
-  bills.forEach(b=>{const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0), lim=Number(b.LIMITE_DESCARGA||0); if(lim>0&&saldo>=lim)alertas+=`🔴 ${b.PC} · ${b.NOMBRE_VISIBLE}: descargar. Saldo ${money(saldo)} / límite ${money(lim)}<br>`; else if(lim>0&&saldo>=lim*.8)alertas+=`🟡 ${b.PC} · ${b.NOMBRE_VISIBLE}: cerca del límite. Saldo ${money(saldo)}<br>`});
-  document.getElementById("alertasBilleteras").innerHTML=alertas||"Sin alertas por ahora.";
+  const pcFiltro = val("dashPc");
+  const fechaDesde = val("dashFechaDesde");
+  const fechaHasta = val("dashFechaHasta");
 
-  let ult=solicitudes.slice().reverse().slice(0,10);
-  let html=`<table><thead><tr><th>Fecha</th><th>PC</th><th>Usuario</th><th>Monto</th><th>Estado</th></tr></thead><tbody>`;
-  ult.forEach(s=>html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}</td><td>${s.PC||""}</td><td>${s.USUARIO||""}</td><td>${money(s.MONTO_DECLARADO)}</td><td>${estadoBadge(s.ESTADO)}</td></tr>`);
-  html+=`</tbody></table>`;
-  document.getElementById("tablaDashboardSolicitudes").innerHTML=html;
+  let solicitudesFiltradas = solicitudes.slice();
+
+  if (pcFiltro) {
+    solicitudesFiltradas = solicitudesFiltradas.filter(s =>
+      String(s.PC || "").toUpperCase() === String(pcFiltro).toUpperCase()
+    );
+  }
+
+  if (fechaDesde) {
+    const desde = new Date(fechaDesde + "T00:00:00");
+    solicitudesFiltradas = solicitudesFiltradas.filter(s => {
+      const d = new Date(s.FECHA_CREACION);
+      return !isNaN(d) && d >= desde;
+    });
+  }
+
+  if (fechaHasta) {
+    const hasta = new Date(fechaHasta + "T23:59:59");
+    solicitudesFiltradas = solicitudesFiltradas.filter(s => {
+      const d = new Date(s.FECHA_CREACION);
+      return !isNaN(d) && d <= hasta;
+    });
+  }
+
+  const cargasOk = solicitudesFiltradas.filter(s =>
+    String(s.TIPO_SOLICITUD) === "CARGA" &&
+    ["APROBADA_MANUAL", "ACREDITADA", "PAGADA"].includes(String(s.ESTADO))
+  );
+
+  const retirosOk = solicitudesFiltradas.filter(s =>
+    String(s.TIPO_SOLICITUD) === "RETIRO" &&
+    ["PAGADA", "APROBADA_MANUAL", "ACREDITADA"].includes(String(s.ESTADO))
+  );
+
+  const pendientes = solicitudesFiltradas.filter(s =>
+    String(s.ESTADO || "").includes("PENDIENTE")
+  );
+
+  const totalCargas = cargasOk.reduce((a, s) =>
+    a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+  );
+
+  const totalRetiros = retirosOk.reduce((a, s) =>
+    a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+  );
+
+  const cantCargas = cargasOk.length;
+  const cantRetiros = retirosOk.length;
+  const totalOperaciones = cantCargas + cantRetiros;
+  const neto = totalCargas - totalRetiros;
+
+  let bills = billsAll.slice();
+
+  if (pcFiltro) {
+    bills = bills.filter(b =>
+      String(b.PC || "").toUpperCase() === String(pcFiltro).toUpperCase()
+    );
+  }
+
+  const activas = bills.filter(b =>
+    String(b.ACTIVA || "").toUpperCase() === "SI"
+  );
+
+  const saldoTotal = bills.reduce((a, b) =>
+    a + Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0), 0
+  );
+
+  document.getElementById("dashboardStats").innerHTML = `
+    <div class="stat">
+      <div class="stat-num">${money(totalCargas)}</div>
+      <div class="small">Total cargas</div>
+      <span class="badge badge-ok">${cantCargas} cargas</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${money(totalRetiros)}</div>
+      <div class="small">Total retiros</div>
+      <span class="badge badge-danger">${cantRetiros} retiros</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${money(neto)}</div>
+      <div class="small">Venta neta</div>
+      <span class="badge ${neto >= 0 ? "badge-ok" : "badge-danger"}">
+        ${neto >= 0 ? "POSITIVO" : "NEGATIVO"}
+      </span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${totalOperaciones}</div>
+      <div class="small">Operaciones</div>
+      <span class="badge">Cargas + retiros</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${money(saldoTotal)}</div>
+      <div class="small">Saldo billeteras</div>
+      <span class="badge badge-warn">${activas.length} activas</span>
+    </div>
+
+    <div class="stat">
+      <div class="stat-num">${pendientes.length}</div>
+      <div class="small">Pendientes actuales</div>
+      <span class="badge badge-warn">Por resolver</span>
+    </div>
+  `;
+
+  renderResumenPorPc(solicitudesFiltradas, billsAll);
+  renderDashboardBilleteras(bills);
+  renderSideResumen(totalCargas, totalRetiros, neto, totalOperaciones, saldoTotal);
 }
 
+function renderResumenPorPc(solicitudesBase, billeterasBase) {
+  const pcs = ["CHINO", "ALV", "X", "SAN", "EYF"];
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>PC</th>
+          <th>Cargas</th>
+          <th>Retiros</th>
+          <th>Neto</th>
+          <th>Operaciones</th>
+          <th>Saldo billeteras</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  pcs.forEach(pc => {
+    const solPc = solicitudesBase.filter(s =>
+      String(s.PC || "").toUpperCase() === pc
+    );
+
+    const cargas = solPc.filter(s =>
+      String(s.TIPO_SOLICITUD) === "CARGA" &&
+      ["APROBADA_MANUAL", "ACREDITADA", "PAGADA"].includes(String(s.ESTADO))
+    );
+
+    const retiros = solPc.filter(s =>
+      String(s.TIPO_SOLICITUD) === "RETIRO" &&
+      ["PAGADA", "APROBADA_MANUAL", "ACREDITADA"].includes(String(s.ESTADO))
+    );
+
+    const totalCargas = cargas.reduce((a, s) =>
+      a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+    );
+
+    const totalRetiros = retiros.reduce((a, s) =>
+      a + Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0), 0
+    );
+
+    const saldo = billeterasBase
+      .filter(b => String(b.PC || "").toUpperCase() === pc)
+      .reduce((a, b) => a + Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0), 0);
+
+    const neto = totalCargas - totalRetiros;
+
+    html += `
+      <tr>
+        <td><b>${pc}</b></td>
+        <td>${money(totalCargas)}<br><span class="small">${cargas.length} cargas</span></td>
+        <td>${money(totalRetiros)}<br><span class="small">${retiros.length} retiros</span></td>
+        <td>
+          <b>${money(neto)}</b><br>
+          <span class="badge ${neto >= 0 ? "badge-ok" : "badge-danger"}">
+            ${neto >= 0 ? "POSITIVO" : "NEGATIVO"}
+          </span>
+        </td>
+        <td>${cargas.length + retiros.length}</td>
+        <td>${money(saldo)}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaResumenPc").innerHTML = html;
+}
+
+function renderDashboardBilleteras(bills) {
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Billetera</th>
+          <th>PC</th>
+          <th>Estado</th>
+          <th>En uso</th>
+          <th>Saldo real</th>
+          <th>Límite</th>
+          <th>Alerta</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  bills.forEach(b => {
+    const activa = String(b.ACTIVA || "").toUpperCase() === "SI";
+    const enUso = String(b.SELECCIONADA_MANUAL || "").toUpperCase() === "SI";
+
+    const saldo = Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0);
+    const limite = Number(b.LIMITE_DESCARGA || 0);
+
+    let alerta = `<span class="badge badge-ok">OK</span>`;
+
+    if (limite > 0 && saldo >= limite) {
+      alerta = `<span class="badge badge-danger">DESCARGAR</span>`;
+    } else if (limite > 0 && saldo >= limite * 0.8) {
+      alerta = `<span class="badge badge-warn">CERCA DEL LÍMITE</span>`;
+    }
+
+    html += `
+      <tr>
+        <td><b>${b.NOMBRE_VISIBLE || ""}</b><br><span class="small">${b.TITULAR || ""}</span></td>
+        <td>${b.PC || ""}</td>
+        <td>${activa ? '<span class="badge badge-ok">ACTIVA</span>' : '<span class="badge badge-danger">INACTIVA</span>'}</td>
+        <td>${enUso ? '<span class="badge badge-warn">EN USO</span>' : '-'}</td>
+        <td><b>${money(saldo)}</b></td>
+        <td>${money(limite)}</td>
+        <td>${alerta}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById("tablaDashboardBilleteras").innerHTML = html;
+}
+
+function renderSideResumen(cargas, retiros, neto, operaciones, saldo) {
+  document.getElementById("sideResumen").innerHTML = `
+    Rol: <b>${admin?.rol || ""}</b><br>
+    PC: <b>${admin?.pc || ""}</b><br><br>
+    Cargas: <b>${money(cargas)}</b><br>
+    Retiros: <b>${money(retiros)}</b><br>
+    Neto: <b>${money(neto)}</b><br>
+    Operaciones: <b>${operaciones}</b><br>
+    Saldo billeteras: <b>${money(saldo)}</b>
+  `;
+}
+
+function resetDashboardHoy() {
+  const hoy = new Date();
+  const yyyy = hoy.getFullYear();
+  const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+  const dd = String(hoy.getDate()).padStart(2, "0");
+  const fecha = `${yyyy}-${mm}-${dd}`;
+
+  document.getElementById("dashFechaDesde").value = fecha;
+  document.getElementById("dashFechaHasta").value = fecha;
+  document.getElementById("dashPc").value = "";
+
+  renderDashboard();
+}
+  
 function renderOperadores(){
   let html=`<table><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>PC</th><th>Tipo</th><th>Turno</th><th>Activo</th><th>Permisos</th><th>Acción</th></tr></thead><tbody>`;
   (config.operadores||[]).forEach(o=>{
