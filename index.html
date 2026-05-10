@@ -1,66 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PANEL OPERATIVO BET300</title>
-  <style>
-    *{box-sizing:border-box;font-family:Arial,sans-serif}
-    body{margin:0;background:#0f1115;color:#fff}
-    .hidden{display:none!important}
-    .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
-    .sidebar{background:#15161b;border-right:1px solid #30323a;padding:18px;height:100vh;position:sticky;top:0;overflow-y:auto}
-    .main{padding:18px}
-    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-    .login-card,.card{background:#1c1d22;border:1px solid #30323a;border-radius:16px;padding:18px;margin-bottom:16px}
-    .login-card{width:100%;max-width:430px}
-    .brand{font-size:24px;font-weight:900}
-    .small{color:#98a2b3;font-size:13px}
-    input,select,textarea,button{width:100%;padding:11px;border-radius:8px;border:none;margin:5px 0 10px;font-size:14px}
-    input,select,textarea{background:#fff;color:#111}
-    textarea{min-height:80px;resize:vertical}
-    button{cursor:pointer;font-weight:bold;background:#e8e8e8;color:#111}
-    .primary{background:#4c6fff;color:#fff}
-    .success{background:#12b76a;color:#fff}
-    .danger{background:#f04438;color:#fff}
-    .secondary{background:#667085;color:#fff}
-    .warning{background:#fdb022;color:#111}
-    .nav-btn{background:transparent;color:#d0d5dd;text-align:left;border:1px solid transparent;margin:4px 0}
-    .nav-btn:hover,.nav-btn.active{background:#232631;border-color:#3b3f4a;color:#fff}
-    .badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#2d2e35;margin:4px 4px 4px 0;font-size:13px}
-    .badge-ok{background:#123322;color:#b7f7cf}
-    .badge-warn{background:#3d2d10;color:#ffe0a3}
-    .badge-danger{background:#3a1717;color:#ffd0d0}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    .row{display:flex;flex-wrap:wrap;gap:8px}
-    .row button{flex:1;min-width:130px}
-    .okBox{background:#123322;border-left:5px solid #12b76a;padding:12px;border-radius:10px;margin-top:10px}
-    .errBox{background:#3a1717;border-left:5px solid #f04438;padding:12px;border-radius:10px;margin-top:10px}
-    .msg{color:#d0d5dd;font-size:14px;white-space:pre-wrap}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{border-bottom:1px solid #333640;padding:9px;text-align:left;vertical-align:top;font-size:13px}
-    th{background:#252731}
-    tr:hover{background:#22242c}
-    .miniBtn{padding:7px;font-size:12px;margin:2px 0}
-    .wallet-item{border:1px solid #30323a;background:#1f222b;border-radius:12px;padding:10px;font-size:13px;margin-bottom:8px}
-    .wallet-title{font-weight:bold;margin-bottom:4px}
-    .modal{position:fixed;right:18px;bottom:18px;width:min(540px,calc(100vw - 36px));max-height:86vh;background:#1c1d22;border:1px solid #424651;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.45);z-index:50;overflow:hidden}
-    .modal.minimized{height:58px;overflow:hidden}
-    .modal-head{display:flex;justify-content:space-between;align-items:center;background:#252731;padding:12px;cursor:pointer}
-    .modal-body{padding:14px;max-height:72vh;overflow-y:auto}
-    .chat-box{background:#111217;border:1px solid #333640;border-radius:10px;padding:12px;max-height:360px;overflow-y:auto;margin-bottom:10px}
-    .chat-msg{background:#242631;padding:9px;border-radius:9px;margin-bottom:8px;font-size:14px}
-    .chat-meta{color:#98a2b3;font-size:12px;margin-bottom:4px}
-    @media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}th,td{font-size:11px;padding:6px}.row button{min-width:100%}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BET300 CORE OPS</title>
+
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#0f1115;color:#fff}
+.hidden{display:none!important}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.sidebar{background:#15161b;border-right:1px solid #30323a;padding:18px;height:100vh;position:sticky;top:0;overflow-y:auto}
+.main{padding:18px}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card,.card{background:#1c1d22;border:1px solid #30323a;border-radius:16px;padding:18px;margin-bottom:16px}
+.login-card{width:100%;max-width:430px}
+.logo{width:210px;max-width:90%;display:block;margin:0 auto 16px;filter:drop-shadow(0 0 18px rgba(212,175,55,.22))}
+.small{color:#98a2b3;font-size:13px}
+input,select,textarea,button{width:100%;padding:11px;border-radius:8px;border:none;margin:5px 0 10px;font-size:14px}
+input,select,textarea{background:#fff;color:#111}
+textarea{min-height:80px;resize:vertical}
+button{cursor:pointer;font-weight:bold;background:#e8e8e8;color:#111}
+.primary{background:#4c6fff;color:#fff}
+.success{background:#12b76a;color:#fff}
+.danger{background:#f04438;color:#fff}
+.secondary{background:#667085;color:#fff}
+.warning{background:#fdb022;color:#111}
+.nav-btn{background:transparent;color:#d0d5dd;text-align:left;border:1px solid transparent;margin:4px 0}
+.nav-btn:hover,.nav-btn.active{background:#232631;border-color:#3b3f4a;color:#fff}
+.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#2d2e35;margin:4px 4px 4px 0;font-size:13px}
+.badge-ok{background:#123322;color:#b7f7cf}
+.badge-warn{background:#3d2d10;color:#ffe0a3}
+.badge-danger{background:#3a1717;color:#ffd0d0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.row button{flex:1;min-width:130px}
+.msg{color:#d0d5dd;font-size:14px;white-space:pre-wrap}
+.okBox{background:#123322;border-left:5px solid #12b76a;padding:12px;border-radius:10px;margin-top:10px}
+.errBox{background:#3a1717;border-left:5px solid #f04438;padding:12px;border-radius:10px;margin-top:10px}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{border-bottom:1px solid #333640;padding:9px;text-align:left;vertical-align:top;font-size:13px}
+th{background:#252731}
+tr:hover{background:#22242c}
+.miniBtn{padding:7px;font-size:12px;margin:2px 0}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:#232631;border:1px solid #343844;border-radius:14px;padding:16px}
+.stat-num{font-size:28px;font-weight:900}
+.wallet-item{border:1px solid #30323a;background:#1f222b;border-radius:12px;padding:10px;font-size:13px;margin-bottom:8px}
+.wallet-title{font-weight:bold;margin-bottom:4px}
+.modal{position:fixed;right:18px;bottom:18px;width:min(580px,calc(100vw - 36px));max-height:88vh;background:#1c1d22;border:1px solid #424651;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.45);z-index:50;overflow:hidden}
+.modal.minimized{height:58px;overflow:hidden}
+.modal-head{display:flex;justify-content:space-between;align-items:center;background:#252731;padding:12px;cursor:pointer}
+.modal-body{padding:14px;max-height:76vh;overflow-y:auto}
+.chat-box{background:#111217;border:1px solid #333640;border-radius:10px;padding:12px;max-height:360px;overflow-y:auto;margin-bottom:10px}
+.chat-msg{background:#242631;padding:9px;border-radius:9px;margin-bottom:8px;font-size:14px}
+.chat-meta{color:#98a2b3;font-size:12px;margin-bottom:4px}
+@media(max-width:850px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto}
+  th,td{font-size:11px;padding:6px}
+  .row button{min-width:100%}
+}
+</style>
 </head>
 
 <body>
 
 <div id="loginView" class="login-wrap">
   <div class="login-card">
-    <h1>PANEL OPERATIVO</h1>
-    <p class="small">Ingreso</p>
+    <img src="logo-bet300.png" class="logo" alt="BET300">
+    <h1>CORE OPS</h1>
+    <p class="small">Ingreso operativo</p>
     <label>Usuario</label>
     <input id="loginUsuario" placeholder="usuario">
     <label>Clave</label>
@@ -71,11 +81,11 @@
 </div>
 
 <div id="appView" class="layout hidden">
-  <aside class="sidebar">
-    <div class="brand">BET300</div>
-    <div class="small">Panel operativo</div>
 
-    <div class="card" style="margin-top:14px;">
+  <aside class="sidebar">
+    <img src="logo-bet300.png" class="logo" alt="BET300">
+
+    <div class="card">
       <div id="operadorBox"></div>
 
       <div id="franqueroBox" class="hidden">
@@ -85,11 +95,11 @@
         <div id="pcOperativaMsg" class="msg"></div>
       </div>
 
-      <button class="secondary" onclick="mostrarVista('clave')">Cambiar clave</button>
       <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
     </div>
 
-    <button id="navSolicitudes" class="nav-btn active" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
+    <button id="navInicio" class="nav-btn active" onclick="mostrarVista('inicio')">🏠 Inicio</button>
+    <button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
     <button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button>
     <button id="navChat" class="nav-btn" onclick="mostrarVista('chat')">💬 Chat</button>
     <button id="navClave" class="nav-btn" onclick="mostrarVista('clave')">🔐 Cambiar clave</button>
@@ -101,15 +111,49 @@
   </aside>
 
   <main class="main">
-    <section id="viewSolicitudes">
+
+    <section id="viewInicio">
       <div class="card">
         <div class="row">
           <button class="secondary" onclick="refrescarTodo()">Refrescar</button>
         </div>
+        <h2>Inicio operativo</h2>
+        <p class="small">Resumen en tiempo real de la PC operativa.</p>
+        <div id="inicioStats" class="stat-grid"></div>
+      </div>
+
+      <div class="card">
+        <h3>Alertas billeteras</h3>
+        <div id="alertasBilleteras" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Últimas solicitudes</h3>
+        <div id="tablaInicioSolicitudes"></div>
+      </div>
+    </section>
+
+    <section id="viewSolicitudes" class="hidden">
+      <div class="card">
         <h2>Solicitudes</h2>
-        <p class="small">Se muestran todas las solicitudes de la PC operativa. El estado cambia, no desaparecen.</p>
 
         <div class="grid">
+          <div>
+            <label>Fecha desde</label>
+            <input id="filtroFechaDesde" type="date" onchange="cargarSolicitudes()">
+          </div>
+          <div>
+            <label>Fecha hasta</label>
+            <input id="filtroFechaHasta" type="date" onchange="cargarSolicitudes()">
+          </div>
+          <div>
+            <label>Hora desde</label>
+            <input id="filtroHoraDesde" type="time" onchange="cargarSolicitudes()">
+          </div>
+          <div>
+            <label>Hora hasta</label>
+            <input id="filtroHoraHasta" type="time" onchange="cargarSolicitudes()">
+          </div>
           <div>
             <label>Tipo</label>
             <select id="filtroTipo" onchange="cargarSolicitudes()">
@@ -130,6 +174,10 @@
               <option value="ACREDITADA">ACREDITADA</option>
             </select>
           </div>
+          <div>
+            <label>Usuario</label>
+            <input id="filtroUsuario" placeholder="Buscar usuario" oninput="renderSolicitudes()">
+          </div>
         </div>
 
         <div id="solicitudesMsg" class="msg"></div>
@@ -140,7 +188,7 @@
     <section id="viewBilleteras" class="hidden">
       <div class="card">
         <h2>Billeteras de la PC</h2>
-        <p class="small">Podés activar/desactivar billeteras y elegir cuál queda en uso.</p>
+        <p class="small">Activar/desactivar, elegir en uso y ajustar saldos.</p>
         <div id="billeteraMsg" class="msg"></div>
         <div id="tablaBilleteras"></div>
       </div>
@@ -171,6 +219,7 @@
         <div id="claveMsg" class="msg"></div>
       </div>
     </section>
+
   </main>
 </div>
 
@@ -198,11 +247,40 @@
   </div>
 </div>
 
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycby8W41JkJ-QROI3DrFLDBX2NCfHH1fF7S_s_BGTtuo7vSRJ2-Udd2opSVAtSGwHvcc/exec";
+<div id="ajusteModal" class="modal hidden">
+  <div class="modal-head">
+    <b>Ajustar saldo billetera</b>
+    <button class="miniBtn danger" onclick="cerrarModalAjuste()">Cerrar</button>
+  </div>
+  <div class="modal-body">
+    <input id="ajusteBilleteraId" type="hidden">
+    <div id="ajusteBilleteraNombre" class="okBox"></div>
 
-let operador = JSON.parse(localStorage.getItem("operador_core_v3") || "null");
-let pcOperativa = localStorage.getItem("pc_operativa_core_v3") || "";
+    <label>Tipo de movimiento</label>
+    <select id="ajusteTipo">
+      <option value="AJUSTE_POSITIVO">Ajuste positivo / sobra</option>
+      <option value="AJUSTE_NEGATIVO">Ajuste negativo / falta</option>
+      <option value="ERROR_CAJA">Error de caja</option>
+      <option value="DESCARGA_BILLETERA">Descarga billetera</option>
+      <option value="CORRECCION_TURNO">Corrección de turno</option>
+    </select>
+
+    <label>Monto</label>
+    <input id="ajusteMonto" type="number" placeholder="Ej: 5000">
+
+    <label>Motivo / observación</label>
+    <textarea id="ajusteMotivo" placeholder="Ej: falta al recibir turno"></textarea>
+
+    <button class="primary" onclick="guardarAjusteSaldo()">Guardar ajuste</button>
+    <div id="ajusteMsg" class="msg"></div>
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzUQ7N60sUsAK0OGAK66BWXVxLItYtj4TDUKJcsZM1e-jwOA4QoNwoPMor_W38a--Hx/exec";
+
+let operador = JSON.parse(localStorage.getItem("operador_core_v5") || "null");
+let pcOperativa = localStorage.getItem("pc_operativa_core_v5") || "";
 let billeteras = [];
 let solicitudes = [];
 let solicitudSeleccionada = null;
@@ -211,7 +289,7 @@ window.onload = () => {
   if (operador) mostrarApp();
 };
 
-async function api(params) {
+async function api(params){
   const url = API_URL + "?" + new URLSearchParams(params).toString();
   const res = await fetch(url);
   const text = await res.text();
@@ -220,10 +298,26 @@ async function api(params) {
 }
 
 function msg(id,text,ok=null){
-  const el=document.getElementById(id);
-  if(!el)return;
+  const el=document.getElementById(id); if(!el)return;
   el.innerHTML=text||"";
   el.className=ok===true?"okBox":ok===false?"errBox":"msg";
+}
+
+function money(n){
+  return "$" + Number(n || 0).toLocaleString("es-AR");
+}
+
+function formatFecha(f){
+  if(!f)return "";
+  const d=new Date(f);
+  if(isNaN(d))return f;
+  return d.toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit"})+" · "+d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function minutosDesde(f){
+  const d=new Date(f);
+  if(isNaN(d))return 0;
+  return Math.floor((Date.now()-d.getTime())/60000);
 }
 
 async function login(){
@@ -233,14 +327,14 @@ async function login(){
   if(!r.ok){msg("loginMsg",r.error||"Error",false);return;}
 
   operador=r.operador;
-  localStorage.setItem("operador_core_v3",JSON.stringify(operador));
+  localStorage.setItem("operador_core_v5",JSON.stringify(operador));
 
   if(operador.requiereSeleccionPc){
     pcOperativa="";
-    localStorage.removeItem("pc_operativa_core_v3");
+    localStorage.removeItem("pc_operativa_core_v5");
   }else{
     pcOperativa=operador.pcOperativa||operador.pc;
-    localStorage.setItem("pc_operativa_core_v3",pcOperativa);
+    localStorage.setItem("pc_operativa_core_v5",pcOperativa);
   }
 
   mostrarApp();
@@ -286,19 +380,19 @@ async function confirmarPcOperativa(){
   const r=await api({action:"validarpcoperativa",usuario:operador.usuario,pcOperativa:pc});
   if(!r.ok){msg("pcOperativaMsg",r.error,false);return;}
   pcOperativa=r.pcOperativa;
-  localStorage.setItem("pc_operativa_core_v3",pcOperativa);
+  localStorage.setItem("pc_operativa_core_v5",pcOperativa);
   renderOperador();
   refrescarTodo();
 }
 
 function cerrarSesion(){
-  localStorage.removeItem("operador_core_v3");
-  localStorage.removeItem("pc_operativa_core_v3");
+  localStorage.removeItem("operador_core_v5");
+  localStorage.removeItem("pc_operativa_core_v5");
   location.reload();
 }
 
 function mostrarVista(vista){
-  ["Solicitudes","Billeteras","Chat","Clave"].forEach(v=>{
+  ["Inicio","Solicitudes","Billeteras","Chat","Clave"].forEach(v=>{
     document.getElementById("view"+v).classList.add("hidden");
     document.getElementById("nav"+v).classList.remove("active");
   });
@@ -319,6 +413,7 @@ async function cargarBilleteras(){
   billeteras=r.billeteras||[];
   renderSidebarWallets();
   renderBilleteras();
+  renderInicio();
 }
 
 function renderSidebarWallets(){
@@ -332,7 +427,7 @@ function renderSidebarWallets(){
     div.innerHTML=`
       <div class="wallet-title">${b.NOMBRE_VISIBLE||""}</div>
       <div>${b.TIPO||""} · ${b.PC||""}</div>
-      <div>Saldo: $${b.SALDO_ESTIMADO||0}</div>
+      <div>Saldo: <b>${money(b.SALDO_REAL || b.SALDO_ESTIMADO)}</b></div>
       ${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}
       ${enUso?'<span class="badge badge-warn">EN USO</span>':''}
     `;
@@ -350,17 +445,65 @@ function renderBilleteras(){
         <td><b>${b.NOMBRE_VISIBLE||""}</b><br>${b.TITULAR||""}</td>
         <td>${b.TIPO||""}<br>${b.VALIDACION||""}</td>
         <td>${b.ALIAS||""}<br>${b.CVU_CBU||""}</td>
-        <td>Estimado: $${b.SALDO_ESTIMADO||0}<br>Real: $${b.SALDO_REAL||0}<br>Límite: $${b.LIMITE_DESCARGA||0}</td>
-        <td>${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}${enUso?'<span class="badge badge-warn">EN USO</span>':''}</td>
+        <td>
+          Real: <b>${money(b.SALDO_REAL||0)}</b><br>
+          Estimado: ${money(b.SALDO_ESTIMADO||0)}<br>
+          Límite: ${money(b.LIMITE_DESCARGA||0)}
+        </td>
+        <td>
+          ${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}
+          ${enUso?'<span class="badge badge-warn">EN USO</span>':''}
+        </td>
         <td>
           <button class="miniBtn success" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">Usar</button>
           <button class="miniBtn primary" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button>
           <button class="miniBtn danger" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Desactivar</button>
+          <button class="miniBtn warning" onclick="abrirAjusteSaldo('${b.ID_BILLETERA}')">Ajustar saldo</button>
         </td>
       </tr>`;
   });
   html+=`</tbody></table>`;
   document.getElementById("tablaBilleteras").innerHTML=html;
+}
+
+function renderInicio(){
+  const activas=billeteras.filter(b=>String(b.ACTIVA||"").toUpperCase()==="SI");
+  const saldoTotal=activas.reduce((a,b)=>a+Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0),0);
+  const enUso=billeteras.find(b=>String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI");
+  const pendientes=solicitudes.filter(s=>String(s.ESTADO||"").includes("PENDIENTE")).length;
+  const retiros=solicitudes.filter(s=>String(s.TIPO_SOLICITUD)==="RETIRO" && String(s.ESTADO||"").includes("PENDIENTE")).length;
+
+  document.getElementById("inicioStats").innerHTML=`
+    <div class="stat"><div class="stat-num">${money(saldoTotal)}</div><div class="small">Saldo total PC</div></div>
+    <div class="stat"><div class="stat-num">${activas.length}</div><div class="small">Billeteras activas</div></div>
+    <div class="stat"><div class="stat-num">${pendientes}</div><div class="small">Solicitudes pendientes</div></div>
+    <div class="stat"><div class="stat-num">${retiros}</div><div class="small">Retiros pendientes</div></div>
+    <div class="stat"><div class="stat-num">${enUso ? enUso.NOMBRE_VISIBLE : "-"}</div><div class="small">Billetera en uso</div></div>
+  `;
+
+  let alertas="";
+  billeteras.forEach(b=>{
+    const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0);
+    const limite=Number(b.LIMITE_DESCARGA||0);
+    if(limite>0 && saldo>=limite){
+      alertas+=`🔴 ${b.NOMBRE_VISIBLE}: superar límite / descargar. Saldo ${money(saldo)} · Límite ${money(limite)}<br>`;
+    }else if(limite>0 && saldo>=limite*0.8){
+      alertas+=`🟡 ${b.NOMBRE_VISIBLE}: cerca del límite. Saldo ${money(saldo)} · Límite ${money(limite)}<br>`;
+    }
+  });
+  document.getElementById("alertasBilleteras").innerHTML=alertas||"Sin alertas por ahora.";
+
+  renderTablaInicio();
+}
+
+function renderTablaInicio(){
+  let ult=solicitudes.slice().reverse().slice(0,8);
+  let html=`<table><thead><tr><th>Hora</th><th>Tipo</th><th>Usuario</th><th>Monto</th><th>Estado</th></tr></thead><tbody>`;
+  ult.forEach(s=>{
+    html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}</td><td>${s.TIPO_SOLICITUD||""}</td><td>${s.USUARIO||""}</td><td>${money(s.MONTO_DECLARADO)}</td><td>${estadoBadge(s.ESTADO)}</td></tr>`;
+  });
+  html+=`</tbody></table>`;
+  document.getElementById("tablaInicioSolicitudes").innerHTML=html;
 }
 
 async function seleccionarBilletera(idBilletera){
@@ -375,14 +518,82 @@ async function cambiarEstadoBilletera(idBilletera,estadoBilletera){
   if(r.ok)cargarBilleteras();
 }
 
+function abrirAjusteSaldo(idBilletera){
+  const b=billeteras.find(x=>String(x.ID_BILLETERA)===String(idBilletera));
+  if(!b)return;
+  document.getElementById("ajusteBilleteraId").value=b.ID_BILLETERA;
+  document.getElementById("ajusteBilleteraNombre").innerHTML=`<b>${b.NOMBRE_VISIBLE}</b><br>Saldo actual: ${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}`;
+  document.getElementById("ajusteMonto").value="";
+  document.getElementById("ajusteMotivo").value="";
+  document.getElementById("ajusteModal").classList.remove("hidden");
+}
+
+function cerrarModalAjuste(){
+  document.getElementById("ajusteModal").classList.add("hidden");
+}
+
+async function guardarAjusteSaldo(){
+  const r=await api({
+    action:"ajustarsaldobilletera",
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    idBilletera:document.getElementById("ajusteBilleteraId").value,
+    tipoMovimiento:document.getElementById("ajusteTipo").value,
+    monto:document.getElementById("ajusteMonto").value,
+    motivoAjuste:document.getElementById("ajusteMotivo").value
+  });
+  msg("ajusteMsg",r.ok?`Saldo actualizado: ${money(r.saldoDespues)}`:r.error,r.ok);
+  if(r.ok){
+    await cargarBilleteras();
+    setTimeout(cerrarModalAjuste,800);
+  }
+}
+
 async function cargarSolicitudes(){
-  const tipoSolicitud=document.getElementById("filtroTipo").value;
-  const estado=document.getElementById("filtroEstado").value;
+  const tipoSolicitud=document.getElementById("filtroTipo")?.value||"";
+  const estado=document.getElementById("filtroEstado")?.value||"";
   const r=await api({action:"listarsolicitudesoperador",usuario:operador.usuario,operador:operador.nombre,pcOperativa,tipoSolicitud,estado});
   if(!r.ok){msg("solicitudesMsg",r.error,false);return;}
   solicitudes=r.solicitudes||[];
+  solicitudes=filtrarPorFechaHora(solicitudes);
   msg("solicitudesMsg",`Solicitudes encontradas: ${solicitudes.length}`,true);
   renderSolicitudes();
+  renderInicio();
+}
+
+function filtrarPorFechaHora(arr){
+  const fd=document.getElementById("filtroFechaDesde")?.value;
+  const fh=document.getElementById("filtroFechaHasta")?.value;
+  const hd=document.getElementById("filtroHoraDesde")?.value;
+  const hh=document.getElementById("filtroHoraHasta")?.value;
+
+  return arr.filter(s=>{
+    const d=new Date(s.FECHA_CREACION);
+    if(isNaN(d))return true;
+
+    if(fd){
+      const desde=new Date(fd+"T00:00:00");
+      if(d<desde)return false;
+    }
+    if(fh){
+      const hasta=new Date(fh+"T23:59:59");
+      if(d>hasta)return false;
+    }
+
+    const mins=d.getHours()*60+d.getMinutes();
+
+    if(hd){
+      const [h,m]=hd.split(":").map(Number);
+      if(mins<(h*60+m))return false;
+    }
+
+    if(hh){
+      const [h,m]=hh.split(":").map(Number);
+      if(mins>(h*60+m))return false;
+    }
+
+    return true;
+  });
 }
 
 function estadoBadge(e){
@@ -392,17 +603,33 @@ function estadoBadge(e){
   return `<span class="badge badge-warn">${e}</span>`;
 }
 
+function prioridadBadge(s){
+  const min=minutosDesde(s.FECHA_CREACION);
+  if(["APROBADA_MANUAL","ACREDITADA","PAGADA","RECHAZADA"].includes(String(s.ESTADO))) return "";
+  if(min>=15)return `<span class="badge badge-danger">+15 min</span>`;
+  if(min>=5)return `<span class="badge badge-warn">${min} min</span>`;
+  return `<span class="badge badge-ok">${min} min</span>`;
+}
+
 function renderSolicitudes(){
+  const buscar=(document.getElementById("filtroUsuario")?.value||"").toLowerCase();
+
+  let lista=solicitudes.filter(s=>{
+    if(!buscar)return true;
+    return String(s.USUARIO||"").toLowerCase().includes(buscar) ||
+           String(s.NOMBRE_COMPLETO||"").toLowerCase().includes(buscar);
+  });
+
   let html=`<table><thead><tr><th>Fecha</th><th>Tipo</th><th>Usuario</th><th>Nombre</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Operador</th><th>Acción</th></tr></thead><tbody>`;
-  solicitudes.slice().reverse().forEach(s=>{
+  lista.slice().reverse().forEach(s=>{
     const safe=encodeURIComponent(JSON.stringify(s));
     html+=`
       <tr>
-        <td>${s.FECHA_CREACION||""}</td>
+        <td>${formatFecha(s.FECHA_CREACION)}<br>${prioridadBadge(s)}</td>
         <td>${s.TIPO_SOLICITUD||""}</td>
         <td><b>${s.USUARIO||""}</b></td>
         <td>${s.NOMBRE_COMPLETO||""}</td>
-        <td>Declarado: $${s.MONTO_DECLARADO||""}<br>Real: $${s.MONTO_REAL||""}</td>
+        <td>Declarado: ${money(s.MONTO_DECLARADO)}<br>Real: ${money(s.MONTO_REAL)}</td>
         <td>${s.BILLETERA_NOMBRE||""}<br>${s.METODO_BILLETERA||""}</td>
         <td>${estadoBadge(s.ESTADO)}<br><span class="small">${s.VERIFICACION||""}</span></td>
         <td>Tomó: ${s.QUIEN_TOMO||"-"}<br>Aprobó: ${s.QUIEN_APROBO||"-"}</td>
@@ -427,10 +654,12 @@ function verSolicitud(encoded){
     <span class="badge">ID: ${solicitudSeleccionada.ID}</span>
     <span class="badge">PC: ${solicitudSeleccionada.PC}</span>
     ${estadoBadge(solicitudSeleccionada.ESTADO)}
+    ${prioridadBadge(solicitudSeleccionada)}
     <br><br>
+    <b>Fecha:</b> ${formatFecha(solicitudSeleccionada.FECHA_CREACION)}<br>
     <b>Usuario:</b> ${solicitudSeleccionada.USUARIO}<br>
     <b>Nombre:</b> ${solicitudSeleccionada.NOMBRE_COMPLETO}<br>
-    <b>Monto declarado:</b> $${solicitudSeleccionada.MONTO_DECLARADO}<br>
+    <b>Monto declarado:</b> ${money(solicitudSeleccionada.MONTO_DECLARADO)}<br>
     <b>Billetera:</b> ${solicitudSeleccionada.BILLETERA_NOMBRE}<br>
     <b>Método:</b> ${solicitudSeleccionada.METODO_BILLETERA}<br>
   `;
@@ -440,23 +669,47 @@ function toggleModalMin(){document.getElementById("detalleModal").classList.togg
 
 async function tomarSolicitud(){
   const r=await api({action:"tomarsolicitud",usuario:operador.usuario,operador:operador.nombre,solicitudId:solicitudSeleccionada.ID});
-  msg("detalleMsg",r.ok?"Solicitud tomada.":r.error,r.ok); if(r.ok)cargarSolicitudes();
+  msg("detalleMsg",r.ok?"Solicitud tomada.":r.error,r.ok);
+  if(r.ok)cargarSolicitudes();
 }
 
 async function aprobarSolicitud(){
-  const r=await api({action:"aprobarsolicitud",usuario:operador.usuario,operador:operador.nombre,solicitudId:solicitudSeleccionada.ID,montoReal:document.getElementById("detalleMontoReal").value,observaciones:document.getElementById("detalleObs").value});
-  msg("detalleMsg",r.ok?"Solicitud aprobada.":r.error,r.ok); if(r.ok)cargarSolicitudes();
+  const r=await api({
+    action:"aprobarsolicitud",
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    solicitudId:solicitudSeleccionada.ID,
+    montoReal:document.getElementById("detalleMontoReal").value,
+    observaciones:document.getElementById("detalleObs").value
+  });
+  msg("detalleMsg",r.ok?"Solicitud aprobada.":r.error,r.ok);
+  if(r.ok){await cargarBilleteras();await cargarSolicitudes();}
 }
 
 async function rechazarSolicitud(){
   if(!confirm("¿Rechazar solicitud?"))return;
-  const r=await api({action:"rechazarsolicitud",usuario:operador.usuario,operador:operador.nombre,solicitudId:solicitudSeleccionada.ID,observaciones:document.getElementById("detalleObs").value});
-  msg("detalleMsg",r.ok?"Solicitud rechazada.":r.error,r.ok); if(r.ok)cargarSolicitudes();
+  const r=await api({
+    action:"rechazarsolicitud",
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    solicitudId:solicitudSeleccionada.ID,
+    observaciones:document.getElementById("detalleObs").value
+  });
+  msg("detalleMsg",r.ok?"Solicitud rechazada.":r.error,r.ok);
+  if(r.ok)cargarSolicitudes();
 }
 
 async function cerrarRetiro(){
-  const r=await api({action:"cerrarretiro",usuario:operador.usuario,operador:operador.nombre,solicitudId:solicitudSeleccionada.ID,operationId:document.getElementById("detalleOperationId").value,observaciones:document.getElementById("detalleObs").value});
-  msg("detalleMsg",r.ok?"Retiro cerrado.":r.error,r.ok); if(r.ok)cargarSolicitudes();
+  const r=await api({
+    action:"cerrarretiro",
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    solicitudId:solicitudSeleccionada.ID,
+    operationId:document.getElementById("detalleOperationId").value,
+    observaciones:document.getElementById("detalleObs").value
+  });
+  msg("detalleMsg",r.ok?"Retiro cerrado.":r.error,r.ok);
+  if(r.ok){await cargarBilleteras();await cargarSolicitudes();}
 }
 
 function abrirChat(encoded){
@@ -506,7 +759,13 @@ async function cambiarClave(){
   }
 }
 
-setInterval(()=>{if(operador&&pcOperativa)cargarSolicitudes()},60000);
+setInterval(()=>{
+  if(operador&&pcOperativa){
+    cargarSolicitudes();
+    cargarBilleteras();
+  }
+},30000);
 </script>
+
 </body>
 </html>
