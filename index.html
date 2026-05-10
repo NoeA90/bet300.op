@@ -826,49 +826,18 @@ setInterval(()=>{
   }
 },30000);
 
-function getAgentes_(d) {
+async function cargarAgentes() {
 
-  const pc = normalizarPc_(d.pc || d.pcOperativa || '');
+  const r = await api({
+    action:'getagentes',
+    pc: pcOperativa
+  });
 
-  const sh = SpreadsheetApp
-    .openById(SPREADSHEET_ID)
-    .getSheetByName('CONFIG_AGENTES');
+  console.log(r);
 
-  const data = sh.getDataRange().getValues();
-
-  const agentes = [];
-
-  for (let i = 1; i < data.length; i++) {
-
-    const row = data[i];
-
-    const agentePc = normalizarPc_(row[1]);
-    const activo = String(row[4] || '')
-      .trim()
-      .toUpperCase();
-
-    if (
-      agentePc === pc &&
-      activo === 'SI'
-    ) {
-
-      agentes.push({
-        agenteId: row[0],
-        pc: agentePc,
-        nombre: row[2],
-        saldo: Number(row[3] || 0),
-        activo
-      });
-
-    }
-
-  }
-
-  return {
-    ok: true,
-    agentes
-  };
 }
+
+
 
 function renderAgentes(){
   const box = document.getElementById("agenteBox");
