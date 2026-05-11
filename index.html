@@ -665,7 +665,15 @@ input,select,textarea{
 
         <div id="agentesGrid" class="wallet-grid"></div>
 
-      </div>
+<div class="history-table">
+
+  <h3 style="margin:18px 0 10px;">
+    Historial de movimientos de fichas
+  </h3>
+
+  <div id="tablaMovimientosAgente"></div>
+
+</div>
 
     </section>
 
@@ -1745,6 +1753,70 @@ function renderAgentes(){
 
   }
 
+function renderMovimientosAgente(){
+
+  const box =
+    document.getElementById('tablaMovimientosAgente');
+
+  if(!box) return;
+
+  if(!movimientosAgente.length){
+
+    box.innerHTML = `
+      <div class="alert-box">
+        No hay movimientos de fichas todavía.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Agente</th>
+          <th>Monto</th>
+          <th>Antes</th>
+          <th>Después</th>
+          <th>Operador</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  movimientosAgente
+    .slice(0,50)
+    .forEach(m=>{
+
+      html += `
+        <tr>
+          <td>${formatFecha(m.FECHA)}</td>
+          <td>${m.TIPO || ''}</td>
+          <td>${m.AGENTE_ID || ''}</td>
+          <td>${money(m.MONTO || 0)}</td>
+          <td>${money(m.SALDO_ANTES || 0)}</td>
+          <td>${money(m.SALDO_DESPUES || 0)}</td>
+          <td>${m.OPERADOR || ''}</td>
+          <td>${m.OBS || m.NOTA || ''}</td>
+        </tr>
+      `;
+
+    });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  box.innerHTML = html;
+
+}
+  
   let html = '';
 
   agentes.forEach(a=>{
@@ -1846,30 +1918,118 @@ function verificarNotificaciones(){
 
   const pendientes =
     solicitudes.filter(s =>
-      String(s.ESTADO || '').includes('PENDIENTE')
+      String(s.ESTADO || '')
+        .includes('PENDIENTE')
     ).length;
 
   const badge =
-    document.getElementById('badgeSolicitudes');
+    document.getElementById(
+      'badgeSolicitudes'
+    );
 
   if(pendientes > 0){
+
     badge.classList.remove('hidden');
     badge.innerText = pendientes;
+
   }else{
+
     badge.classList.add('hidden');
+
   }
 
   if(
     ultimaCantidadPendientes &&
     pendientes > ultimaCantidadPendientes
   ){
+
     reproducirAviso();
+
+    mostrarToast(
+      '🔔 Nueva solicitud recibida'
+    );
+
+    document
+      .getElementById('navSolicitudes')
+      .classList
+      .add('chat-notify');
+
   }
 
   ultimaCantidadPendientes = pendientes;
 
 }
 
+function mostrarToast(msg){
+
+  const div =
+    document.createElement('div');
+
+  div.style.position = 'fixed';
+  div.style.top = '20px';
+  div.style.right = '20px';
+  div.style.background = '#3d5afe';
+  div.style.color = '#fff';
+  div.style.padding = '14px 18px';
+  div.style.borderRadius = '14px';
+  div.style.zIndex = '99999';
+  div.style.fontWeight = 'bold';
+  div.style.boxShadow =
+    '0 10px 30px rgba(0,0,0,.35)';
+
+  div.innerText = msg;
+
+  document.body.appendChild(div);
+
+  setTimeout(()=>{
+    div.remove();
+  },3500);
+
+}
+
+async function refrescarChatPendiente(){
+
+  if(!chatSolicitudId) return;
+
+  const r = await api({
+    action:'getchat',
+    solicitudId:chatSolicitudId
+  });
+
+  if(!r.ok) return;
+
+  const mensajes =
+    r.mensajes || [];
+
+  if(
+    mensajes.length >
+    ultimoChatPendiente
+  ){
+
+    if(ultimoChatPendiente !== 0){
+
+      reproducirAviso();
+
+      mostrarToast(
+        '💬 Nuevo mensaje en chat'
+      );
+
+      document
+        .getElementById('navChat')
+        .classList
+        .add('chat-notify');
+
+    }
+
+    ultimoChatPendiente =
+      mensajes.length;
+
+    cargarChat();
+
+  }
+
+}
+  
 function reproducirAviso(){
 
   try{
