@@ -92,7 +92,67 @@ function renderAgentes(){const box=document.getElementById('agentesGrid');if(!bo
 function renderMovimientosAgente(){const box=document.getElementById('tablaMovimientosAgente');if(!box)return;if(!movimientosAgente.length){box.innerHTML=`<div class="alert-box">No hay movimientos de fichas todavía.</div>`;return}let html=`<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Agente</th><th>Monto</th><th>Antes</th><th>Después</th><th>Operador</th><th>Nota</th></tr></thead><tbody>`;movimientosAgente.slice(0,80).forEach(m=>{html+=`<tr><td>${formatFecha(m.FECHA)}</td><td>${m.TIPO||''}</td><td>${m.AGENTE_ID||''}</td><td>${money(m.MONTO||0)}</td><td>${money(m.SALDO_ANTES||0)}</td><td>${money(m.SALDO_DESPUES||0)}</td><td>${m.OPERADOR||''}</td><td>${m.OBS||m.NOTA||''}</td></tr>`});html+=`</tbody></table></div>`;box.innerHTML=html}
 function renderCargaManualBilleteras(){const sel=document.getElementById('manualBilletera');if(!sel)return;sel.innerHTML='';billeteras.filter(b=>normalizar(b.ACTIVA)==='SI').forEach(b=>{const opt=document.createElement('option');opt.value=b.ID_BILLETERA;opt.textContent=`${b.NOMBRE_VISIBLE} · ${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}`;sel.appendChild(opt)})}
 function estadoBadge(e){e=normalizar(e);if(['APROBADA_MANUAL','ACREDITADA','PAGADA'].includes(e))return`<span class="badge badge-ok">${e}</span>`;if(['RECHAZADA','ERROR'].includes(e))return`<span class="badge badge-danger">${e}</span>`;return`<span class="badge badge-pending">${e}</span>`}
-function formatFecha(f){const d=new Date(f);if(isNaN(d))return f||'';return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})+' · '+d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}function tiempoHace(f){const d=new Date(f);if(isNaN(d))return '-';const sec=Math.floor((Date.now()-d.getTime())/1000);if(sec<60)return 'hace '+sec+'s';if(sec<3600)return 'hace '+Math.floor(sec/60)+'m';return 'hace '+Math.floor(sec/3600)+'h'}
+function formatFecha(f){
+
+  const d = new Date(f);
+
+  if(isNaN(d)) return f || '';
+
+  return d.toLocaleDateString('es-AR',{
+    timeZone:'America/Argentina/Buenos_Aires',
+    day:'2-digit',
+    month:'2-digit'
+  }) + ' · ' + d.toLocaleTimeString('es-AR',{
+    timeZone:'America/Argentina/Buenos_Aires',
+    hour:'2-digit',
+    minute:'2-digit'
+  });
+
+}
+
+function horaArgentina(){
+
+  return Number(
+    new Date().toLocaleString('es-AR',{
+      timeZone:'America/Argentina/Buenos_Aires',
+      hour:'2-digit',
+      hour12:false
+    })
+  );
+
+}
+
+function turnoActual(){
+
+  const h = horaArgentina();
+
+  if(h >= 6 && h < 14){
+    return {
+      id:'TM',
+      desde:6,
+      hasta:14,
+      label:'06:00 a 14:00'
+    };
+  }
+
+  if(h >= 14 && h < 22){
+    return {
+      id:'TT',
+      desde:14,
+      hasta:22,
+      label:'14:00 a 22:00'
+    };
+  }
+
+  return {
+    id:'TN',
+    desde:22,
+    hasta:6,
+    label:'22:00 a 06:00'
+  };
+
+}
+  
 function verificarNotificaciones(silencioso=false){const pendientes=solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE')).length;const retiros=solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE')&&normalizar(s.TIPO_SOLICITUD)==='RETIRO').length;const badge=document.getElementById('badgeSolicitudes');if(pendientes>0){badge.classList.remove('hidden');badge.innerText=pendientes}else badge.classList.add('hidden');const currentIds=new Set(solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE')).map(s=>String(s.ID)));let nuevas=0;currentIds.forEach(id=>{if(!lastSolicitudIds.has(id))nuevas++});if(!silencioso||lastSolicitudIds.size===0){lastSolicitudIds=currentIds;ultimaCantidadPendientes=pendientes;return}if(nuevas>0){reproducirAviso(retiros>0?"retiro":"solicitud");toast(`🔔 ${nuevas} nueva/s solicitud/es recibida/s`);document.getElementById('navSolicitudes').classList.add('chat-notify')}lastSolicitudIds=currentIds;ultimaCantidadPendientes=pendientes}
 function reproducirAviso(tipo="solicitud"){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.type="sine";osc.frequency.value=tipo==="chat"?660:tipo==="retiro"?330:520;gain.gain.value=.08;osc.start();setTimeout(()=>{osc.stop();ctx.close()},tipo==="retiro"?450:220)}catch(e){}}
 async function refrescarChatPendiente(){if(!chatSolicitudId)return;const r=await api({action:'getchat',solicitudId:chatSolicitudId});if(!r.ok)return;const mensajes=r.mensajes||[];if(mensajes.length>ultimoChatPendiente){if(ultimoChatPendiente!==0){reproducirAviso("chat");toast('💬 Nuevo mensaje en chat');document.getElementById('navChat').classList.add('chat-notify')}ultimoChatPendiente=mensajes.length;renderChatMensajes(mensajes)}}
@@ -166,6 +226,72 @@ function renderConciliacion(){const box=document.getElementById('tablaConciliaci
 function abrirMenuMobile(){const menu=document.getElementById('mobileMenu');menu.classList.add('open');menu.innerHTML='';const clone=document.getElementById('sidebar').cloneNode(true);clone.style.display='block';menu.appendChild(clone)}
 function cerrarMenuMobile(e){if(!e||e.target.id==='mobileMenu'){const menu=document.getElementById('mobileMenu');menu.classList.remove('open');menu.innerHTML=''}}
 function cerrarSesion(){localStorage.removeItem('nodo_operador');localStorage.removeItem('nodo_pc_operativa');operador=null;pcOperativa=null;location.reload()}
+function abrirEditarMovimiento(id){
+
+  const mov = operacionesPanel.find(o =>
+    String(o.ID_MOVIMIENTO || '') === String(id)
+  );
+
+  if(!mov){
+    alert('Movimiento no encontrado.');
+    return;
+  }
+
+  abrirModal(
+    'Editar movimiento manual',
+    `
+      <label>Tipo</label>
+      <select id="editMovTipo">
+        <option value="CARGA">Carga</option>
+        <option value="RETIRO">Retiro</option>
+      </select>
+
+      <label>Usuario</label>
+      <input id="editMovUsuario" value="${mov.USUARIO || ''}">
+
+      <label>Monto</label>
+      <input id="editMovMonto" type="number" value="${Math.abs(Number(mov.MONTO || 0))}">
+
+      <label>Observación</label>
+      <textarea id="editMovObs"></textarea>
+    `,
+    async function(){
+
+      const r = await api({
+        action:'editarmovimientomanual',
+        idMovimiento:id,
+        tipoSolicitud:document.getElementById('editMovTipo').value,
+        usuarioJugador:document.getElementById('editMovUsuario').value,
+        monto:document.getElementById('editMovMonto').value,
+        obs:document.getElementById('editMovObs').value,
+        operador:operador.nombre,
+        usuario:operador.usuario
+      });
+
+      if(!r.ok){
+        alert(r.error || 'Error');
+        return;
+      }
+
+      cerrarModal();
+
+      await refrescarTodo(false);
+
+      toast('Movimiento editado','green');
+
+    },
+    'Guardar cambios'
+  );
+
+  setTimeout(()=>{
+    document.getElementById('editMovTipo').value =
+      String(mov.TIPO || '').toUpperCase().includes('RETIRO')
+        ? 'RETIRO'
+        : 'CARGA';
+  },50);
+
+}
+
 </script>
 </body>
 </html>
