@@ -52,7 +52,63 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 <div id="floatingCarga" class="floating-box hidden"><div class="floating-header"><span>⚡ Carga manual</span><button onclick="toggleCargaManual()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px">×</button></div><div id="floatingBody" class="floating-body"><label>Tipo</label><select id="manualTipo"><option value="CARGA">Carga</option><option value="RETIRO">RetIRO</option></select><label>Usuario</label><input id="manualUsuario"><label>Billetera</label><select id="manualBilletera"></select><label>Monto</label><input id="manualMonto" type="number"><button class="btn btn-primary" onclick="registrarCargaManual()">Registrar carga</button></div></div>
 <div id="modalOverlay" class="modal-overlay hidden"><div class="modal"><div id="modalTitle" class="modal-title">Modal</div><div id="modalBody"></div><div class="modal-actions"><button class="btn btn-gray" onclick="cerrarModal()">Cancelar</button><button id="modalSaveBtn" class="btn btn-primary">Guardar</button></div></div></div>
 <div id="selectorPcOverlay" class="modal-overlay hidden"><div class="modal"><div class="modal-title">Seleccionar PC operativa</div><p class="small">Elegí la PC que cubrís hoy.</p><div id="pcSelectorGrid" class="pc-selector"></div></div></div>
-<div id="chatDrawer" class="chat-drawer hidden"><div class="chat-head"><div><b id="chatTitulo">Chat</b><div class="small" id="chatSubtitulo"></div></div><button class="mini-btn red" onclick="cerrarChatDrawer()">Cerrar</button></div><div class="chat-box" id="chatBox"></div><div class="chat-compose"><div id="chatImagenPreview"></div><textarea id="chatInput" rows="3" placeholder="Escribí un mensaje o pegá captura con Ctrl+V..."></textarea><div style="display:flex;gap:8px"><input id="chatImagenFile" type="file" accept="image/*" onchange="prepararImagenChatFile()" style="display:none"><button class="mini-btn gray" onclick="document.getElementById('chatImagenFile').click()">📎 Imagen</button><button class="mini-btn blue" style="flex:1" onclick="enviarMensajeChat()">Enviar</button></div></div></div>
+<div id="chatDrawer" class="chat-drawer hidden">
+
+  <div class="chat-head">
+
+    <div>
+      <b id="chatTitulo">Chat</b>
+      <div class="small" id="chatSubtitulo"></div>
+    </div>
+
+    <button class="mini-btn red" onclick="cerrarChatDrawer()">
+      Cerrar
+    </button>
+
+  </div>
+
+  <div class="chat-box" id="chatBox"></div>
+
+  <div class="chat-compose">
+
+    <div id="chatImagenPreview"></div>
+
+    <textarea
+      id="chatInput"
+      rows="3"
+      placeholder="Escribí un mensaje o pegá captura con Ctrl+V..."
+    ></textarea>
+
+    <div style="display:flex;gap:8px">
+
+      <input
+        id="chatImagenFile"
+        type="file"
+        accept="image/*"
+        onchange="prepararImagenChatFile()"
+        style="display:none"
+      >
+
+      <button
+        class="mini-btn gray"
+        onclick="document.getElementById('chatImagenFile').click()"
+      >
+        📎 Imagen
+      </button>
+
+      <button
+        class="mini-btn blue"
+        style="flex:1"
+        onclick="enviarMensajeChat()"
+      >
+        Enviar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbzX7B1-JK97f7XPYMZX80zD14NF488bvIfQn3ZgEE-CwlZrJwbugfyw_lrq0wL34agM/exec";
 let operador=null,pcOperativa=null,solicitudes=[],billeteras=[],agentes=[],movimientosBilletera=[],movimientosAgente=[],operacionesPanel=[],conciliacionRows=[];
@@ -278,6 +334,34 @@ async function registrarCargaManual(){
   await refrescarTodo(false);
 
 }
+
+
+function abrirChatSinSolicitud(){
+
+  chatSolicitudId = "";
+
+  abrirChatDrawer();
+
+  setBox(
+    'chatTitulo',
+    'Chat operativo'
+  );
+
+  setBox(
+    'chatSubtitulo',
+    'Abrí el chat desde una solicitud para responder.'
+  );
+
+  setBox(
+    'chatBox',
+    `
+      <div class="alert-box">
+        Para usar el chat, abrilo desde una solicitud con el botón Chat.
+      </div>
+    `
+  );
+
+} 
 function abrirChatSolicitud(id,usuario=''){chatSolicitudId=id;ultimoChatPendiente=0;abrirChatDrawer();setBox('chatTitulo',`Chat · ${usuario||id}`);setBox('chatSubtitulo',`Solicitud: ${id}`);document.getElementById('navChat').classList.remove('chat-notify');cargarChat()}
 function abrirChatDrawer(){document.getElementById('chatDrawer').classList.remove('hidden')}function cerrarChatDrawer(){document.getElementById('chatDrawer').classList.add('hidden')}
 async function cargarChat(){if(!chatSolicitudId){setBox('chatBox','<div class="alert-box">Seleccioná una solicitud para abrir el chat.</div>');return}const r=await api({action:'getchat',solicitudId:chatSolicitudId});if(!r.ok){setBox('chatBox',`<div class="err-box">${r.error||'No se pudo cargar chat.'}</div>`);return}renderChatMensajes(r.mensajes||[]);ultimoChatPendiente=(r.mensajes||[]).length;api({action:'marcarchatleido',solicitudId:chatSolicitudId,tipoEmisor:'OPERADOR'}).catch(()=>{})}
