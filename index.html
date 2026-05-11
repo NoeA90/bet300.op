@@ -1167,31 +1167,34 @@ function money(v){
 
 async function api(data){
 
-  const fd = new FormData();
+  const url = API_URL + "?" + new URLSearchParams(data).toString();
 
-  Object.keys(data).forEach(k=>{
-    fd.append(k,data[k]);
-  });
+  const res = await fetch(url);
+  const text = await res.text();
 
-  const r = await fetch(
-    API_URL,
-    {
-      method:'POST',
-      body:fd
-    }
-  );
-
-  return await r.json();
-
+  try{
+    return JSON.parse(text);
+  }catch(e){
+    console.error("Respuesta inválida:", text);
+    return {
+      ok:false,
+      error:"Respuesta inválida del servidor"
+    };
+  }
 }
 
 async function login(){
 
-  const usuario =
-    document.getElementById('loginUsuario').value;
+  document.getElementById('loginMsg').innerHTML = "Ingresando...";
 
-  const clave =
-    document.getElementById('loginClave').value;
+  const usuario = document.getElementById('loginUsuario').value.trim();
+  const clave = document.getElementById('loginClave').value.trim();
+
+  if(!usuario || !clave){
+    document.getElementById('loginMsg').innerHTML =
+      `<div class="alert-box">Completá usuario y clave.</div>`;
+    return;
+  }
 
   const r = await api({
     action:'login',
@@ -1199,66 +1202,49 @@ async function login(){
     clave
   });
 
+  console.log("LOGIN:", r);
+
   if(!r.ok){
-
-    document.getElementById(
-      'loginMsg'
-    ).innerHTML =
-      `<div class="alert-box">
-        ${r.error || 'Error'}
-      </div>`;
-
+    document.getElementById('loginMsg').innerHTML =
+      `<div class="alert-box">${r.error || 'Error al iniciar sesión'}</div>`;
     return;
-
   }
 
   operador = r.operador;
 
-  if(r.requiereSeleccionPc){
+  if(operador.requiereSeleccionPc){
 
     const pc = prompt(
       'Seleccionar PC:\n' +
-      r.pcsDisponibles.join(', ')
+      (operador.pcsDisponibles || []).join(', ')
     );
 
-    pcOperativa = pc;
+    if(!pc){
+      document.getElementById('loginMsg').innerHTML =
+        `<div class="alert-box">Tenés que seleccionar una PC.</div>`;
+      return;
+    }
+
+    pcOperativa = pc.toUpperCase();
 
   }else{
-
-    pcOperativa = r.operador.pc;
-
+    pcOperativa = operador.pc;
   }
 
-  document
-    .getElementById('loginView')
-    .classList.add('hidden');
+  document.getElementById('loginView').classList.add('hidden');
+  document.getElementById('appView').classList.remove('hidden');
 
-  document
-    .getElementById('appView')
-    .classList.remove('hidden');
-
-  document.getElementById(
-    'operadorInfo'
-  ).innerHTML = `
-    <b>${operador.nombre}</b>
-    <br>
-    ${operador.rol}
-    <br>
-    ${pcOperativa}
+  document.getElementById('operadorInfo').innerHTML = `
+    <b>${operador.nombre}</b><br>
+    Rol: ${operador.rol}<br>
+    Tipo: ${operador.tipoOperador}<br>
+    PC: ${pcOperativa}
   `;
 
-  refrescarTodo();
+  await refrescarTodo();
 
-  setInterval(
-    refrescarSolicitudesRapido,
-    5000
-  );
-
-  setInterval(
-    refrescarSaldos,
-    20000
-  );
-
+  setInterval(refrescarSolicitudesRapido, 5000);
+  setInterval(refrescarSaldos, 20000);
 }
 
 function mostrarVista(vista){
