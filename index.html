@@ -1143,6 +1143,19 @@ function mostrarVista(vista){
 
   if(btn){
     btn.classList.add('active');
+  if(vista === 'solicitudes'){
+  document
+    .getElementById('navSolicitudes')
+    .classList
+    .remove('chat-notify');
+}
+
+if(vista === 'chat'){
+  document
+    .getElementById('navChat')
+    .classList
+    .remove('chat-notify');
+}
   }
 
 }
@@ -2416,7 +2429,7 @@ document.addEventListener('paste', async e=>{
   }
 
 });
-
+}
 function cerrarSesion(){
 
   operador = null;
