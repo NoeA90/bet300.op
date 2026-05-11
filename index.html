@@ -85,7 +85,72 @@ function renderAlertas(){let html='';const pendientes=solicitudes.filter(s=>norm
 function renderSolicitudes(){const tipo=document.getElementById('filtroTipo')?.value||'';const estado=document.getElementById('filtroEstado')?.value||'';const texto=normalizar(document.getElementById('filtroSolicitudTexto')?.value||'');let lista=solicitudes.slice();if(tipo)lista=lista.filter(s=>normalizar(s.TIPO_SOLICITUD)===tipo);if(estado==='PENDIENTE')lista=lista.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE'));if(estado==='APROBADA')lista=lista.filter(s=>['APROBADA_MANUAL','ACREDITADA','PAGADA'].includes(normalizar(s.ESTADO)));if(estado==='RECHAZADA')lista=lista.filter(s=>normalizar(s.ESTADO)==='RECHAZADA');if(texto)lista=lista.filter(s=>normalizar(`${s.USUARIO||''} ${s.NOMBRE_COMPLETO||''}`).includes(texto));setBox('tablaSolicitudes',tablaSolicitudesHTML(lista.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE'))));setBox('tablaSolicitudesCompleta',tablaSolicitudesHTML(lista))}
 function tablaSolicitudesHTML(lista){if(!lista.length)return`<div class="alert-box">No hay solicitudes para mostrar.</div>`;let html=`<div class="table-wrap"><table><thead><tr><th>Hora</th><th>Tipo</th><th>Usuario</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Tomó</th><th>Acción</th></tr></thead><tbody>`;lista.slice().reverse().forEach(s=>{const id=s.ID||s.SOLICITUD_ID||"";const tomado=s.QUIEN_TOMO||s.OPERADOR||"";const bloqueado=tomado&&operador&&tomado!==operador.nombre&&normalizar(s.ESTADO).includes("PENDIENTE");const esRetiro=normalizar(s.TIPO_SOLICITUD)==="RETIRO";html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}<br><span class="small">${tiempoHace(s.FECHA_CREACION)}</span></td><td>${s.TIPO_SOLICITUD||''}</td><td><b>${s.USUARIO||''}</b><br><span class="small">${s.NOMBRE_COMPLETO||''}</span></td><td>${money(s.MONTO_REAL||s.MONTO_DECLARADO||0)}</td><td>${s.BILLETERA_NOMBRE||''}</td><td>${estadoBadge(s.ESTADO)}</td><td>${tomado||'-'}</td><td>${bloqueado?`<span class="badge badge-danger">Bloqueada</span>`:`<button class="mini-btn blue" onclick="tomarSolicitud('${id}')">Tomar</button> <button class="mini-btn green" onclick="abrirModalAprobar('${id}')">Aprobar</button> <button class="mini-btn red" onclick="abrirModalRechazar('${id}')">Rechazar</button> ${esRetiro?`<button class="mini-btn blue" onclick="abrirModalCerrarRetiro('${id}')">Cerrar retiro</button>`:''}`} <button class="mini-btn yellow" onclick="abrirChatSolicitud('${id}','${s.USUARIO||''}')">Chat</button></td></tr>`});html+=`</tbody></table></div>`;return html}
 function renderOperacionesPanel(){const origen=normalizar(document.getElementById('opFiltroOrigen')?.value||'');const tipo=normalizar(document.getElementById('opFiltroTipo')?.value||'');const operadorFiltro=normalizar(document.getElementById('opFiltroOperador')?.value||'');const texto=normalizar(document.getElementById('opFiltroTexto')?.value||'');const fecha=document.getElementById('opFiltroFecha')?.value||'';let lista=operacionesPanel.slice();if(origen)lista=lista.filter(o=>normalizar(o.ORIGEN)===origen);if(tipo){if(tipo==='AJUSTE')lista=lista.filter(o=>normalizar(o.TIPO).includes('AJUSTE'));else lista=lista.filter(o=>normalizar(o.TIPO).includes(tipo))}if(operadorFiltro)lista=lista.filter(o=>normalizar(o.OPERADOR||o.QUIEN_TOMO||o.QUIEN_APROBO||'').includes(operadorFiltro));if(texto)lista=lista.filter(o=>normalizar(`${o.USUARIO||''} ${o.BILLETERA||''} ${o.ID_BILLETERA||''}`).includes(texto));if(fecha)lista=lista.filter(o=>{const d=new Date(o.FECHA);return !isNaN(d)&&d.toISOString().slice(0,10)===fecha});const html=tablaOperacionesHTML(lista);setBox('tablaOperacionesPanel',tablaOperacionesHTML(lista.slice(0,40)));setBox('tablaOperacionesPanelCompleta',html)}
-function tablaOperacionesHTML(lista){if(!lista.length)return`<div class="alert-box">No hay operaciones registradas todavía.</div>`;let html=`<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Origen</th><th>Tipo</th><th>Usuario</th><th>Monto</th><th>Estado</th><th>Operador</th></tr></thead><tbody>`;lista.slice(0,200).forEach(o=>{html+=`<tr><td>${formatFecha(o.FECHA)}</td><td>${o.ORIGEN||''}</td><td>${o.TIPO||''}</td><td>${o.USUARIO||'-'}</td><td>${money(o.MONTO||0)}</td><td>${o.ESTADO||''}</td><td>${o.OPERADOR||o.QUIEN_TOMO||o.QUIEN_APROBO||'-'}</td></tr>`});html+=`</tbody></table></div>`;return html}
+function tablaOperacionesHTML(lista){
+
+  if(!lista.length){
+    return `
+      <div class="alert-box">
+        No hay operaciones registradas todavía.
+      </div>
+    `;
+  }
+
+  let html = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Origen</th>
+            <th>Tipo</th>
+            <th>Usuario</th>
+            <th>Monto</th>
+            <th>Estado</th>
+            <th>Operador</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  lista.slice(0,200).forEach(o=>{
+
+    const esManual =
+      String(o.ORIGEN || '').toUpperCase() === 'OPERADOR';
+
+    const idMovimiento =
+      o.ID_MOVIMIENTO || '';
+
+    html += `
+      <tr>
+        <td>${formatFecha(o.FECHA)}</td>
+        <td>${o.ORIGEN || ''}</td>
+        <td>${o.TIPO || '-'}</td>
+        <td>${o.USUARIO || '-'}</td>
+        <td>${money(o.MONTO || 0)}</td>
+        <td>${o.ESTADO || ''}</td>
+        <td>${o.OPERADOR || o.QUIEN_TOMO || o.QUIEN_APROBO || '-'}</td>
+        <td>
+          ${
+            esManual && idMovimiento
+              ? `<button class="mini-btn yellow" onclick="abrirEditarMovimiento('${idMovimiento}')">Editar</button>`
+              : '-'
+          }
+        </td>
+      </tr>
+    `;
+
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  return html;
+
+}
 function renderBilleteras(){const box=document.getElementById('walletsGrid');if(!box)return;if(!billeteras.length){box.innerHTML=`<div class="alert-box">No hay billeteras configuradas para esta PC.</div>`;return}let html='';billeteras.forEach(b=>{const activa=normalizar(b.ACTIVA)==='SI';const enUso=normalizar(b.SELECCIONADA_MANUAL)==='SI';const cls=estadoBilleteraVisual(b);html+=`<div class="wallet-card ${cls}"><div class="wallet-name">${b.NOMBRE_VISIBLE||''}</div><div class="wallet-type">${b.TIPO||''} · ${b.PC||pcOperativa}</div><div class="wallet-balance">${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}</div><div style="margin-top:8px">${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">PAUSADA</span>'}${enUso?'<span class="badge badge-pending">EN USO</span>':''}</div><div class="small">Última op: ${b.ULTIMA_OPERACION||'-'} · Usa: ${b.USADA_POR||b.OPERADOR_USO||'-'}</div><div class="wallet-actions"><button class="mini-btn blue" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">Usar</button><button class="mini-btn green" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button><button class="mini-btn red" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Pausar</button><button class="mini-btn yellow" onclick="abrirModalAjusteBilletera('${b.ID_BILLETERA}')">Ajustar</button></div></div>`});box.innerHTML=html}
 function renderMovimientosBilletera(){const box=document.getElementById('tablaMovimientosBilletera');if(!box)return;if(!movimientosBilletera.length){box.innerHTML=`<div class="alert-box">No hay movimientos de billetera todavía.</div>`;return}let html=`<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Billetera</th><th>Monto</th><th>Antes</th><th>Después</th><th>Operador</th><th>Nota</th></tr></thead><tbody>`;movimientosBilletera.slice(0,80).forEach(m=>{html+=`<tr><td>${formatFecha(m.FECHA)}</td><td>${m.TIPO||m.TIPO_MOVIMIENTO||''}</td><td>${m.ID_BILLETERA||''}</td><td>${money(m.MONTO||0)}</td><td>${money(m.SALDO_ANTES||0)}</td><td>${money(m.SALDO_DESPUES||0)}</td><td>${m.OPERADOR||''}</td><td>${m.OBS||m.NOTA||''}</td></tr>`});html+=`</tbody></table></div>`;box.innerHTML=html}
 function renderAgentes(){const box=document.getElementById('agentesGrid');if(!box)return;if(!agentes.length){box.innerHTML=`<div class="alert-box">No hay agentes configurados para esta PC.</div>`;return}let html='';agentes.forEach(a=>{html+=`<div class="wallet-card ok"><div class="wallet-name">🎮 ${a.nombre||a.NOMBRE_AGENTE||''}</div><div class="wallet-type">${a.pc||a.PC||pcOperativa}</div><div class="wallet-balance">${money(a.saldo||a.SALDO_FICHAS||0)}</div><div class="wallet-actions"><button class="mini-btn green" onclick="ajustarAgente('${a.agenteId||a.AGENTE_ID}','SUMA')">+ Fichas</button><button class="mini-btn red" onclick="ajustarAgente('${a.agenteId||a.AGENTE_ID}','RESTA')">- Fichas</button></div></div>`});box.innerHTML=html}
