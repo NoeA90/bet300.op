@@ -1982,25 +1982,67 @@ async function cambiarEstadoBilletera(id,estado){
 
 }
 
-async function ajustarBilletera(id){
+function abrirModalAjusteBilletera(id){
 
-  const monto = prompt('Monto del ajuste');
-  if(!monto) return;
+  billeteraAjusteActual = id;
 
-  const tipo = confirm('Aceptar = sumar / Cancelar = restar')
-    ? 'AJUSTE_POSITIVO'
-    : 'AJUSTE_NEGATIVO';
+  const b = billeteras.find(x =>
+    String(x.ID_BILLETERA) === String(id)
+  );
 
-  const obs = prompt('Motivo del ajuste') || '';
+  document.getElementById('modalTitle').innerText =
+    b
+      ? `Ajustar ${b.NOMBRE_VISIBLE || id}`
+      : 'Ajustar billetera';
+
+  document.getElementById('modalTipo').value =
+    'AJUSTE_POSITIVO';
+
+  document.getElementById('modalMonto').value = '';
+  document.getElementById('modalNota').value = '';
+
+  document
+    .getElementById('modalOverlay')
+    .classList
+    .remove('hidden');
+
+}
+
+function cerrarModalAjuste(){
+
+  document
+    .getElementById('modalOverlay')
+    .classList
+    .add('hidden');
+
+  billeteraAjusteActual = null;
+
+}
+
+async function guardarAjusteBilletera(){
+
+  const monto =
+    document.getElementById('modalMonto').value;
+
+  const tipo =
+    document.getElementById('modalTipo').value;
+
+  const nota =
+    document.getElementById('modalNota').value;
+
+  if(!billeteraAjusteActual || !monto){
+    alert('Completá el monto.');
+    return;
+  }
 
   const r = await api({
     action:'ajustarsaldobilletera',
     usuario:operador.usuario,
     operador:operador.nombre,
-    idBilletera:id,
+    idBilletera:billeteraAjusteActual,
     tipoMovimiento:tipo,
     monto,
-    motivoAjuste:obs
+    motivoAjuste:nota
   });
 
   if(!r.ok){
@@ -2008,7 +2050,11 @@ async function ajustarBilletera(id){
     return;
   }
 
+  cerrarModalAjuste();
+
   await cargarBilleteras();
+  await cargarMovimientosBilletera();
+  await cargarOperacionesPanel();
 
 }
 
