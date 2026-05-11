@@ -39,7 +39,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 </style>
 </head>
 <body>
-<div id="loginView" class="login-wrap"><div class="login-card"><img src="logo-nodo.png" class="logo" alt="NODO"><h2 style="margin-bottom:18px">PANEL OPERATIVO</h2><label>Usuario</label><input id="loginUsuario" autocomplete="username"><label>Clave</label><input id="loginClave" type="password" autocomplete="current-password"><button class="btn btn-primary" onclick="login()">Ingresar</button><div id="loginMsg" style="margin-top:12px"></div></div></div>
+<div id="loginView" class="login-wrap"><div class="login-card"><img src="logo-nodo.png" class="logo" alt="NODO"><h2 style="margin-bottom:18px">PANEL OPERATIVO</h2><label>Tipo</label><select id="manualTipo"> <option value="CARGA">Carga</option><option value="RETIRO">Retiro</option></select><label>Usuario</label><input id="loginUsuario" autocomplete="username"><label>Clave</label><input id="loginClave" type="password" autocomplete="current-password"><button class="btn btn-primary" onclick="login()">Ingresar</button><div id="loginMsg" style="margin-top:12px"></div></div></div>
 <div id="appView" class="hidden"><div class="mobile-top"><button class="mini-btn blue" onclick="abrirMenuMobile()">☰ Menú</button><b>NODO Operativo</b><button class="mini-btn red" onclick="cerrarSesion()">Salir</button></div><div class="layout"><aside class="sidebar" id="sidebar"><img src="logo-nodo.png" class="logo" alt="NODO"><div class="card"><div id="operadorInfo"></div></div><button id="navInicio" class="nav-btn active" onclick="mostrarVista('inicio')">🏠 Inicio</button><button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes<span id="badgeSolicitudes" class="badge-alert hidden">0</span></button><button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button><button id="navAgentes" class="nav-btn" onclick="mostrarVista('agentes')">🎮 Agente / Fichas</button><button id="navOperaciones" class="nav-btn" onclick="mostrarVista('operaciones')">📊 Operaciones</button><button id="navConciliacion" class="nav-btn" onclick="mostrarVista('conciliacion')">🧾 Conciliación CSV</button><button id="navChat" class="nav-btn" onclick="abrirChatSinSolicitud()">💬 Chat<span id="badgeChat" class="badge-alert badge-chat hidden">0</span></button><button class="nav-btn" onclick="cerrarSesion()">🚪 Cerrar sesión</button></aside>
 <main class="main">
 <section id="viewInicio"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><div><h1 style="font-size:26px">Inicio operativo</h1><div class="small">Resumen vivo de PC, solicitudes, billeteras y fichas.</div></div><button class="mini-btn blue" onclick="refrescarTodo(true)">🔄 Refresh operaciones</button></div><div id="alertas"></div><div class="top-grid"><div class="stat-card"><div class="stat-title">Turno actual</div><div class="stat-value" id="statTurno">-</div><div class="stat-sub" id="statTurnoHorario"></div></div><div class="stat-card"><div class="stat-title">Operaciones turno</div><div class="stat-value" id="statOpsTurno">0</div><div class="stat-sub">Cargas + retiros</div></div><div class="stat-card"><div class="stat-title">Neto turno</div><div class="stat-value" id="statNeto">$0</div><div class="stat-sub" id="statCargasRetiros">Cargas $0 · Retiros $0</div></div><div class="stat-card"><div class="stat-title">Pendientes</div><div class="stat-value" id="statPendientes">0</div><div class="stat-sub" id="statRetiros">Retiros pendientes: 0</div></div></div><div id="walletsInicio" class="wallet-grid"></div><div class="card"><h2 class="card-title">Solicitudes pendientes</h2><div id="tablaSolicitudes"></div></div><div class="card"><h2 class="card-title">Últimas operaciones</h2><div id="tablaOperacionesPanel"></div></div></section>
@@ -105,9 +105,54 @@ async function seleccionarBilletera(id){const r=await api({action:'seleccionarbi
 async function cambiarEstadoBilletera(id,estado){const r=await api({action:'actualizarestadobilletera',usuario:operador.usuario,operador:operador.nombre,idBilletera:id,estadoBilletera:estado});if(!r.ok){alert(r.error||'Error');return}await cargarBilleteras()}
 function abrirModalAjusteBilletera(id){billeteraAjusteActual=id;const b=billeteras.find(x=>String(x.ID_BILLETERA)===String(id));abrirModal(b?`Ajustar ${b.NOMBRE_VISIBLE||id}`:'Ajustar billetera',`<label>Tipo de ajuste</label><select id="ajTipo"><option value="AJUSTE_POSITIVO">➕ Sumar saldo</option><option value="AJUSTE_NEGATIVO">➖ Restar saldo</option></select><label>Monto</label><input id="ajMonto" type="number"><label>Nota / motivo</label><textarea id="ajNota"></textarea>`,guardarAjusteBilletera,"Guardar ajuste")}async function guardarAjusteBilletera(){const monto=document.getElementById("ajMonto").value;const tipo=document.getElementById("ajTipo").value;const nota=document.getElementById("ajNota").value;if(!billeteraAjusteActual||!monto){alert("Completá monto.");return}const r=await api({action:'ajustarsaldobilletera',usuario:operador.usuario,operador:operador.nombre,idBilletera:billeteraAjusteActual,tipoMovimiento:tipo,monto,motivoAjuste:nota});if(!r.ok){alert(r.error||'Error');return}cerrarModal();await cargarBilleteras();await cargarMovimientosBilletera();await cargarOperacionesPanel()}
 async function ajustarAgente(id,tipo){const monto=prompt(tipo==='SUMA'?'Monto a sumar en fichas':'Monto a restar en fichas');if(!monto)return;const obs=prompt('Motivo del ajuste')||'';const r=await api({action:'ajustarsaldoagente',usuario:operador.usuario,operador:operador.nombre,agenteId:id,tipo,monto,obs});if(!r.ok){alert(r.error||'Error');return}await cargarAgentes();await cargarMovimientosAgente();await cargarOperacionesPanel()}
-async function registrarCargaManual(){const usuario=document.getElementById('manualUsuario').value.trim();const idBilletera=document.getElementById('manualBilletera').value;const monto=document.getElementById('manualMonto').value;if(!usuario||!idBilletera||!monto){alert('Completá usuario, billetera y monto.');return}const r=await api({action:'registraroperacionmanual',usuario:operador.usuario,operador:operador.nombre,pc:pcOperativa,usuarioJugador:usuario,idBilletera,tipoSolicitud:'CARGA',monto});if(!r.ok){alert(r.error||'Error');return}document.getElementById('manualUsuario').value='';document.getElementById('manualMonto').value='';toast("Carga manual registrada","green");await refrescarTodo()}
-function toggleCargaManual(){const box=document.getElementById('floatingCarga');const body=document.getElementById('floatingBody');body.classList.toggle('hidden');box.classList.toggle('floating-min',body.classList.contains('hidden'))}
-function abrirChatSinSolicitud(){abrirChatDrawer();chatSolicitudId="";setBox('chatTitulo','Chat operativo');setBox('chatSubtitulo','Seleccioná una solicitud para asociar el chat.');setBox('chatBox','<div class="alert-box">Abrí el chat desde una solicitud para responder.</div>')}
+async function registrarCargaManual(){
+
+  const tipoSolicitud =
+    document.getElementById('manualTipo').value;
+
+  const usuario =
+    document.getElementById('manualUsuario').value.trim();
+
+  const idBilletera =
+    document.getElementById('manualBilletera').value;
+
+  const monto =
+    document.getElementById('manualMonto').value;
+
+  if(!tipoSolicitud || !usuario || !idBilletera || !monto){
+    alert('Completá tipo, usuario, billetera y monto.');
+    return;
+  }
+
+  const r = await api({
+    action:'registraroperacionmanual',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    pc:pcOperativa,
+    usuarioJugador:usuario,
+    idBilletera,
+    tipoSolicitud,
+    monto
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  document.getElementById('manualUsuario').value = '';
+  document.getElementById('manualMonto').value = '';
+
+  toast(
+    tipoSolicitud === 'RETIRO'
+      ? 'Retiro manual registrado'
+      : 'Carga manual registrada',
+    'green'
+  );
+
+  await refrescarTodo(false);
+
+}
 function abrirChatSolicitud(id,usuario=''){chatSolicitudId=id;ultimoChatPendiente=0;abrirChatDrawer();setBox('chatTitulo',`Chat · ${usuario||id}`);setBox('chatSubtitulo',`Solicitud: ${id}`);document.getElementById('navChat').classList.remove('chat-notify');cargarChat()}
 function abrirChatDrawer(){document.getElementById('chatDrawer').classList.remove('hidden')}function cerrarChatDrawer(){document.getElementById('chatDrawer').classList.add('hidden')}
 async function cargarChat(){if(!chatSolicitudId){setBox('chatBox','<div class="alert-box">Seleccioná una solicitud para abrir el chat.</div>');return}const r=await api({action:'getchat',solicitudId:chatSolicitudId});if(!r.ok){setBox('chatBox',`<div class="err-box">${r.error||'No se pudo cargar chat.'}</div>`);return}renderChatMensajes(r.mensajes||[]);ultimoChatPendiente=(r.mensajes||[]).length;api({action:'marcarchatleido',solicitudId:chatSolicitudId,tipoEmisor:'OPERADOR'}).catch(()=>{})}
