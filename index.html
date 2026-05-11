@@ -568,7 +568,7 @@ input,select,textarea{
 
         <div id="tablaSolicitudes"></div>
 
-      div>
+      <div>
 
       <div class="card op-table-card">
 
@@ -1143,6 +1143,7 @@ function mostrarVista(vista){
 
   if(btn){
     btn.classList.add('active');
+  }  
   if(vista === 'solicitudes'){
   document
     .getElementById('navSolicitudes')
@@ -1765,7 +1766,7 @@ function renderAgentes(){
     return;
 
   }
-
+ 
 function renderMovimientosAgente(){
 
   const box =
@@ -2429,7 +2430,7 @@ document.addEventListener('paste', async e=>{
   }
 
 });
-}
+
 function cerrarSesion(){
 
   operador = null;
