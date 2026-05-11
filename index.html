@@ -2,971 +2,2378 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PANEL OPERATIVO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>NODO · OPERATIVO</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#0f1115;color:#fff}
-.hidden{display:none!important}
-.layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
-.sidebar{background:#15161b;border-right:1px solid #30323a;padding:18px;height:100vh;position:sticky;top:0;overflow-y:auto}
-.main{padding:18px}
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-card,.card{background:#1c1d22;border:1px solid #30323a;border-radius:16px;padding:18px;margin-bottom:16px}
-.login-card{width:100%;max-width:430px}
-.logo{width:210px;max-width:90%;display:block;margin:0 auto 16px;filter:drop-shadow(0 0 18px rgba(212,175,55,.22))}
-.small{color:#98a2b3;font-size:13px}
-input,select,textarea,button{width:100%;padding:11px;border-radius:8px;border:none;margin:5px 0 10px;font-size:14px}
-input,select,textarea{background:#fff;color:#111}
-textarea{min-height:80px;resize:vertical}
-button{cursor:pointer;font-weight:bold;background:#e8e8e8;color:#111}
-.primary{background:#4c6fff;color:#fff}
-.success{background:#12b76a;color:#fff}
-.danger{background:#f04438;color:#fff}
-.secondary{background:#667085;color:#fff}
-.warning{background:#fdb022;color:#111}
-.nav-btn{background:transparent;color:#d0d5dd;text-align:left;border:1px solid transparent;margin:4px 0}
-.nav-btn:hover,.nav-btn.active{background:#232631;border-color:#3b3f4a;color:#fff}
-.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#2d2e35;margin:4px 4px 4px 0;font-size:13px}
-.badge-ok{background:#123322;color:#b7f7cf}
-.badge-warn{background:#3d2d10;color:#ffe0a3}
-.badge-danger{background:#3a1717;color:#ffd0d0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
-.row{display:flex;flex-wrap:wrap;gap:8px}
-.row button{flex:1;min-width:130px}
-.msg{color:#d0d5dd;font-size:14px;white-space:pre-wrap}
-.okBox{background:#123322;border-left:5px solid #12b76a;padding:12px;border-radius:10px;margin-top:10px}
-.errBox{background:#3a1717;border-left:5px solid #f04438;padding:12px;border-radius:10px;margin-top:10px}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border-bottom:1px solid #333640;padding:9px;text-align:left;vertical-align:top;font-size:13px}
-th{background:#252731}
-tr:hover{background:#22242c}
-.miniBtn{padding:7px;font-size:12px;margin:2px 0}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.stat{background:#232631;border:1px solid #343844;border-radius:14px;padding:16px}
-.stat-num{font-size:28px;font-weight:900}
-.wallet-item{border:1px solid #30323a;background:#1f222b;border-radius:12px;padding:10px;font-size:13px;margin-bottom:8px}
-.wallet-title{font-weight:bold;margin-bottom:4px}
-.modal{position:fixed;right:18px;bottom:18px;width:min(580px,calc(100vw - 36px));max-height:88vh;background:#1c1d22;border:1px solid #424651;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.45);z-index:50;overflow:hidden}
-.modal.minimized{height:58px;overflow:hidden}
-.modal-head{display:flex;justify-content:space-between;align-items:center;background:#252731;padding:12px;cursor:pointer}
-.modal-body{padding:14px;max-height:76vh;overflow-y:auto}
-.chat-box{background:#111217;border:1px solid #333640;border-radius:10px;padding:12px;max-height:360px;overflow-y:auto;margin-bottom:10px}
-.chat-msg{background:#242631;padding:9px;border-radius:9px;margin-bottom:8px;font-size:14px}
-.chat-meta{color:#98a2b3;font-size:12px;margin-bottom:4px}
-@media(max-width:850px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:relative;height:auto}
-  th,td{font-size:11px;padding:6px}
-  .row button{min-width:100%}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
 }
+
+body{
+  background:#0e1014;
+  color:#fff;
+  overflow:hidden;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  height:100vh;
+}
+
+.sidebar{
+  background:#151821;
+  border-right:1px solid #272b36;
+  padding:18px;
+  overflow-y:auto;
+}
+
+.main{
+  overflow-y:auto;
+  padding:18px;
+}
+
+.logo{
+  width:180px;
+  display:block;
+  margin:0 auto 18px;
+}
+
+.card{
+  background:#191d27;
+  border:1px solid #2c3140;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+}
+
+.nav-btn{
+  width:100%;
+  background:#1d2230;
+  color:#fff;
+  border:none;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  text-align:left;
+  font-weight:bold;
+  transition:.15s;
+  position:relative;
+}
+
+.nav-btn:hover{
+  background:#262d3d;
+}
+
+.nav-btn.active{
+  background:#3d5afe;
+}
+
+.badge-alert{
+  position:absolute;
+  right:12px;
+  top:10px;
+  background:#ff3b30;
+  color:#fff;
+  border-radius:999px;
+  min-width:22px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.top-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.stat-card{
+  background:#1b202c;
+  border:1px solid #2e3444;
+  border-radius:18px;
+  padding:16px;
+}
+
+.stat-title{
+  font-size:13px;
+  color:#98a2b3;
+  margin-bottom:10px;
+}
+
+.stat-value{
+  font-size:30px;
+  font-weight:900;
+}
+
+.wallet-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+
+.wallet-card{
+  background:#1c2230;
+  border:1px solid #30384a;
+  border-radius:18px;
+  padding:14px;
+}
+
+.wallet-name{
+  font-weight:bold;
+  font-size:16px;
+}
+
+.wallet-type{
+  color:#98a2b3;
+  margin-top:4px;
+  font-size:13px;
+}
+
+.wallet-balance{
+  margin-top:16px;
+  font-size:26px;
+  font-weight:900;
+}
+
+.wallet-actions{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+  flex-wrap:wrap;
+}
+
+.mini-btn{
+  border:none;
+  border-radius:10px;
+  padding:8px 10px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.green{background:#12b76a;color:#fff}
+.red{background:#f04438;color:#fff}
+.blue{background:#3d5afe;color:#fff}
+.yellow{background:#fdb022;color:#111}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #2d3342;
+  text-align:left;
+  font-size:14px;
+}
+
+th{
+  background:#202635;
+}
+
+tr:hover{
+  background:#1c2230;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.badge-pending{
+  background:#5a3d09;
+  color:#ffd98f;
+}
+
+.badge-ok{
+  background:#11371f;
+  color:#b9f7cb;
+}
+
+.badge-danger{
+  background:#3a1515;
+  color:#ffd0d0;
+}
+
+.floating-box{
+  position:fixed;
+  bottom:18px;
+  right:18px;
+  width:320px;
+  background:#191d27;
+  border:1px solid #2e3444;
+  border-radius:18px;
+  overflow:hidden;
+  z-index:999;
+}
+
+.floating-header{
+  background:#23293a;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:bold;
+}
+
+.floating-body{
+  padding:14px;
+}
+
+input,select,textarea{
+  width:100%;
+  border:none;
+  border-radius:10px;
+  padding:11px;
+  margin-top:6px;
+  margin-bottom:12px;
+  background:#fff;
+  color:#111;
+}
+
+.btn{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  padding:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn-primary{
+  background:#3d5afe;
+  color:#fff;
+}
+
+.chat-box{
+  max-height:400px;
+  overflow-y:auto;
+  background:#10131a;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+}
+
+.chat-msg{
+  background:#232a38;
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+.chat-meta{
+  color:#98a2b3;
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+.alert-box{
+  background:#38280d;
+  color:#ffd98f;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:14px;
+}
+
+.login-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  padding:20px;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:#191d27;
+  border:1px solid #2d3342;
+  border-radius:20px;
+  padding:22px;
+}
+
+@media(max-width:900px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
 <div id="loginView" class="login-wrap">
+
   <div class="login-card">
-    <img src="logo-nodo.png" class="logo" alt="BET300">
-    <h1>PANEL OPERATIVO</h1>
-    <p class="small">Ingreso operativo</p>
+
+    <img src="logo-nodo.png" class="logo">
+
+    <h2 style="margin-bottom:18px;">
+      PANEL OPERATIVO
+    </h2>
+
     <label>Usuario</label>
-    <input id="loginUsuario" placeholder="usuario">
+    <input id="loginUsuario">
+
     <label>Clave</label>
-    <input id="loginClave" type="password" placeholder="clave">
-    <button class="primary" onclick="login()">Ingresar</button>
-    <div id="loginMsg" class="msg"></div>
+    <input id="loginClave" type="password">
+
+    <button class="btn btn-primary" onclick="login()">
+      Ingresar
+    </button>
+
+    <div id="loginMsg" style="margin-top:12px;"></div>
+
   </div>
+
 </div>
 
 <div id="appView" class="layout hidden">
 
   <aside class="sidebar">
-    <img src="logo-nodo.png" class="logo" alt="BET300">
+
+    <img src="logo-nodo.png" class="logo">
 
     <div class="card">
-      <div id="operadorBox"></div>
 
-      <div id="franqueroBox" class="hidden">
-        <label>PC que cubrís hoy</label>
-        <select id="pcOperativaSelect"></select>
-        <button class="primary" onclick="confirmarPcOperativa()">Ingresar a PC</button>
-        <div id="pcOperativaMsg" class="msg"></div>
-      </div>
+      <div id="operadorInfo"></div>
 
-      <button class="danger" onclick="cerrarSesion()">Cerrar sesión</button>
     </div>
 
-    <button id="navInicio" class="nav-btn active" onclick="mostrarVista('inicio')">🏠 Inicio</button>
-    <button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes</button>
-    <button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button>
-    <button id="navAgentes" class="nav-btn" onclick="mostrarVista('agentes')">🎮 Agente / Fichas</button>
-    <button id="navChat" class="nav-btn" onclick="mostrarVista('chat')">💬 Chat</button>
-    <button id="navClave" class="nav-btn" onclick="mostrarVista('clave')">🔐 Cambiar clave</button>
+    <button
+      id="navInicio"
+      class="nav-btn active"
+      onclick="mostrarVista('inicio')"
+    >
+      🏠 Inicio
+    </button>
 
-    <div class="card">
-      <h4>Billeteras</h4>
-      <div id="sidebarWallets"><div class="small">Cargando...</div></div>
-    </div>
+    <button
+      id="navSolicitudes"
+      class="nav-btn"
+      onclick="mostrarVista('solicitudes')"
+    >
+      📋 Solicitudes
+      <span
+        id="badgeSolicitudes"
+        class="badge-alert hidden"
+      >
+        0
+      </span>
+    </button>
+
+    <button
+      id="navBilleteras"
+      class="nav-btn"
+      onclick="mostrarVista('billeteras')"
+    >
+      💳 Billeteras
+    </button>
+
+    <button
+      id="navAgentes"
+      class="nav-btn"
+      onclick="mostrarVista('agentes')"
+    >
+      🎮 Agente / Fichas
+    </button>
+
+    <button
+      id="navChat"
+      class="nav-btn"
+      onclick="mostrarVista('chat')"
+    >
+      💬 Chat
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="cerrarSesion()"
+    >
+      🚪 Cerrar sesión
+    </button>
+
   </aside>
 
   <main class="main">
 
     <section id="viewInicio">
-      <div class="card">
-        <div class="row">
-          <button class="secondary" onclick="refrescarTodo()">Refrescar</button>
+
+      <div id="alertas"></div>
+
+      <div class="top-grid">
+
+        <div class="stat-card">
+          <div class="stat-title">
+            Solicitudes pendientes
+          </div>
+
+          <div
+            class="stat-value"
+            id="statPendientes"
+          >
+            0
+          </div>
         </div>
-        <h2>Inicio operativo</h2>
-        <p class="small">Resumen en tiempo real de la PC operativa.</p>
-        <div id="inicioStats" class="stat-grid"></div>
+
+        <div class="stat-card">
+          <div class="stat-title">
+            Retiros pendientes
+          </div>
+
+          <div
+            class="stat-value"
+            id="statRetiros"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">
+            Neto operativo
+          </div>
+
+          <div
+            class="stat-value"
+            id="statNeto"
+          >
+            $0
+          </div>
+        </div>
+
       </div>
 
-      <div class="card">
-        <h3>Alertas billeteras</h3>
-        <div id="alertasBilleteras" class="msg"></div>
-      </div>
+      <div id="walletsInicio" class="wallet-grid"></div>
 
       <div class="card">
-        <h3>Últimas solicitudes</h3>
-        <div id="tablaInicioSolicitudes"></div>
+
+        <h2 style="margin-bottom:14px;">
+          Solicitudes pendientes
+        </h2>
+
+        <div id="tablaSolicitudes"></div>
+
       </div>
+
     </section>
 
-    <section id="viewSolicitudes" class="hidden">
-      <div class="card">
-        <h2>Solicitudes</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-        <div class="grid">
-          <div>
-            <label>Fecha desde</label>
-            <input id="filtroFechaDesde" type="date" onchange="cargarSolicitudes()">
+<title>NODO · OPERATIVO</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#0e1014;
+  color:#fff;
+  overflow:hidden;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  height:100vh;
+}
+
+.sidebar{
+  background:#151821;
+  border-right:1px solid #272b36;
+  padding:18px;
+  overflow-y:auto;
+}
+
+.main{
+  overflow-y:auto;
+  padding:18px;
+}
+
+.logo{
+  width:180px;
+  display:block;
+  margin:0 auto 18px;
+}
+
+.card{
+  background:#191d27;
+  border:1px solid #2c3140;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+}
+
+.nav-btn{
+  width:100%;
+  background:#1d2230;
+  color:#fff;
+  border:none;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  text-align:left;
+  font-weight:bold;
+  transition:.15s;
+  position:relative;
+}
+
+.nav-btn:hover{
+  background:#262d3d;
+}
+
+.nav-btn.active{
+  background:#3d5afe;
+}
+
+.badge-alert{
+  position:absolute;
+  right:12px;
+  top:10px;
+  background:#ff3b30;
+  color:#fff;
+  border-radius:999px;
+  min-width:22px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.top-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.stat-card{
+  background:#1b202c;
+  border:1px solid #2e3444;
+  border-radius:18px;
+  padding:16px;
+}
+
+.stat-title{
+  font-size:13px;
+  color:#98a2b3;
+  margin-bottom:10px;
+}
+
+.stat-value{
+  font-size:30px;
+  font-weight:900;
+}
+
+.wallet-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+
+.wallet-card{
+  background:#1c2230;
+  border:1px solid #30384a;
+  border-radius:18px;
+  padding:14px;
+}
+
+.wallet-name{
+  font-weight:bold;
+  font-size:16px;
+}
+
+.wallet-type{
+  color:#98a2b3;
+  margin-top:4px;
+  font-size:13px;
+}
+
+.wallet-balance{
+  margin-top:16px;
+  font-size:26px;
+  font-weight:900;
+}
+
+.wallet-actions{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+  flex-wrap:wrap;
+}
+
+.mini-btn{
+  border:none;
+  border-radius:10px;
+  padding:8px 10px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.green{background:#12b76a;color:#fff}
+.red{background:#f04438;color:#fff}
+.blue{background:#3d5afe;color:#fff}
+.yellow{background:#fdb022;color:#111}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #2d3342;
+  text-align:left;
+  font-size:14px;
+}
+
+th{
+  background:#202635;
+}
+
+tr:hover{
+  background:#1c2230;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.badge-pending{
+  background:#5a3d09;
+  color:#ffd98f;
+}
+
+.badge-ok{
+  background:#11371f;
+  color:#b9f7cb;
+}
+
+.badge-danger{
+  background:#3a1515;
+  color:#ffd0d0;
+}
+
+.floating-box{
+  position:fixed;
+  bottom:18px;
+  right:18px;
+  width:320px;
+  background:#191d27;
+  border:1px solid #2e3444;
+  border-radius:18px;
+  overflow:hidden;
+  z-index:999;
+}
+
+.floating-header{
+  background:#23293a;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:bold;
+}
+
+.floating-body{
+  padding:14px;
+}
+
+input,select,textarea{
+  width:100%;
+  border:none;
+  border-radius:10px;
+  padding:11px;
+  margin-top:6px;
+  margin-bottom:12px;
+  background:#fff;
+  color:#111;
+}
+
+.btn{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  padding:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn-primary{
+  background:#3d5afe;
+  color:#fff;
+}
+
+.chat-box{
+  max-height:400px;
+  overflow-y:auto;
+  background:#10131a;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+}
+
+.chat-msg{
+  background:#232a38;
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+.chat-meta{
+  color:#98a2b3;
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+.alert-box{
+  background:#38280d;
+  color:#ffd98f;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:14px;
+}
+
+.login-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  padding:20px;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:#191d27;
+  border:1px solid #2d3342;
+  border-radius:20px;
+  padding:22px;
+}
+
+@media(max-width:900px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loginView" class="login-wrap">
+
+  <div class="login-card">
+
+    <img src="logo-nodo.png" class="logo">
+
+    <h2 style="margin-bottom:18px;">
+      PANEL OPERATIVO
+    </h2>
+
+    <label>Usuario</label>
+    <input id="loginUsuario">
+
+    <label>Clave</label>
+    <input id="loginClave" type="password">
+
+    <button class="btn btn-primary" onclick="login()">
+      Ingresar
+    </button>
+
+    <div id="loginMsg" style="margin-top:12px;"></div>
+
+  </div>
+
+</div>
+
+<div id="appView" class="layout hidden">
+
+  <aside class="sidebar">
+
+    <img src="logo-nodo.png" class="logo">
+
+    <div class="card">
+
+      <div id="operadorInfo"></div>
+
+    </div>
+
+    <button
+      id="navInicio"
+      class="nav-btn active"
+      onclick="mostrarVista('inicio')"
+    >
+      🏠 Inicio
+    </button>
+
+    <button
+      id="navSolicitudes"
+      class="nav-btn"
+      onclick="mostrarVista('solicitudes')"
+    >
+      📋 Solicitudes
+      <span
+        id="badgeSolicitudes"
+        class="badge-alert hidden"
+      >
+        0
+      </span>
+    </button>
+
+    <button
+      id="navBilleteras"
+      class="nav-btn"
+      onclick="mostrarVista('billeteras')"
+    >
+      💳 Billeteras
+    </button>
+
+    <button
+      id="navAgentes"
+      class="nav-btn"
+      onclick="mostrarVista('agentes')"
+    >
+      🎮 Agente / Fichas
+    </button>
+
+    <button
+      id="navChat"
+      class="nav-btn"
+      onclick="mostrarVista('chat')"
+    >
+      💬 Chat
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="cerrarSesion()"
+    >
+      🚪 Cerrar sesión
+    </button>
+
+  </aside>
+
+  <main class="main">
+
+    <section id="viewInicio">
+
+      <div id="alertas"></div>
+
+      <div class="top-grid">
+
+        <div class="stat-card">
+          <div class="stat-title">
+            Solicitudes pendientes
           </div>
-          <div>
-            <label>Fecha hasta</label>
-            <input id="filtroFechaHasta" type="date" onchange="cargarSolicitudes()">
-          </div>
-          <div>
-            <label>Hora desde</label>
-            <input id="filtroHoraDesde" type="time" onchange="cargarSolicitudes()">
-          </div>
-          <div>
-            <label>Hora hasta</label>
-            <input id="filtroHoraHasta" type="time" onchange="cargarSolicitudes()">
-          </div>
-          <div>
-            <label>Tipo</label>
-            <select id="filtroTipo" onchange="cargarSolicitudes()">
-              <option value="">Todos</option>
-              <option value="CARGA">CARGA</option>
-              <option value="RETIRO">RETIRO</option>
-            </select>
-          </div>
-          <div>
-            <label>Estado</label>
-            <select id="filtroEstado" onchange="cargarSolicitudes()">
-              <option value="">Todos</option>
-              <option value="PENDIENTE_PAGO">PENDIENTE_PAGO</option>
-              <option value="PENDIENTE_APROBACION">PENDIENTE_APROBACION</option>
-              <option value="APROBADA_MANUAL">APROBADA_MANUAL</option>
-              <option value="RECHAZADA">RECHAZADA</option>
-              <option value="PAGADA">PAGADA</option>
-              <option value="ACREDITADA">ACREDITADA</option>
-            </select>
-          </div>
-          <div>
-            <label>Usuario</label>
-            <input id="filtroUsuario" placeholder="Buscar usuario" oninput="renderSolicitudes()">
+
+          <div
+            class="stat-value"
+            id="statPendientes"
+          >
+            0
           </div>
         </div>
 
-        <div id="solicitudesMsg" class="msg"></div>
-        <div id="tablaSolicitudes"></div>
+        <div class="stat-card">
+          <div class="stat-title">
+            Retiros pendientes
+          </div>
+
+          <div
+            class="stat-value"
+            id="statRetiros"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">
+            Neto operativo
+          </div>
+
+          <div
+            class="stat-value"
+            id="statNeto"
+          >
+            $0
+          </div>
+        </div>
+
       </div>
+
+      <div id="walletsInicio" class="wallet-grid"></div>
+
+      <div class="card">
+
+        <h2 style="margin-bottom:14px;">
+          Solicitudes pendientes
+        </h2>
+
+        <div id="tablaSolicitudes"></div>
+
+      </div>
+
+    </section>
+
+        <section id="viewSolicitudes" class="hidden">
+
+      <div class="card">
+
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:14px;
+            gap:12px;
+            flex-wrap:wrap;
+          "
+        >
+
+          <h2>
+            📋 Solicitudes
+          </h2>
+
+          <div
+            style="
+              display:flex;
+              gap:10px;
+              flex-wrap:wrap;
+            "
+          >
+
+            <select id="filtroTipo" onchange="renderSolicitudes()">
+              <option value="">Todos</option>
+              <option value="CARGA">Cargas</option>
+              <option value="RETIRO">Retiros</option>
+            </select>
+
+            <select id="filtroEstado" onchange="renderSolicitudes()">
+              <option value="">Todos</option>
+              <option value="PENDIENTE">Pendientes</option>
+              <option value="APROBADA">Aprobadas</option>
+              <option value="RECHAZADA">Rechazadas</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        <div id="tablaSolicitudesCompleta"></div>
+
+      </div>
+
     </section>
 
     <section id="viewBilleteras" class="hidden">
+
       <div class="card">
-        <h2>Billeteras de la PC</h2>
-        <p class="small">Activar/desactivar, elegir en uso y ajustar saldos.</p>
-        <div id="billeteraMsg" class="msg"></div>
-        <div id="tablaBilleteras"></div>
+
+        <h2 style="margin-bottom:14px;">
+          💳 Billeteras
+        </h2>
+
+        <div id="walletsGrid" class="wallet-grid"></div>
+
       </div>
+
     </section>
 
     <section id="viewAgentes" class="hidden">
-      <div class="card">
-        <h2>🎮 Agente / Fichas</h2>
-        <p class="small">Control operativo del saldo de fichas del agente de esta PC.</p>
-        <div id="agenteMsg" class="msg"></div>
-        <div id="agenteBox">
-          <div class="small">Cargando agentes...</div>
-        </div>
-      </div>
 
       <div class="card">
-        <h3>Registrar operación manual</h3>
-        <p class="small">Usá esto cuando el operador tenga que asentar una carga/retiro fuera del flujo normal.</p>
-        <div class="grid">
-          <div>
-            <label>Agente</label>
-            <select id="manualAgenteId"></select>
-          </div>
-          <div>
-            <label>Tipo</label>
-            <select id="manualTipo">
-              <option value="CARGA">CARGA - resta fichas</option>
-              <option value="RETIRO">RETIRO - suma fichas</option>
-            </select>
-          </div>
-          <div>
-            <label>Monto</label>
-            <input id="manualMonto" type="number" placeholder="Ej: 5000">
-          </div>
-        </div>
-        <label>Observación</label>
-        <textarea id="manualObs" placeholder="Ej: operación manual por ajuste de turno"></textarea>
-        <button class="primary" onclick="registrarOperacionManualAgente()">Registrar operación manual</button>
+
+        <h2 style="margin-bottom:14px;">
+          🎮 Agente / Fichas
+        </h2>
+
+        <div id="agentesGrid" class="wallet-grid"></div>
+
       </div>
+
     </section>
 
     <section id="viewChat" class="hidden">
-      <div class="card">
-        <h2>Chat</h2>
-        <div id="chatEmpty" class="okBox">Seleccioná una solicitud para abrir su chat.</div>
-        <div id="chatPanel" class="hidden">
-          <h3 id="chatTitulo"></h3>
-          <div id="chatBox" class="chat-box"></div>
-          <textarea id="chatMensaje" placeholder="Escribir mensaje..."></textarea>
-          <button class="primary" onclick="enviarMensaje()">Enviar mensaje</button>
-          <div id="chatMsg" class="msg"></div>
-        </div>
-      </div>
-    </section>
 
-    <section id="viewClave" class="hidden">
       <div class="card">
-        <h2>Cambiar clave</h2>
-        <label>Clave actual</label>
-        <input id="claveActual" type="password">
-        <label>Nueva clave</label>
-        <input id="claveNueva" type="password">
-        <button class="primary" onclick="cambiarClave()">Actualizar clave</button>
-        <div id="claveMsg" class="msg"></div>
+
+        <h2 style="margin-bottom:14px;">
+          💬 Chat operativo
+        </h2>
+
+        <div class="chat-box" id="chatBox"></div>
+
+        <textarea
+          id="chatInput"
+          rows="3"
+          placeholder="Escribí un mensaje..."
+        ></textarea>
+
+        <button
+          class="btn btn-primary"
+          onclick="enviarMensajeChat()"
+        >
+          Enviar mensaje
+        </button>
+
       </div>
+
     </section>
 
   </main>
+
 </div>
 
-<div id="detalleModal" class="modal hidden">
-  <div class="modal-head" onclick="toggleModalMin()">
-    <b id="modalTitle">Detalle solicitud</b>
-    <span class="small">clic para minimizar</span>
-  </div>
-  <div class="modal-body">
-    <div id="detalleSolicitud"></div>
-    <label>Monto real</label>
-    <input id="detalleMontoReal" type="number">
-    <label>Operation ID / comprobante interno</label>
-    <input id="detalleOperationId">
-    <label>Observaciones</label>
-    <textarea id="detalleObs"></textarea>
-    <div class="row">
-      <button class="warning" onclick="tomarSolicitud()">Tomar</button>
-      <button class="success" onclick="aprobarSolicitud()">Aceptar / aprobar</button>
-      <button class="danger" onclick="rechazarSolicitud()">Rechazar</button>
-      <button class="primary" onclick="cerrarRetiro()">Cerrar retiro</button>
-    </div>
-    <button class="secondary" onclick="abrirChatDesdeModal()">Abrir chat</button>
-    <div id="detalleMsg" class="msg"></div>
-  </div>
-</div>
+<div
+  id="floatingCarga"
+  class="floating-box"
+>
 
-<div id="ajusteModal" class="modal hidden">
-  <div class="modal-head">
-    <b>Ajustar saldo billetera</b>
-    <button class="miniBtn danger" onclick="cerrarModalAjuste()">Cerrar</button>
-  </div>
-  <div class="modal-body">
-    <input id="ajusteBilleteraId" type="hidden">
-    <div id="ajusteBilleteraNombre" class="okBox"></div>
+  <div class="floating-header">
 
-    <label>Tipo de movimiento</label>
-    <select id="ajusteTipo">
-      <option value="AJUSTE_POSITIVO">Ajuste positivo / sobra</option>
-      <option value="AJUSTE_NEGATIVO">Ajuste negativo / falta</option>
-      <option value="ERROR_CAJA">Error de caja</option>
-      <option value="DESCARGA_BILLETERA">Descarga billetera</option>
-      <option value="CORRECCION_TURNO">Corrección de turno</option>
-    </select>
+    <span>
+      ⚡ Carga manual
+    </span>
+
+    <button
+      onclick="toggleCargaManual()"
+      style="
+        background:none;
+        border:none;
+        color:#fff;
+        cursor:pointer;
+        font-size:18px;
+      "
+    >
+      ×
+    </button>
+
+  </div>
+
+  <div
+    id="floatingBody"
+    class="floating-body"
+  >
+
+    <label>Usuario</label>
+
+    <input id="manualUsuario">
+
+    <label>Billetera</label>
+
+    <select id="manualBilletera"></select>
 
     <label>Monto</label>
-    <input id="ajusteMonto" type="number" placeholder="Ej: 5000">
 
-    <label>Motivo / observación</label>
-    <textarea id="ajusteMotivo" placeholder="Ej: falta al recibir turno"></textarea>
+    <input
+      id="manualMonto"
+      type="number"
+    >
 
-    <button class="primary" onclick="guardarAjusteSaldo()">Guardar ajuste</button>
-    <div id="ajusteMsg" class="msg"></div>
+    <button
+      class="btn btn-primary"
+      onclick="registrarCargaManual()"
+    >
+      Registrar carga
+    </button>
+
   </div>
+
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzqQdwSkDvj-02PT-0TgaVmRBmmk_XvuPdI03ZboW1KtD4Kh-nPEJsvhX1tF-YRpdW9/exec";
 
-const PCS_VALIDAS = ["P1", "P2", "P3", "P4", "P5"];
-const PC_MAP = {
-  X: "P1",
-  ALV: "P2",
-  CHINO: "P3",
-  SAN: "P4",
-  EYF: "P5"
-};
+const API_URL = "https://script.google.com/macros/s/AKfycbxQnQTbI7q3-CNjkTUwlyNH8_NJK90M1LSHqgBaBjY1Nx-EzDRSPDkUxNPGN5qBZVHJ/exec";
 
-  
-function normalizarPC(pc){
-  const v = String(pc || "").trim().toUpperCase();
-  return PC_MAP[v] || v;
-}
+let operador = null;
+let pcOperativa = null;
 
-let operador = JSON.parse(localStorage.getItem("operador_core_v5") || "null");
-let pcOperativa = normalizarPC(localStorage.getItem("pc_operativa_core_v5") || "");
-let billeteras = [];
 let solicitudes = [];
-let agentes = []; 
-let solicitudSeleccionada = null;
+let billeteras = [];
+let agentes = [];
 
-window.onload = () => {
-  if (operador) mostrarApp();
-};
+let ultimaCantidadPendientes = 0;
 
-async function api(params){
-  const url = API_URL + "?" + new URLSearchParams(params).toString();
-  const res = await fetch(url);
-  const text = await res.text();
-  try { return JSON.parse(text); }
-  catch(e){ console.error(text); return {ok:false,error:"Respuesta inválida de API"}; }
+function money(v){
+
+  return Number(v || 0)
+    .toLocaleString(
+      'es-AR',
+      {
+        style:'currency',
+        currency:'ARS',
+        maximumFractionDigits:0
+      }
+    );
+
 }
 
-function msg(id,text,ok=null){
-  const el=document.getElementById(id); if(!el)return;
-  el.innerHTML=text||"";
-  el.className=ok===true?"okBox":ok===false?"errBox":"msg";
-}
+async function api(data){
 
-function money(n){
-  return "$" + Number(n || 0).toLocaleString("es-AR");
-}
+  const fd = new FormData();
 
-function formatFecha(f){
-  if(!f)return "";
-  const d=new Date(f);
-  if(isNaN(d))return f;
-  return d.toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit"})+" · "+d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
-}
+  Object.keys(data).forEach(k=>{
+    fd.append(k,data[k]);
+  });
 
-function minutosDesde(f){
-  const d=new Date(f);
-  if(isNaN(d))return 0;
-  return Math.floor((Date.now()-d.getTime())/60000);
+  const r = await fetch(
+    API_URL,
+    {
+      method:'POST',
+      body:fd
+    }
+  );
+
+  return await r.json();
+
 }
 
 async function login(){
-  const usuario=document.getElementById("loginUsuario").value.trim();
-  const clave=document.getElementById("loginClave").value.trim();
-  const r=await api({action:"login",usuario,clave});
-  if(!r.ok){msg("loginMsg",r.error||"Error",false);return;}
 
-  operador=r.operador;
-  localStorage.setItem("operador_core_v5",JSON.stringify(operador));
+  const usuario =
+    document.getElementById('loginUsuario').value;
 
-  if(operador.requiereSeleccionPc){
-    pcOperativa="";
-    localStorage.removeItem("pc_operativa_core_v5");
-  }else{
-    pcOperativa=normalizarPC(operador.pcOperativa||operador.pc);
-    localStorage.setItem("pc_operativa_core_v5",pcOperativa);
-  }
+  const clave =
+    document.getElementById('loginClave').value;
 
-  mostrarApp();
-}
-
-function mostrarApp(){
-  document.getElementById("loginView").classList.add("hidden");
-  document.getElementById("appView").classList.remove("hidden");
-  renderOperador();
-
-  if(operador.requiereSeleccionPc && !pcOperativa){
-    prepararSelectorFranquero();
-    msg("solicitudesMsg","Seleccioná la PC que cubrís hoy.",false);
-    return;
-  }
-
-  refrescarTodo();
-}
-
-function renderOperador(){
-  document.getElementById("operadorBox").innerHTML=`
-    <span class="badge"><b>${operador.nombre}</b></span>
-    <span class="badge">Rol: ${operador.rol}</span>
-    <span class="badge">Tipo: ${operador.tipoOperador}</span>
-    <span class="badge">PC: ${pcOperativa || normalizarPC(operador.pc)}</span>
-    <span class="badge">Turno: ${operador.turno}</span>
-  `;
-}
-
-function prepararSelectorFranquero(){
-  document.getElementById("franqueroBox").classList.remove("hidden");
-  const sel=document.getElementById("pcOperativaSelect");
-  sel.innerHTML="";
-
-  const pcs = (operador.pcsDisponibles && operador.pcsDisponibles.length)
-    ? operador.pcsDisponibles.map(normalizarPC)
-    : PCS_VALIDAS;
-
-  [...new Set(pcs)].forEach(pc=>{
-    const opt=document.createElement("option");
-    opt.value=pc;
-    opt.textContent=pc;
-    sel.appendChild(opt);
+  const r = await api({
+    action:'login',
+    usuario,
+    clave
   });
-}
 
-async function confirmarPcOperativa(){
-  const pc=normalizarPC(document.getElementById("pcOperativaSelect").value);
-  const r=await api({action:"validarpcoperativa",usuario:operador.usuario,pcOperativa:pc});
-  if(!r.ok){msg("pcOperativaMsg",r.error,false);return;}
-  pcOperativa=normalizarPC(r.pcOperativa);
-  localStorage.setItem("pc_operativa_core_v5",pcOperativa);
-  renderOperador();
+  if(!r.ok){
+
+    document.getElementById(
+      'loginMsg'
+    ).innerHTML =
+      `<div class="alert-box">
+        ${r.error || 'Error'}
+      </div>`;
+
+    return;
+
+  }
+
+  operador = r.operador;
+
+  if(r.requiereSeleccionPc){
+
+    const pc = prompt(
+      'Seleccionar PC:\n' +
+      r.pcsDisponibles.join(', ')
+    );
+
+    pcOperativa = pc;
+
+  }else{
+
+    pcOperativa = r.operador.pc;
+
+  }
+
+  document
+    .getElementById('loginView')
+    .classList.add('hidden');
+
+  document
+    .getElementById('appView')
+    .classList.remove('hidden');
+
+  document.getElementById(
+    'operadorInfo'
+  ).innerHTML = `
+    <b>${operador.nombre}</b>
+    <br>
+    ${operador.rol}
+    <br>
+    ${pcOperativa}
+  `;
+
   refrescarTodo();
-}
 
-function cerrarSesion(){
-  localStorage.removeItem("operador_core_v5");
-  localStorage.removeItem("pc_operativa_core_v5");
-  location.reload();
+  setInterval(
+    refrescarSolicitudesRapido,
+    5000
+  );
+
+  setInterval(
+    refrescarSaldos,
+    20000
+  );
+
 }
 
 function mostrarVista(vista){
-  ["Inicio","Solicitudes","Billeteras","Agentes","Chat","Clave"].forEach(v=>{
-    document.getElementById("view"+v).classList.add("hidden");
-    document.getElementById("nav"+v).classList.remove("active");
+
+  [
+    'Inicio',
+    'Solicitudes',
+    'Billeteras',
+    'Agentes',
+    'Chat'
+  ].forEach(v=>{
+
+    document
+      .getElementById('view'+v)
+      .classList.add('hidden');
+
+    const nav =
+      document.getElementById(
+        'nav'+v
+      );
+
+    if(nav){
+      nav.classList.remove('active');
+    }
+
   });
 
-  const cap = vista.charAt(0).toUpperCase() + vista.slice(1);
+  const cap =
+    vista.charAt(0).toUpperCase() +
+    vista.slice(1);
 
-  document.getElementById("view"+cap).classList.remove("hidden");
-  document.getElementById("nav"+cap).classList.add("active");
+  document
+    .getElementById('view'+cap)
+    .classList.remove('hidden');
 
-  if (vista === "agentes") {
-    cargarAgentes();
+  const btn =
+    document.getElementById(
+      'nav'+cap
+    );
+
+  if(btn){
+    btn.classList.add('active');
   }
+
 }
 
 async function refrescarTodo(){
-  if(!pcOperativa)return;
+
   await cargarBilleteras();
-  await cargarSolicitudes();
   await cargarAgentes();
+  await cargarSolicitudes();
+
+}
+
+async function refrescarSolicitudesRapido(){
+
+  await cargarSolicitudes();
+
+}
+
+async function refrescarSaldos(){
+
+  await cargarBilleteras();
+  await cargarAgentes();
+
 }
 
 async function cargarBilleteras(){
-  const r=await api({action:"getbilleteras",pc:normalizarPC(pcOperativa)});
-  if(!r.ok){msg("billeteraMsg",r.error,false);return;}
-  billeteras=r.billeteras||[];
-  renderSidebarWallets();
-  renderBilleteras();
-  renderInicio();
-}
-
-function renderSidebarWallets(){
-  const box=document.getElementById("sidebarWallets");
-  box.innerHTML="";
-  billeteras.forEach(b=>{
-    const activa=String(b.ACTIVA||"").toUpperCase()==="SI";
-    const enUso=String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI";
-    const div=document.createElement("div");
-    div.className="wallet-item";
-    div.innerHTML=`
-      <div class="wallet-title">${b.NOMBRE_VISIBLE||""}</div>
-      <div>${b.TIPO||""} · ${b.PC||""}</div>
-      <div>Saldo: <b>${money(b.SALDO_REAL || b.SALDO_ESTIMADO)}</b></div>
-      ${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}
-      ${enUso?'<span class="badge badge-warn">EN USO</span>':''}
-    `;
-    box.appendChild(div);
-  });
-}
-
-function renderBilleteras(){
-  let html=`<table><thead><tr><th>Nombre</th><th>Tipo</th><th>Alias/CVU</th><th>Saldo</th><th>Estado</th><th>Acción</th></tr></thead><tbody>`;
-  billeteras.forEach(b=>{
-    const activa=String(b.ACTIVA||"").toUpperCase()==="SI";
-    const enUso=String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI";
-    html+=`
-      <tr>
-        <td><b>${b.NOMBRE_VISIBLE||""}</b><br>${b.TITULAR||""}</td>
-        <td>${b.TIPO||""}<br>${b.VALIDACION||""}</td>
-        <td>${b.ALIAS||""}<br>${b.CVU_CBU||""}</td>
-        <td>
-          Real: <b>${money(b.SALDO_REAL||0)}</b><br>
-          Estimado: ${money(b.SALDO_ESTIMADO||0)}<br>
-          Límite: ${money(b.LIMITE_DESCARGA||0)}
-        </td>
-        <td>
-          ${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">INACTIVA</span>'}
-          ${enUso?'<span class="badge badge-warn">EN USO</span>':''}
-        </td>
-        <td>
-          <button class="miniBtn success" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">Usar</button>
-          <button class="miniBtn primary" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button>
-          <button class="miniBtn danger" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Desactivar</button>
-          <button class="miniBtn warning" onclick="abrirAjusteSaldo('${b.ID_BILLETERA}')">Ajustar saldo</button>
-        </td>
-      </tr>`;
-  });
-  html+=`</tbody></table>`;
-  document.getElementById("tablaBilleteras").innerHTML=html;
-}
-
-function renderInicio(){
-  const activas=billeteras.filter(b=>String(b.ACTIVA||"").toUpperCase()==="SI");
-  const saldoTotal=activas.reduce((a,b)=>a+Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0),0);
-  const enUso=billeteras.find(b=>String(b.SELECCIONADA_MANUAL||"").toUpperCase()==="SI");
-  const pendientes=solicitudes.filter(s=>String(s.ESTADO||"").includes("PENDIENTE")).length;
-  const retiros=solicitudes.filter(s=>String(s.TIPO_SOLICITUD)==="RETIRO" && String(s.ESTADO||"").includes("PENDIENTE")).length;
-
-  document.getElementById("inicioStats").innerHTML=`
-    <div class="stat"><div class="stat-num">${money(saldoTotal)}</div><div class="small">Saldo total PC</div></div>
-    <div class="stat"><div class="stat-num">${activas.length}</div><div class="small">Billeteras activas</div></div>
-    <div class="stat"><div class="stat-num">${pendientes}</div><div class="small">Solicitudes pendientes</div></div>
-    <div class="stat"><div class="stat-num">${retiros}</div><div class="small">Retiros pendientes</div></div>
-    <div class="stat"><div class="stat-num">${enUso ? enUso.NOMBRE_VISIBLE : "-"}</div><div class="small">Billetera en uso</div></div>
-  `;
-
-  let alertas="";
-  billeteras.forEach(b=>{
-    const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0);
-    const limite=Number(b.LIMITE_DESCARGA||0);
-    if(limite>0 && saldo>=limite){
-      alertas+=`🔴 ${b.NOMBRE_VISIBLE}: superar límite / descargar. Saldo ${money(saldo)} · Límite ${money(limite)}<br>`;
-    }else if(limite>0 && saldo>=limite*0.8){
-      alertas+=`🟡 ${b.NOMBRE_VISIBLE}: cerca del límite. Saldo ${money(saldo)} · Límite ${money(limite)}<br>`;
-    }
-  });
-  document.getElementById("alertasBilleteras").innerHTML=alertas||"Sin alertas por ahora.";
-
-  renderTablaInicio();
-}
-
-function renderTablaInicio(){
-  let ult=solicitudes.slice().reverse().slice(0,8);
-  let html=`<table><thead><tr><th>Hora</th><th>Tipo</th><th>Usuario</th><th>Monto</th><th>Estado</th></tr></thead><tbody>`;
-  ult.forEach(s=>{
-    html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}</td><td>${s.TIPO_SOLICITUD||""}</td><td>${s.USUARIO||""}</td><td>${money(s.MONTO_DECLARADO)}</td><td>${estadoBadge(s.ESTADO)}</td></tr>`;
-  });
-  html+=`</tbody></table>`;
-  document.getElementById("tablaInicioSolicitudes").innerHTML=html;
-}
-
-async function seleccionarBilletera(idBilletera){
-  const r=await api({action:"seleccionarbilletera",usuario:operador.usuario,operador:operador.nombre,idBilletera});
-  msg("billeteraMsg",r.ok?"Billetera en uso actualizada.":r.error,r.ok);
-  if(r.ok)cargarBilleteras();
-}
-
-async function cambiarEstadoBilletera(idBilletera,estadoBilletera){
-  const r=await api({action:"actualizarestadobilletera",usuario:operador.usuario,operador:operador.nombre,idBilletera,estadoBilletera});
-  msg("billeteraMsg",r.ok?"Estado actualizado.":r.error,r.ok);
-  if(r.ok)cargarBilleteras();
-}
-
-function abrirAjusteSaldo(idBilletera){
-  const b=billeteras.find(x=>String(x.ID_BILLETERA)===String(idBilletera));
-  if(!b)return;
-  document.getElementById("ajusteBilleteraId").value=b.ID_BILLETERA;
-  document.getElementById("ajusteBilleteraNombre").innerHTML=`<b>${b.NOMBRE_VISIBLE}</b><br>Saldo actual: ${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}`;
-  document.getElementById("ajusteMonto").value="";
-  document.getElementById("ajusteMotivo").value="";
-  document.getElementById("ajusteModal").classList.remove("hidden");
-}
-
-function cerrarModalAjuste(){
-  document.getElementById("ajusteModal").classList.add("hidden");
-}
-
-async function guardarAjusteSaldo(){
-  const r=await api({
-    action:"ajustarsaldobilletera",
-    usuario:operador.usuario,
-    operador:operador.nombre,
-    idBilletera:document.getElementById("ajusteBilleteraId").value,
-    tipoMovimiento:document.getElementById("ajusteTipo").value,
-    monto:document.getElementById("ajusteMonto").value,
-    motivoAjuste:document.getElementById("ajusteMotivo").value
-  });
-  msg("ajusteMsg",r.ok?`Saldo actualizado: ${money(r.saldoDespues)}`:r.error,r.ok);
-  if(r.ok){
-    await cargarBilleteras();
-    setTimeout(cerrarModalAjuste,800);
-  }
-}
-
-async function cargarSolicitudes(){
-  const tipoSolicitud=document.getElementById("filtroTipo")?.value||"";
-  const estado=document.getElementById("filtroEstado")?.value||"";
-  const r=await api({action:"listarsolicitudesoperador",usuario:operador.usuario,operador:operador.nombre,pcOperativa:normalizarPC(pcOperativa),tipoSolicitud,estado});
-  if(!r.ok){msg("solicitudesMsg",r.error,false);return;}
-  solicitudes=r.solicitudes||[];
-  solicitudes=filtrarPorFechaHora(solicitudes);
-  msg("solicitudesMsg",`Solicitudes encontradas: ${solicitudes.length}`,true);
-  renderSolicitudes();
-  renderInicio();
-}
-
-function filtrarPorFechaHora(arr){
-  const fd=document.getElementById("filtroFechaDesde")?.value;
-  const fh=document.getElementById("filtroFechaHasta")?.value;
-  const hd=document.getElementById("filtroHoraDesde")?.value;
-  const hh=document.getElementById("filtroHoraHasta")?.value;
-
-  return arr.filter(s=>{
-    const d=new Date(s.FECHA_CREACION);
-    if(isNaN(d))return true;
-
-    if(fd){
-      const desde=new Date(fd+"T00:00:00");
-      if(d<desde)return false;
-    }
-    if(fh){
-      const hasta=new Date(fh+"T23:59:59");
-      if(d>hasta)return false;
-    }
-
-    const mins=d.getHours()*60+d.getMinutes();
-
-    if(hd){
-      const [h,m]=hd.split(":").map(Number);
-      if(mins<(h*60+m))return false;
-    }
-
-    if(hh){
-      const [h,m]=hh.split(":").map(Number);
-      if(mins>(h*60+m))return false;
-    }
-
-    return true;
-  });
-}
-
-function estadoBadge(e){
-  e=String(e||"");
-  if(["APROBADA_MANUAL","ACREDITADA","PAGADA"].includes(e))return `<span class="badge badge-ok">${e}</span>`;
-  if(["RECHAZADA","ERROR"].includes(e))return `<span class="badge badge-danger">${e}</span>`;
-  return `<span class="badge badge-warn">${e}</span>`;
-}
-
-function prioridadBadge(s){
-  const min=minutosDesde(s.FECHA_CREACION);
-  if(["APROBADA_MANUAL","ACREDITADA","PAGADA","RECHAZADA"].includes(String(s.ESTADO))) return "";
-  if(min>=15)return `<span class="badge badge-danger">+15 min</span>`;
-  if(min>=5)return `<span class="badge badge-warn">${min} min</span>`;
-  return `<span class="badge badge-ok">${min} min</span>`;
-}
-
-function renderSolicitudes(){
-  const buscar=(document.getElementById("filtroUsuario")?.value||"").toLowerCase();
-
-  let lista=solicitudes.filter(s=>{
-    if(!buscar)return true;
-    return String(s.USUARIO||"").toLowerCase().includes(buscar) ||
-           String(s.NOMBRE_COMPLETO||"").toLowerCase().includes(buscar);
-  });
-
-  let html=`<table><thead><tr><th>Fecha</th><th>Tipo</th><th>Usuario</th><th>Nombre</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Operador</th><th>Acción</th></tr></thead><tbody>`;
-  lista.slice().reverse().forEach(s=>{
-    const safe=encodeURIComponent(JSON.stringify(s));
-    html+=`
-      <tr>
-        <td>${formatFecha(s.FECHA_CREACION)}<br>${prioridadBadge(s)}</td>
-        <td>${s.TIPO_SOLICITUD||""}</td>
-        <td><b>${s.USUARIO||""}</b></td>
-        <td>${s.NOMBRE_COMPLETO||""}</td>
-        <td>Declarado: ${money(s.MONTO_DECLARADO)}<br>Real: ${money(s.MONTO_REAL)}</td>
-        <td>${s.BILLETERA_NOMBRE||""}<br>${s.METODO_BILLETERA||""}</td>
-        <td>${estadoBadge(s.ESTADO)}<br><span class="small">${s.VERIFICACION||""}</span></td>
-        <td>Tomó: ${s.QUIEN_TOMO||"-"}<br>Aprobó: ${s.QUIEN_APROBO||"-"}</td>
-        <td>
-          <button class="miniBtn primary" onclick="verSolicitud('${safe}')">Ver</button>
-          <button class="miniBtn secondary" onclick="abrirChat('${safe}')">Chat</button>
-        </td>
-      </tr>`;
-  });
-  html+=`</tbody></table>`;
-  document.getElementById("tablaSolicitudes").innerHTML=html;
-}
-
-function verSolicitud(encoded){
-  solicitudSeleccionada=JSON.parse(decodeURIComponent(encoded));
-  document.getElementById("detalleModal").classList.remove("hidden","minimized");
-  document.getElementById("modalTitle").innerText=`${solicitudSeleccionada.TIPO_SOLICITUD} · ${solicitudSeleccionada.USUARIO}`;
-  document.getElementById("detalleMontoReal").value=solicitudSeleccionada.MONTO_REAL||solicitudSeleccionada.MONTO_DECLARADO||"";
-  document.getElementById("detalleOperationId").value=solicitudSeleccionada.OPERATION_ID||"";
-  document.getElementById("detalleObs").value=solicitudSeleccionada.OBS||"";
-  document.getElementById("detalleSolicitud").innerHTML=`
-    <span class="badge">ID: ${solicitudSeleccionada.ID}</span>
-    <span class="badge">PC: ${solicitudSeleccionada.PC}</span>
-    ${estadoBadge(solicitudSeleccionada.ESTADO)}
-    ${prioridadBadge(solicitudSeleccionada)}
-    <br><br>
-    <b>Fecha:</b> ${formatFecha(solicitudSeleccionada.FECHA_CREACION)}<br>
-    <b>Usuario:</b> ${solicitudSeleccionada.USUARIO}<br>
-    <b>Nombre:</b> ${solicitudSeleccionada.NOMBRE_COMPLETO}<br>
-    <b>Monto declarado:</b> ${money(solicitudSeleccionada.MONTO_DECLARADO)}<br>
-    <b>Billetera:</b> ${solicitudSeleccionada.BILLETERA_NOMBRE}<br>
-    <b>Método:</b> ${solicitudSeleccionada.METODO_BILLETERA}<br>
-  `;
-}
-
-function toggleModalMin(){document.getElementById("detalleModal").classList.toggle("minimized")}
-
-async function tomarSolicitud(){
-  const r=await api({action:"tomarsolicitud",usuario:operador.usuario,operador:operador.nombre,solicitudId:solicitudSeleccionada.ID});
-  msg("detalleMsg",r.ok?"Solicitud tomada.":r.error,r.ok);
-  if(r.ok)cargarSolicitudes();
-}
-
-async function aprobarSolicitud(){
-  const r=await api({
-    action:"aprobarsolicitud",
-    usuario:operador.usuario,
-    operador:operador.nombre,
-    solicitudId:solicitudSeleccionada.ID,
-    montoReal:document.getElementById("detalleMontoReal").value,
-    observaciones:document.getElementById("detalleObs").value
-  });
-  msg("detalleMsg",r.ok?"Solicitud aprobada.":r.error,r.ok);
-  if(r.ok){await cargarBilleteras();await cargarSolicitudes();}
-}
-
-async function rechazarSolicitud(){
-  if(!confirm("¿Rechazar solicitud?"))return;
-  const r=await api({
-    action:"rechazarsolicitud",
-    usuario:operador.usuario,
-    operador:operador.nombre,
-    solicitudId:solicitudSeleccionada.ID,
-    observaciones:document.getElementById("detalleObs").value
-  });
-  msg("detalleMsg",r.ok?"Solicitud rechazada.":r.error,r.ok);
-  if(r.ok)cargarSolicitudes();
-}
-
-async function cerrarRetiro(){
-  const r=await api({
-    action:"cerrarretiro",
-    usuario:operador.usuario,
-    operador:operador.nombre,
-    solicitudId:solicitudSeleccionada.ID,
-    operationId:document.getElementById("detalleOperationId").value,
-    observaciones:document.getElementById("detalleObs").value
-  });
-  msg("detalleMsg",r.ok?"Retiro cerrado.":r.error,r.ok);
-  if(r.ok){await cargarBilleteras();await cargarSolicitudes();}
-}
-
-function abrirChat(encoded){
-  solicitudSeleccionada=JSON.parse(decodeURIComponent(encoded));
-  abrirChatSeleccionado();
-}
-
-function abrirChatDesdeModal(){abrirChatSeleccionado()}
-
-function abrirChatSeleccionado(){
-  mostrarVista("chat");
-  document.getElementById("chatEmpty").classList.add("hidden");
-  document.getElementById("chatPanel").classList.remove("hidden");
-  document.getElementById("chatTitulo").innerText=`Chat · ${solicitudSeleccionada.USUARIO}`;
-  cargarChat();
-}
-
-async function cargarChat(){
-  const r=await api({action:"getchat",solicitudId:solicitudSeleccionada.ID});
-  const box=document.getElementById("chatBox");
-  box.innerHTML="";
-  (r.mensajes||[]).forEach(m=>{
-    const div=document.createElement("div");
-    div.className="chat-msg";
-    div.innerHTML=`<div class="chat-meta">${m.FECHA||""} · ${m.EMISOR||""}</div><div>${m.MENSAJE||""}</div>`;
-    box.appendChild(div);
-  });
-  if((r.mensajes||[]).length===0)box.innerHTML='<div class="small">Sin mensajes.</div>';
-}
-
-async function enviarMensaje(){
-  const mensaje=document.getElementById("chatMensaje").value.trim();
-  if(!mensaje){msg("chatMsg","Escribí un mensaje.",false);return;}
-  const r=await api({action:"enviarmensaje",solicitudId:solicitudSeleccionada.ID,emisor:operador.nombre,tipoEmisor:"OPERADOR",mensaje});
-  if(r.ok){document.getElementById("chatMensaje").value="";msg("chatMsg","Mensaje enviado.",true);cargarChat();}
-  else msg("chatMsg",r.error,false);
-}
-
-async function cambiarClave(){
-  const clave=document.getElementById("claveActual").value.trim();
-  const nuevaClave=document.getElementById("claveNueva").value.trim();
-  const r=await api({action:"cambiarclave",usuario:operador.usuario,clave,nuevaClave});
-  msg("claveMsg",r.ok?"Clave actualizada.":r.error,r.ok);
-  if(r.ok){
-    document.getElementById("claveActual").value="";
-    document.getElementById("claveNueva").value="";
-  }
-}
-
-setInterval(()=>{
-  if(operador&&pcOperativa){
-    cargarSolicitudes();
-    cargarBilleteras();
-    cargarAgentes();
-  }
-},30000);
-
-async function cargarAgentes(){
-  document.getElementById("agenteBox").innerHTML = "Cargando agentes...";
 
   const r = await api({
-    action: "getagentes",
-    pc: pcOperativa
+    action:'getbilleteras',
+    pc:pcOperativa
   });
 
-  console.log("GET AGENTES:", r);
+  if(!r.ok){
+    return;
+  }
 
-  if (!r.ok) {
-    document.getElementById("agenteBox").innerHTML = `
-      <div class="errBox">${r.error || "Error cargando agentes."}</div>
-    `;
+  billeteras = r.billeteras || [];
+
+  renderBilleteras();
+  renderCargaManualBilleteras();
+  renderInicio();
+
+}
+
+async function cargarAgentes(){
+
+  const r = await api({
+    action:'getagentes',
+    pc:pcOperativa
+  });
+
+  if(!r.ok){
     return;
   }
 
   agentes = r.agentes || [];
+
   renderAgentes();
+  renderInicio();
+
 }
 
+async function cargarSolicitudes(){
 
-function renderAgentes(){
-  const box = document.getElementById("agenteBox");
-  const sel = document.getElementById("manualAgenteId");
+  const r = await api({
+    action:'listarsolicitudesoperador',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    pcOperativa
+  });
+
+  if(!r.ok){
+    return;
+  }
+
+  solicitudes = r.solicitudes || [];
+
+  renderSolicitudes();
+  renderInicio();
+  verificarNotificaciones();
+
+}
+
+function renderInicio(){
+
+  const pendientes =
+    solicitudes.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    );
+
+  const retirosPendientes =
+    pendientes.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === 'RETIRO'
+    );
+
+  const cargasOk =
+    solicitudes.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === 'CARGA' &&
+      ['APROBADA_MANUAL','ACREDITADA','PAGADA']
+        .includes(String(s.ESTADO || ''))
+    );
+
+  const retirosOk =
+    solicitudes.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === 'RETIRO' &&
+      ['PAGADA','APROBADA_MANUAL','ACREDITADA']
+        .includes(String(s.ESTADO || ''))
+    );
+
+  const totalCargas =
+    cargasOk.reduce(
+      (a,s)=>a+Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0),
+      0
+    );
+
+  const totalRetiros =
+    retirosOk.reduce(
+      (a,s)=>a+Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0),
+      0
+    );
+
+  document.getElementById('statPendientes').innerText =
+    pendientes.length;
+
+  document.getElementById('statRetiros').innerText =
+    retirosPendientes.length;
+
+  document.getElementById('statNeto').innerText =
+    money(totalCargas - totalRetiros);
+
+  renderTarjetasInicio();
+  renderAlertas();
+
+}
+
+function renderTarjetasInicio(){
+
+  const box = document.getElementById('walletsInicio');
+
+  let html = '';
+
+  billeteras.forEach(b=>{
+
+    const activa =
+      String(b.ACTIVA || '').toUpperCase() === 'SI';
+
+    const enUso =
+      String(b.SELECCIONADA_MANUAL || '').toUpperCase() === 'SI';
+
+    html += `
+      <div class="wallet-card">
+        <div class="wallet-name">
+          💳 ${b.NOMBRE_VISIBLE || ''}
+        </div>
+
+        <div class="wallet-type">
+          ${b.TIPO || ''} · ${activa ? 'ACTIVA' : 'INACTIVA'}
+          ${enUso ? ' · EN USO' : ''}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0)}
+        </div>
+      </div>
+    `;
+
+  });
+
+  agentes.forEach(a=>{
+
+    html += `
+      <div class="wallet-card">
+        <div class="wallet-name">
+          🎮 ${a.nombre || a.NOMBRE_AGENTE || ''}
+        </div>
+
+        <div class="wallet-type">
+          Fichas disponibles · ${a.pc || a.PC || pcOperativa}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(a.saldo || a.SALDO_FICHAS || 0)}
+        </div>
+      </div>
+    `;
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderAlertas(){
+
+  const box = document.getElementById('alertas');
+
+  let html = '';
+
+  const pendientes =
+    solicitudes.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    );
+
+  if(pendientes.length > 0){
+
+    html += `
+      <div class="alert-box">
+        🔔 Hay ${pendientes.length} solicitud/es pendiente/s para revisar.
+      </div>
+    `;
+
+  }
+
+  billeteras.forEach(b=>{
+
+    const saldo =
+      Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0);
+
+    const limite =
+      Number(b.LIMITE_DESCARGA || 0);
+
+    if(limite > 0 && saldo >= limite){
+
+      html += `
+        <div class="alert-box">
+          ⚠️ ${b.NOMBRE_VISIBLE || 'Billetera'} superó el límite de descarga.
+        </div>
+      `;
+
+    }
+
+  });
+
+  agentes.forEach(a=>{
+
+    const saldo =
+      Number(a.saldo || a.SALDO_FICHAS || 0);
+
+    if(saldo <= 0){
+
+      html += `
+        <div class="alert-box">
+          🚨 El agente ${a.nombre || a.NOMBRE_AGENTE || ''} no tiene fichas disponibles.
+        </div>
+      `;
+
+    }
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderSolicitudes(){
+
+  const tipo =
+    document.getElementById('filtroTipo')?.value || '';
+
+  const estado =
+    document.getElementById('filtroEstado')?.value || '';
+
+  let lista = solicitudes.slice();
+
+  if(tipo){
+    lista = lista.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === tipo
+    );
+  }
+
+  if(estado === 'PENDIENTE'){
+    lista = lista.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    );
+  }
+
+  if(estado === 'APROBADA'){
+    lista = lista.filter(s =>
+      ['APROBADA_MANUAL','ACREDITADA','PAGADA']
+        .includes(String(s.ESTADO || ''))
+    );
+  }
+
+  if(estado === 'RECHAZADA'){
+    lista = lista.filter(s =>
+      String(s.ESTADO || '') === 'RECHAZADA'
+    );
+  }
+
+  const html = tablaSolicitudesHTML(lista);
+
+  const inicio =
+    document.getElementById('tablaSolicitudes');
+
+  const completa =
+    document.getElementById('tablaSolicitudesCompleta');
+
+  if(inicio){
+    inicio.innerHTML = tablaSolicitudesHTML(
+      lista.filter(s =>
+        String(s.ESTADO || '').includes('PENDIENTE')
+      )
+    );
+  }
+
+  if(completa){
+    completa.innerHTML = html;
+  }
+
+}
+
+function tablaSolicitudesHTML(lista){
+
+  if(!lista.length){
+    return `
+      <div class="alert-box">
+        No hay solicitudes para mostrar.
+      </div>
+    `;
+  }
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th>Tipo</th>
+          <th>Usuario</th>
+          <th>Monto</th>
+          <th>Billetera</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  lista
+    .slice()
+    .reverse()
+    .forEach(s=>{
+
+      html += `
+        <tr>
+          <td>${formatFecha(s.FECHA_CREACION)}</td>
+          <td>${s.TIPO_SOLICITUD || ''}</td>
+          <td>
+            <b>${s.USUARIO || ''}</b><br>
+            <span style="color:#98a2b3;font-size:12px;">
+              ${s.NOMBRE_COMPLETO || ''}
+            </span>
+          </td>
+          <td>${money(s.MONTO_REAL || s.MONTO_DECLARADO || 0)}</td>
+          <td>${s.BILLETERA_NOMBRE || ''}</td>
+          <td>${estadoBadge(s.ESTADO)}</td>
+          <td>
+            <button class="mini-btn blue" onclick="tomarSolicitud('${s.ID}')">
+              Tomar
+            </button>
+
+            <button class="mini-btn green" onclick="aprobarSolicitud('${s.ID}')">
+              Aprobar
+            </button>
+
+            <button class="mini-btn red" onclick="rechazarSolicitud('${s.ID}')">
+              Rechazar
+            </button>
+
+            <button class="mini-btn yellow" onclick="abrirChatSolicitud('${s.ID}')">
+              Chat
+            </button>
+          </td>
+        </tr>
+      `;
+
+    });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  return html;
+
+}
+
+function renderBilleteras(){
+
+  const box = document.getElementById('walletsGrid');
 
   if(!box) return;
 
-  if(sel){
-    sel.innerHTML = "";
+  if(!billeteras.length){
+
+    box.innerHTML = `
+      <div class="alert-box">
+        No hay billeteras configuradas para esta PC.
+      </div>
+    `;
+
+    return;
+
   }
+
+  let html = '';
+
+  billeteras.forEach(b=>{
+
+    const activa =
+      String(b.ACTIVA || '').toUpperCase() === 'SI';
+
+    const enUso =
+      String(b.SELECCIONADA_MANUAL || '').toUpperCase() === 'SI';
+
+    html += `
+      <div class="wallet-card">
+
+        <div class="wallet-name">
+          ${b.NOMBRE_VISIBLE || ''}
+        </div>
+
+        <div class="wallet-type">
+          ${b.TIPO || ''} · ${b.PC || pcOperativa}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0)}
+        </div>
+
+        <div style="margin-top:8px;">
+          ${activa
+            ? '<span class="badge badge-ok">ACTIVA</span>'
+            : '<span class="badge badge-danger">INACTIVA</span>'}
+
+          ${enUso
+            ? '<span class="badge badge-pending">EN USO</span>'
+            : ''}
+        </div>
+
+        <div class="wallet-actions">
+          <button class="mini-btn blue" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">
+            Usar
+          </button>
+
+          <button class="mini-btn green" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">
+            Activar
+          </button>
+
+          <button class="mini-btn red" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">
+            Pausar
+          </button>
+
+          <button class="mini-btn yellow" onclick="ajustarBilletera('${b.ID_BILLETERA}')">
+            Ajustar
+          </button>
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderAgentes(){
+
+  const box = document.getElementById('agentesGrid');
+
+  if(!box) return;
 
   if(!agentes.length){
-    box.innerHTML = `<div class="errBox">No hay agentes activos configurados para ${pcOperativa}.</div>`;
+
+    box.innerHTML = `
+      <div class="alert-box">
+        No hay agentes configurados para esta PC.
+      </div>
+    `;
+
     return;
+
   }
 
-  if(sel){
-    agentes.forEach(a=>{
-      const opt = document.createElement("option");
-      opt.value = a.agenteId;
-      opt.textContent = `${a.nombre} · ${money(a.saldo)}`;
+  let html = '';
+
+  agentes.forEach(a=>{
+
+    html += `
+      <div class="wallet-card">
+
+        <div class="wallet-name">
+          🎮 ${a.nombre || a.NOMBRE_AGENTE || ''}
+        </div>
+
+        <div class="wallet-type">
+          ${a.pc || a.PC || pcOperativa}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(a.saldo || a.SALDO_FICHAS || 0)}
+        </div>
+
+        <div class="wallet-actions">
+          <button class="mini-btn green" onclick="ajustarAgente('${a.agenteId || a.AGENTE_ID}','SUMA')">
+            + Fichas
+          </button>
+
+          <button class="mini-btn red" onclick="ajustarAgente('${a.agenteId || a.AGENTE_ID}','RESTA')">
+            - Fichas
+          </button>
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderCargaManualBilleteras(){
+
+  const sel =
+    document.getElementById('manualBilletera');
+
+  if(!sel) return;
+
+  sel.innerHTML = '';
+
+  billeteras
+    .filter(b =>
+      String(b.ACTIVA || '').toUpperCase() === 'SI'
+    )
+    .forEach(b=>{
+
+      const opt =
+        document.createElement('option');
+
+      opt.value = b.ID_BILLETERA;
+      opt.textContent =
+        `${b.NOMBRE_VISIBLE} · ${money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0)}`;
+
       sel.appendChild(opt);
+
     });
-  }
 
-  box.innerHTML = agentes.map(a=>`
-    <div class="card" style="background:#1f222b;border-color:#343844;">
-      <div class="row" style="align-items:center;justify-content:space-between;">
-        <div>
-          <h3 style="margin:0 0 6px;">${a.nombre || "Agente"}</h3>
-          <span class="badge">${a.pc || pcOperativa}</span>
-          <span class="badge badge-ok">ACTIVO</span>
-        </div>
-        <div style="text-align:right;">
-          <div class="small">Saldo fichas</div>
-          <div class="stat-num">${money(a.saldo)}</div>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <button class="success" onclick="ajustarAgente('${a.agenteId}','SUMA')">+ Ajustar fichas</button>
-        <button class="danger" onclick="ajustarAgente('${a.agenteId}','RESTA')">- Ajustar fichas</button>
-      </div>
-    </div>
-  `).join("");
 }
 
-async function ajustarAgente(agenteId, tipo){
-  const monto = prompt(
-    tipo === "SUMA"
-      ? "Monto a SUMAR al saldo de fichas"
-      : "Monto a RESTAR del saldo de fichas"
-  );
-
-  if(!monto) return;
-
-  const obs = prompt("Motivo / observación del ajuste", "Ajuste manual de fichas") || "";
+  async function cargarBilleteras(){
 
   const r = await api({
-    action: "ajustarsaldoagente",
-    agenteId,
-    tipo,
-    monto,
-    operador: operador.nombre,
-    obs
+    action:'getbilleteras',
+    pc:pcOperativa
   });
 
   if(!r.ok){
-    alert(r.error || "Error al ajustar agente");
     return;
   }
 
-  alert("Saldo actualizado.\nNuevo saldo: " + money(r.saldoNuevo));
-  await cargarAgentes();
+  billeteras = r.billeteras || [];
+
+  renderBilleteras();
+  renderCargaManualBilleteras();
+  renderInicio();
+
 }
 
-async function registrarOperacionManualAgente(){
-  const agenteId = document.getElementById("manualAgenteId").value;
-  const tipo = document.getElementById("manualTipo").value;
-  const monto = document.getElementById("manualMonto").value;
-  const obs = document.getElementById("manualObs").value;
-
-  if(!agenteId){
-    msg("agenteMsg", "Seleccioná un agente.", false);
-    return;
-  }
-
-  if(!monto || Number(monto) <= 0){
-    msg("agenteMsg", "Ingresá un monto válido.", false);
-    return;
-  }
+async function cargarAgentes(){
 
   const r = await api({
-    action: "registraroperacionmanual",
-    agenteId,
-    tipo,
-    monto,
-    operador: operador.nombre,
-    obs
+    action:'getagentes',
+    pc:pcOperativa
   });
 
   if(!r.ok){
-    msg("agenteMsg", r.error || "No se pudo registrar.", false);
     return;
   }
 
-  msg("agenteMsg", "Operación manual registrada. Nuevo saldo: " + money(r.saldoNuevo), true);
-  document.getElementById("manualMonto").value = "";
-  document.getElementById("manualObs").value = "";
-  await cargarAgentes();
+  agentes = r.agentes || [];
+
+  renderAgentes();
+  renderInicio();
+
 }
 
-</script>
+async function cargarSolicitudes(){
 
-</body>
-</html>
+  const r = await api({
+    action:'listarsolicitudesoperador',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    pcOperativa
+  });
+
+  if(!r.ok){
+    return;
+  }
+
+  solicitudes = r.solicitudes || [];
+
+  renderSolicitudes();
+  renderInicio();
+  verificarNotificaciones();
+
+}
+
+function renderInicio(){
+
+  const pendientes =
+    solicitudes.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    );
+
+  const retirosPendientes =
+    pendientes.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === 'RETIRO'
+    );
+
+  const cargasOk =
+    solicitudes.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === 'CARGA' &&
+      ['APROBADA_MANUAL','ACREDITADA','PAGADA']
+        .includes(String(s.ESTADO || ''))
+    );
+
+  const retirosOk =
+    solicitudes.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === 'RETIRO' &&
+      ['PAGADA','APROBADA_MANUAL','ACREDITADA']
+        .includes(String(s.ESTADO || ''))
+    );
+
+  const totalCargas =
+    cargasOk.reduce(
+      (a,s)=>a+Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0),
+      0
+    );
+
+  const totalRetiros =
+    retirosOk.reduce(
+      (a,s)=>a+Number(s.MONTO_REAL || s.MONTO_DECLARADO || 0),
+      0
+    );
+
+  document.getElementById('statPendientes').innerText =
+    pendientes.length;
+
+  document.getElementById('statRetiros').innerText =
+    retirosPendientes.length;
+
+  document.getElementById('statNeto').innerText =
+    money(totalCargas - totalRetiros);
+
+  renderTarjetasInicio();
+  renderAlertas();
+
+}
+
+function renderTarjetasInicio(){
+
+  const box = document.getElementById('walletsInicio');
+
+  let html = '';
+
+  billeteras.forEach(b=>{
+
+    const activa =
+      String(b.ACTIVA || '').toUpperCase() === 'SI';
+
+    const enUso =
+      String(b.SELECCIONADA_MANUAL || '').toUpperCase() === 'SI';
+
+    html += `
+      <div class="wallet-card">
+        <div class="wallet-name">
+          💳 ${b.NOMBRE_VISIBLE || ''}
+        </div>
+
+        <div class="wallet-type">
+          ${b.TIPO || ''} · ${activa ? 'ACTIVA' : 'INACTIVA'}
+          ${enUso ? ' · EN USO' : ''}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0)}
+        </div>
+      </div>
+    `;
+
+  });
+
+  agentes.forEach(a=>{
+
+    html += `
+      <div class="wallet-card">
+        <div class="wallet-name">
+          🎮 ${a.nombre || a.NOMBRE_AGENTE || ''}
+        </div>
+
+        <div class="wallet-type">
+          Fichas disponibles · ${a.pc || a.PC || pcOperativa}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(a.saldo || a.SALDO_FICHAS || 0)}
+        </div>
+      </div>
+    `;
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderAlertas(){
+
+  const box = document.getElementById('alertas');
+
+  let html = '';
+
+  const pendientes =
+    solicitudes.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    );
+
+  if(pendientes.length > 0){
+
+    html += `
+      <div class="alert-box">
+        🔔 Hay ${pendientes.length} solicitud/es pendiente/s para revisar.
+      </div>
+    `;
+
+  }
+
+  billeteras.forEach(b=>{
+
+    const saldo =
+      Number(b.SALDO_REAL || b.SALDO_ESTIMADO || 0);
+
+    const limite =
+      Number(b.LIMITE_DESCARGA || 0);
+
+    if(limite > 0 && saldo >= limite){
+
+      html += `
+        <div class="alert-box">
+          ⚠️ ${b.NOMBRE_VISIBLE || 'Billetera'} superó el límite de descarga.
+        </div>
+      `;
+
+    }
+
+  });
+
+  agentes.forEach(a=>{
+
+    const saldo =
+      Number(a.saldo || a.SALDO_FICHAS || 0);
+
+    if(saldo <= 0){
+
+      html += `
+        <div class="alert-box">
+          🚨 El agente ${a.nombre || a.NOMBRE_AGENTE || ''} no tiene fichas disponibles.
+        </div>
+      `;
+
+    }
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderSolicitudes(){
+
+  const tipo =
+    document.getElementById('filtroTipo')?.value || '';
+
+  const estado =
+    document.getElementById('filtroEstado')?.value || '';
+
+  let lista = solicitudes.slice();
+
+  if(tipo){
+    lista = lista.filter(s =>
+      String(s.TIPO_SOLICITUD || '') === tipo
+    );
+  }
+
+  if(estado === 'PENDIENTE'){
+    lista = lista.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    );
+  }
+
+  if(estado === 'APROBADA'){
+    lista = lista.filter(s =>
+      ['APROBADA_MANUAL','ACREDITADA','PAGADA']
+        .includes(String(s.ESTADO || ''))
+    );
+  }
+
+  if(estado === 'RECHAZADA'){
+    lista = lista.filter(s =>
+      String(s.ESTADO || '') === 'RECHAZADA'
+    );
+  }
+
+  const html = tablaSolicitudesHTML(lista);
+
+  const inicio =
+    document.getElementById('tablaSolicitudes');
+
+  const completa =
+    document.getElementById('tablaSolicitudesCompleta');
+
+  if(inicio){
+    inicio.innerHTML = tablaSolicitudesHTML(
+      lista.filter(s =>
+        String(s.ESTADO || '').includes('PENDIENTE')
+      )
+    );
+  }
+
+  if(completa){
+    completa.innerHTML = html;
+  }
+
+}
+
+function tablaSolicitudesHTML(lista){
+
+  if(!lista.length){
+    return `
+      <div class="alert-box">
+        No hay solicitudes para mostrar.
+      </div>
+    `;
+  }
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th>Tipo</th>
+          <th>Usuario</th>
+          <th>Monto</th>
+          <th>Billetera</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  lista
+    .slice()
+    .reverse()
+    .forEach(s=>{
+
+      html += `
+        <tr>
+          <td>${formatFecha(s.FECHA_CREACION)}</td>
+          <td>${s.TIPO_SOLICITUD || ''}</td>
+          <td>
+            <b>${s.USUARIO || ''}</b><br>
+            <span style="color:#98a2b3;font-size:12px;">
+              ${s.NOMBRE_COMPLETO || ''}
+            </span>
+          </td>
+          <td>${money(s.MONTO_REAL || s.MONTO_DECLARADO || 0)}</td>
+          <td>${s.BILLETERA_NOMBRE || ''}</td>
+          <td>${estadoBadge(s.ESTADO)}</td>
+          <td>
+            <button class="mini-btn blue" onclick="tomarSolicitud('${s.ID}')">
+              Tomar
+            </button>
+
+            <button class="mini-btn green" onclick="aprobarSolicitud('${s.ID}')">
+              Aprobar
+            </button>
+
+            <button class="mini-btn red" onclick="rechazarSolicitud('${s.ID}')">
+              Rechazar
+            </button>
+
+            <button class="mini-btn yellow" onclick="abrirChatSolicitud('${s.ID}')">
+              Chat
+            </button>
+          </td>
+        </tr>
+      `;
+
+    });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  return html;
+
+}
+
+function renderBilleteras(){
+
+  const box = document.getElementById('walletsGrid');
+
+  if(!box) return;
+
+  if(!billeteras.length){
+
+    box.innerHTML = `
+      <div class="alert-box">
+        No hay billeteras configuradas para esta PC.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  let html = '';
+
+  billeteras.forEach(b=>{
+
+    const activa =
+      String(b.ACTIVA || '').toUpperCase() === 'SI';
+
+    const enUso =
+      String(b.SELECCIONADA_MANUAL || '').toUpperCase() === 'SI';
+
+    html += `
+      <div class="wallet-card">
+
+        <div class="wallet-name">
+          ${b.NOMBRE_VISIBLE || ''}
+        </div>
+
+        <div class="wallet-type">
+          ${b.TIPO || ''} · ${b.PC || pcOperativa}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0)}
+        </div>
+
+        <div style="margin-top:8px;">
+          ${activa
+            ? '<span class="badge badge-ok">ACTIVA</span>'
+            : '<span class="badge badge-danger">INACTIVA</span>'}
+
+          ${enUso
+            ? '<span class="badge badge-pending">EN USO</span>'
+            : ''}
+        </div>
+
+        <div class="wallet-actions">
+          <button class="mini-btn blue" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">
+            Usar
+          </button>
+
+          <button class="mini-btn green" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">
+            Activar
+          </button>
+
+          <button class="mini-btn red" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">
+            Pausar
+          </button>
+
+          <button class="mini-btn yellow" onclick="ajustarBilletera('${b.ID_BILLETERA}')">
+            Ajustar
+          </button>
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderAgentes(){
+
+  const box = document.getElementById('agentesGrid');
+
+  if(!box) return;
+
+  if(!agentes.length){
+
+    box.innerHTML = `
+      <div class="alert-box">
+        No hay agentes configurados para esta PC.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  let html = '';
+
+  agentes.forEach(a=>{
+
+    html += `
+      <div class="wallet-card">
+
+        <div class="wallet-name">
+          🎮 ${a.nombre || a.NOMBRE_AGENTE || ''}
+        </div>
+
+        <div class="wallet-type">
+          ${a.pc || a.PC || pcOperativa}
+        </div>
+
+        <div class="wallet-balance">
+          ${money(a.saldo || a.SALDO_FICHAS || 0)}
+        </div>
+
+        <div class="wallet-actions">
+          <button class="mini-btn green" onclick="ajustarAgente('${a.agenteId || a.AGENTE_ID}','SUMA')">
+            + Fichas
+          </button>
+
+          <button class="mini-btn red" onclick="ajustarAgente('${a.agenteId || a.AGENTE_ID}','RESTA')">
+            - Fichas
+          </button>
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML = html;
+
+}
+
+function renderCargaManualBilleteras(){
+
+  const sel =
+    document.getElementById('manualBilletera');
+
+  if(!sel) return;
+
+  sel.innerHTML = '';
+
+  billeteras
+    .filter(b =>
+      String(b.ACTIVA || '').toUpperCase() === 'SI'
+    )
+    .forEach(b=>{
+
+      const opt =
+        document.createElement('option');
+
+      opt.value = b.ID_BILLETERA;
+      opt.textContent =
+        `${b.NOMBRE_VISIBLE} · ${money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0)}`;
+
+      sel.appendChild(opt);
+
+    });
+
+}
+  
+    
