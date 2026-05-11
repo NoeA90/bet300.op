@@ -2362,4 +2362,419 @@ function renderCargaManualBilleteras(){
 
 }
   
-    
+ function estadoBadge(e){
+
+  e = String(e || '');
+
+  if(['APROBADA_MANUAL','ACREDITADA','PAGADA'].includes(e)){
+    return `<span class="badge badge-ok">${e}</span>`;
+  }
+
+  if(['RECHAZADA','ERROR'].includes(e)){
+    return `<span class="badge badge-danger">${e}</span>`;
+  }
+
+  return `<span class="badge badge-pending">${e}</span>`;
+}
+
+function formatFecha(f){
+
+  const d = new Date(f);
+
+  if(isNaN(d)) return f || '';
+
+  return d.toLocaleDateString('es-AR',{
+    day:'2-digit',
+    month:'2-digit'
+  }) + ' · ' + d.toLocaleTimeString('es-AR',{
+    hour:'2-digit',
+    minute:'2-digit'
+  });
+
+}
+
+function verificarNotificaciones(){
+
+  const pendientes =
+    solicitudes.filter(s =>
+      String(s.ESTADO || '').includes('PENDIENTE')
+    ).length;
+
+  const badge =
+    document.getElementById('badgeSolicitudes');
+
+  if(pendientes > 0){
+    badge.classList.remove('hidden');
+    badge.innerText = pendientes;
+  }else{
+    badge.classList.add('hidden');
+  }
+
+  if(
+    ultimaCantidadPendientes &&
+    pendientes > ultimaCantidadPendientes
+  ){
+    reproducirAviso();
+  }
+
+  ultimaCantidadPendientes = pendientes;
+
+}
+
+function reproducirAviso(){
+
+  try{
+    const audio = new Audio(
+      'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA='
+    );
+    audio.play();
+  }catch(e){}
+
+}
+
+async function tomarSolicitud(id){
+
+  const r = await api({
+    action:'tomarsolicitud',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    solicitudId:id
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await cargarSolicitudes();
+
+}
+
+async function aprobarSolicitud(id){
+
+  const monto = prompt('Monto real aprobado');
+
+  if(!monto) return;
+
+  const r = await api({
+    action:'aprobarsolicitud',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    solicitudId:id,
+    montoReal:monto
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await refrescarTodo();
+
+}
+
+async function rechazarSolicitud(id){
+
+  if(!confirm('¿Rechazar solicitud?')) return;
+
+  const obs = prompt('Motivo / observación') || '';
+
+  const r = await api({
+    action:'rechazarsolicitud',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    solicitudId:id,
+    observaciones:obs
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await cargarSolicitudes();
+
+}
+
+async function seleccionarBilletera(id){
+
+  const r = await api({
+    action:'seleccionarbilletera',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    idBilletera:id
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await cargarBilleteras();
+
+}
+
+async function cambiarEstadoBilletera(id,estado){
+
+  const r = await api({
+    action:'actualizarestadobilletera',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    idBilletera:id,
+    estadoBilletera:estado
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await cargarBilleteras();
+
+}
+
+async function ajustarBilletera(id){
+
+  const monto = prompt('Monto del ajuste');
+  if(!monto) return;
+
+  const tipo = confirm('Aceptar = sumar / Cancelar = restar')
+    ? 'AJUSTE_POSITIVO'
+    : 'AJUSTE_NEGATIVO';
+
+  const obs = prompt('Motivo del ajuste') || '';
+
+  const r = await api({
+    action:'ajustarsaldobilletera',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    idBilletera:id,
+    tipoMovimiento:tipo,
+    monto,
+    motivoAjuste:obs
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await cargarBilleteras();
+
+}
+
+async function ajustarAgente(id,tipo){
+
+  const monto = prompt(
+    tipo === 'SUMA'
+      ? 'Monto a sumar en fichas'
+      : 'Monto a restar en fichas'
+  );
+
+  if(!monto) return;
+
+  const obs = prompt('Motivo del ajuste') || '';
+
+  const r = await api({
+    action:'ajustarsaldoagente',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    agenteId:id,
+    tipo,
+    monto,
+    obs
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  await cargarAgentes();
+
+}
+
+async function registrarCargaManual(){
+
+  const usuario =
+    document.getElementById('manualUsuario').value.trim();
+
+  const idBilletera =
+    document.getElementById('manualBilletera').value;
+
+  const monto =
+    document.getElementById('manualMonto').value;
+
+  if(!usuario || !idBilletera || !monto){
+    alert('Completá usuario, billetera y monto.');
+    return;
+  }
+
+  const r = await api({
+    action:'registraroperacionmanual',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    pc:pcOperativa,
+    usuarioJugador:usuario,
+    idBilletera,
+    tipoSolicitud:'CARGA',
+    monto
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  document.getElementById('manualUsuario').value = '';
+  document.getElementById('manualMonto').value = '';
+
+  await refrescarTodo();
+
+}
+
+function toggleCargaManual(){
+
+  const body =
+    document.getElementById('floatingBody');
+
+  body.classList.toggle('hidden');
+
+}
+
+let chatSolicitudId = '';
+
+function abrirChatSolicitud(id){
+
+  chatSolicitudId = id;
+
+  mostrarVista('chat');
+
+  cargarChat();
+
+}
+
+async function cargarChat(){
+
+  if(!chatSolicitudId){
+
+    document.getElementById('chatBox').innerHTML =
+      '<div class="alert-box">Seleccioná una solicitud para abrir el chat.</div>';
+
+    return;
+
+  }
+
+  const r = await api({
+    action:'getchat',
+    solicitudId:chatSolicitudId
+  });
+
+  if(!r.ok){
+    return;
+  }
+
+  const mensajes = r.mensajes || [];
+
+  if(!mensajes.length){
+
+    document.getElementById('chatBox').innerHTML =
+      '<div class="alert-box">Sin mensajes todavía.</div>';
+
+    return;
+
+  }
+
+  document.getElementById('chatBox').innerHTML =
+    mensajes.map(m=>`
+      <div class="chat-msg">
+        <div class="chat-meta">
+          ${m.FECHA || ''} · ${m.EMISOR || ''}
+        </div>
+        <div>${m.MENSAJE || ''}</div>
+        ${
+          m.IMAGEN_URL
+            ? `<img src="${m.IMAGEN_URL}" style="max-width:100%;border-radius:10px;margin-top:8px;">`
+            : ''
+        }
+      </div>
+    `).join('');
+
+}
+
+async function enviarMensajeChat(){
+
+  if(!chatSolicitudId){
+    alert('Seleccioná una solicitud primero.');
+    return;
+  }
+
+  const mensaje =
+    document.getElementById('chatInput').value.trim();
+
+  if(!mensaje){
+    return;
+  }
+
+  const r = await api({
+    action:'enviarmensaje',
+    solicitudId:chatSolicitudId,
+    emisor:operador.nombre,
+    tipoEmisor:'OPERADOR',
+    mensaje
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error');
+    return;
+  }
+
+  document.getElementById('chatInput').value = '';
+
+  await cargarChat();
+
+}
+
+document.addEventListener('paste', async e=>{
+
+  if(
+    document
+      .getElementById('viewChat')
+      .classList
+      .contains('hidden')
+  ){
+    return;
+  }
+
+  const items = e.clipboardData?.items || [];
+
+  for(const item of items){
+
+    if(item.type.indexOf('image') === 0){
+
+      alert(
+        'Captura detectada. En el próximo paso conectamos subida a Drive.'
+      );
+
+    }
+
+  }
+
+});
+
+function cerrarSesion(){
+
+  operador = null;
+  pcOperativa = null;
+
+  localStorage.removeItem('operador_nodo');
+  localStorage.removeItem('pc_nodo');
+
+  location.reload();
+
+}
+
+</script>
+
+</body>
+</html>   
