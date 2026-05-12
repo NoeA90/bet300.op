@@ -330,6 +330,118 @@ button:disabled{
   font-size:15px;
 }
 
+
+.chat-modal.hidden{display:none!important}
+.chat-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:9998;
+  padding:14px;
+}
+.chat-panel{
+  width:100%;
+  max-width:480px;
+  height:min(620px,88vh);
+  background:#101722;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.chat-header{
+  padding:16px;
+  background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(255,255,255,.04));
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.chat-header-title{font-weight:900;font-size:18px}
+.chat-header-sub{font-size:13px;color:#cbd5e1;margin-top:3px}
+.chat-close{
+  width:auto;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  box-shadow:none;
+  margin:0;
+  padding:8px 12px;
+  font-size:18px;
+  border-radius:12px;
+}
+.chat-body{
+  flex:1;
+  overflow-y:auto;
+  padding:14px;
+  background:#0b1018;
+}
+.chat-msg{
+  max-width:86%;
+  padding:11px 12px;
+  border-radius:16px;
+  margin-bottom:10px;
+  line-height:1.35;
+  background:#1f2937;
+  color:#f8fafc;
+}
+.chat-msg.me{
+  margin-left:auto;
+  background:#1d4ed8;
+}
+.chat-meta{
+  font-size:11px;
+  color:#cbd5e1;
+  opacity:.8;
+  margin-bottom:4px;
+}
+.chat-img{
+  max-width:100%;
+  display:block;
+  border-radius:12px;
+  margin-top:8px;
+}
+.chat-compose{
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,.12);
+  background:#111827;
+}
+.chat-compose textarea{
+  min-height:74px;
+  margin-bottom:10px;
+  resize:none;
+}
+.chat-actions{display:flex;gap:8px}
+.chat-mini-btn{
+  width:auto;
+  margin:0;
+  padding:12px;
+  font-size:14px;
+  border-radius:12px;
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  box-shadow:none;
+}
+.chat-send{
+  flex:1;
+  margin:0;
+  padding:12px;
+  font-size:15px;
+}
+.chat-preview{
+  margin-bottom:10px;
+  background:rgba(22,163,74,.12);
+  border:1px solid rgba(22,163,74,.35);
+  padding:10px;
+  border-radius:14px;
+  font-size:13px;
+}
+.chat-preview img{max-width:100%;border-radius:10px;margin-top:8px}
+
 @keyframes pulse{
   0%{box-shadow:0 0 0 0 rgba(212,175,55,.55)}
   70%{box-shadow:0 0 0 12px rgba(212,175,55,0)}
@@ -443,7 +555,7 @@ button:disabled{
 
     <div class="actions">
       <a id="btnCrearUsuario" class="wa" target="_blank">👤 Crear usuario</a>
-      <a id="btnContactar" class="wa secondary" target="_blank">💬 Necesito ayuda</a>
+      <a id="btnContactar" class="wa secondary" href="#" onclick="abrirChatLanding(event)">💬 Chateá con nosotros</a>
     </div>
   </div>
 
@@ -451,6 +563,33 @@ button:disabled{
     Guardá el comprobante de transferencia hasta que se confirme la carga.
   </div>
 
+</div>
+
+
+<div id="chatModal" class="chat-modal hidden">
+  <div class="chat-panel">
+    <div class="chat-header">
+      <div>
+        <div class="chat-header-title">💬 Chat de ayuda</div>
+        <div class="chat-header-sub">Consultanos cualquier problema con tu carga.</div>
+      </div>
+      <button class="chat-close" onclick="cerrarChatLanding()">×</button>
+    </div>
+
+    <div id="chatLandingBox" class="chat-body">
+      <div class="chat-msg">Iniciá sesión con tus datos para chatear con soporte.</div>
+    </div>
+
+    <div class="chat-compose">
+      <div id="chatLandingPreview"></div>
+      <textarea id="chatLandingInput" placeholder="Escribí tu consulta o pegá una captura con Ctrl+V..."></textarea>
+      <div class="chat-actions">
+        <input id="chatLandingFile" type="file" accept="image/*" style="display:none" onchange="prepararImagenChatLandingFile()">
+        <button class="chat-mini-btn" onclick="document.getElementById('chatLandingFile').click()">📎 Imagen</button>
+        <button class="chat-send" onclick="enviarChatLanding()">Enviar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="successModal" class="success-modal hidden">
@@ -464,7 +603,7 @@ button:disabled{
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyVuicWTndFUT0gl7eS6G3ynx5QdohB2UKJ8178dD1jlhdL8spaTkhjSeoueQ0zRxwY/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxpMMpNOnwpBIUbZOHUMc0g9tOSiGOm_RrY8tzHDqk9RV9JRG3ASRljeWbmGrlER2yG/exec";
 
 const WHATSAPP_POR_PC = {
   P1: "5492235181171",
@@ -485,11 +624,11 @@ const LINKS_PLATAFORMA = {
 const params = new URLSearchParams(window.location.search);
 
 const PC_ALIASES = {
-  X: "P1",
+  CHINO: "P1",
   ALV: "P2",
-  CHINO: "P3",
-  SAN: "P4",
-  EYF: "P5"
+  SAN: "P3",
+  EYF: "P4",
+  X: "P5"
 };
 
 function normalizarPC(valor) {
@@ -501,11 +640,16 @@ const PC = normalizarPC(params.get("pc") || "P1");
 
 const LS_USER = "bet300_user_" + PC;
 const LS_SOLICITUD = "solicitud_actual_" + PC;
+const LS_CHAT = "chat_general_" + PC;
 
 let billeteraActiva = null;
 let solicitudActual = null;
 let intervaloEstado = null;
 let userData = null;
+let chatSessionId = null;
+let chatLandingTimer = null;
+let chatLandingImagenBase64 = "";
+let chatLandingImagenNombre = "";
 
 window.onload = async () => {
   prepararWhatsapp();
@@ -540,8 +684,7 @@ function prepararWhatsapp() {
   document.getElementById("btnCrearUsuario").href =
     `https://wa.me/${numero}?text=${crearTxt}`;
 
-  document.getElementById("btnContactar").href =
-    `https://wa.me/${numero}?text=${ayudaTxt}`;
+  // El botón de ayuda abre el chat interno. WhatsApp queda solo para crear usuario.
 }
 
 function cargarUsuarioGuardado() {
@@ -567,6 +710,8 @@ function mostrarCarga() {
     <b>Nombre:</b> ${userData.nombre}<br>
     <b>WhatsApp:</b> ${userData.telefono}
   `;
+
+  asegurarChatLanding();
 }
 
 function cambiarDatos() {
@@ -697,7 +842,6 @@ async function crearSolicitud() {
 
   const r = await api({
     action: "crearsolicitud",
-    origen: "LANDING",
     pc: PC,
     idBilletera: billeteraActiva.ID_BILLETERA,
     tipoSolicitud: "CARGA",
@@ -717,6 +861,15 @@ async function crearSolicitud() {
 
   solicitudActual = r.solicitud.id;
   localStorage.setItem(LS_SOLICITUD, solicitudActual);
+
+  if (chatSessionId) {
+    api({
+      action: "vincularchatasolicitud",
+      idChat: chatSessionId,
+      chatSessionId: chatSessionId,
+      solicitudId: solicitudActual
+    });
+  }
 
   mostrarResultado(
     `✅ Solicitud enviada correctamente.<br><br>
@@ -775,7 +928,6 @@ function iniciarEscuchaEstado() {
 
     if (
       estado === "APROBADA_MANUAL" ||
-      estado === "APROBADA_MANUAL_OK" ||
       estado === "ACREDITADA" ||
       estado === "PAGADA"
     ) {
@@ -796,6 +948,193 @@ function iniciarEscuchaEstado() {
     }
   }, 5000);
 }
+
+
+async function asegurarChatLanding() {
+  if (!userData || !userData.usuario) return null;
+
+  chatSessionId = localStorage.getItem(LS_CHAT);
+
+  const r = await api({
+    action: "crearchatlanding",
+    pc: PC,
+    idChat: chatSessionId || "",
+    usuarioJugador: userData.usuario,
+    nombreCompleto: userData.nombre,
+    telefono: userData.telefono
+  });
+
+  if (r.ok && r.idChat) {
+    chatSessionId = r.idChat;
+    localStorage.setItem(LS_CHAT, chatSessionId);
+  }
+
+  return chatSessionId;
+}
+
+async function abrirChatLanding(e) {
+  if (e) e.preventDefault();
+
+  if (!userData || !userData.usuario) {
+    mostrarRegistroMsg("Primero completá tus datos para abrir el chat.", false);
+    return;
+  }
+
+  document.getElementById("chatModal").classList.remove("hidden");
+  await asegurarChatLanding();
+  await cargarChatLanding();
+
+  if (chatLandingTimer) clearInterval(chatLandingTimer);
+  chatLandingTimer = setInterval(cargarChatLanding, 5000);
+}
+
+function cerrarChatLanding() {
+  document.getElementById("chatModal").classList.add("hidden");
+  if (chatLandingTimer) clearInterval(chatLandingTimer);
+  chatLandingTimer = null;
+}
+
+async function cargarChatLanding() {
+  if (!chatSessionId) return;
+
+  const r = await api({
+    action: "getchatlanding",
+    idChat: chatSessionId,
+    chatSessionId: chatSessionId
+  });
+
+  if (!r.ok) return;
+
+  const mensajes = r.mensajes || [];
+  const box = document.getElementById("chatLandingBox");
+
+  if (!mensajes.length) {
+    box.innerHTML = `
+      <div class="chat-msg">
+        Hola ${userData?.nombre || ""}. Escribinos tu consulta y un operador te responde.
+      </div>
+    `;
+    return;
+  }
+
+  box.innerHTML = mensajes.map(m => {
+    const tipo = String(m.TIPO_EMISOR || "").toUpperCase();
+    const me = tipo === "USUARIO";
+    const fecha = m.FECHA || "";
+    const emisor = m.EMISOR || (me ? "Vos" : "Soporte");
+    const mensaje = m.MENSAJE || "";
+    const img = m.IMAGEN_URL
+      ? `<img src="${m.IMAGEN_URL}" class="chat-img" alt="imagen chat">`
+      : "";
+
+    return `
+      <div class="chat-msg ${me ? "me" : ""}">
+        <div class="chat-meta">${emisor} · ${fecha}</div>
+        <div>${mensaje}</div>
+        ${img}
+      </div>
+    `;
+  }).join("");
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function prepararImagenChatLandingFile() {
+  const file = document.getElementById("chatLandingFile").files[0];
+  if (file) leerImagenChatLanding(file);
+}
+
+function leerImagenChatLanding(file) {
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    chatLandingImagenBase64 = String(reader.result || "");
+    chatLandingImagenNombre = file.name || ("captura_" + Date.now() + ".png");
+
+    document.getElementById("chatLandingPreview").innerHTML = `
+      <div class="chat-preview">
+        Imagen lista: ${chatLandingImagenNombre}
+        <img src="${chatLandingImagenBase64}" alt="preview">
+      </div>
+    `;
+  };
+
+  reader.readAsDataURL(file);
+}
+
+async function enviarChatLanding() {
+  if (!userData || !userData.usuario) {
+    mostrarRegistroMsg("Primero completá tus datos para abrir el chat.", false);
+    return;
+  }
+
+  await asegurarChatLanding();
+
+  const input = document.getElementById("chatLandingInput");
+  const mensaje = input.value.trim();
+
+  if (!mensaje && !chatLandingImagenBase64) return;
+
+  let imagenUrl = "";
+
+  if (chatLandingImagenBase64) {
+    const up = await api({
+      action: "subirimagenchat",
+      idChat: chatSessionId,
+      chatSessionId: chatSessionId,
+      solicitudId: solicitudActual || "",
+      filename: chatLandingImagenNombre,
+      base64: chatLandingImagenBase64,
+      emisor: userData.usuario
+    });
+
+    if (up.ok) {
+      imagenUrl = up.url || up.imagenUrl || "";
+    } else if (!mensaje) {
+      alert(up.error || "No se pudo subir la imagen.");
+      return;
+    }
+  }
+
+  const r = await api({
+    action: "enviarmensajechatlanding",
+    idChat: chatSessionId,
+    chatSessionId: chatSessionId,
+    pc: PC,
+    usuarioJugador: userData.usuario,
+    nombreCompleto: userData.nombre,
+    telefono: userData.telefono,
+    solicitudId: solicitudActual || "",
+    mensaje,
+    imagenUrl
+  });
+
+  if (!r.ok) {
+    alert(r.error || "No se pudo enviar el mensaje.");
+    return;
+  }
+
+  input.value = "";
+  chatLandingImagenBase64 = "";
+  chatLandingImagenNombre = "";
+  document.getElementById("chatLandingPreview").innerHTML = "";
+
+  await cargarChatLanding();
+}
+
+document.addEventListener("paste", e => {
+  const modalAbierto = !document.getElementById("chatModal").classList.contains("hidden");
+  if (!modalAbierto) return;
+
+  const items = e.clipboardData?.items || [];
+
+  for (const item of items) {
+    if (item.type.indexOf("image") === 0) {
+      const file = item.getAsFile();
+      if (file) leerImagenChatLanding(file);
+    }
+  }
+});
 
 function irPlataforma() {
   const url = LINKS_PLATAFORMA[PC] || LINKS_PLATAFORMA.P1;
