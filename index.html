@@ -39,17 +39,17 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 </style>
 </head>
 <body>
-<div id="loginView" class="login-wrap"><div class="login-card"><img src="logo-nodo.png" class="logo" alt="NODO"><h2 style="margin-bottom:18px">PANEL OPERATIVO</h2>Usuario</label><input id="loginUsuario" autocomplete="username"><label>Clave</label><input id="loginClave" type="password" autocomplete="current-password"><button class="btn btn-primary" onclick="login()">Ingresar</button><div id="loginMsg" style="margin-top:12px"></div></div></div>
+<div id="loginView" class="login-wrap"><div class="login-card"><img src="logo-nodo.png" class="logo" alt="NODO"><h2 style="margin-bottom:18px">PANEL OPERATIVO</h2><label>Usuario</label><input id="loginUsuario" autocomplete="username"><label>Clave</label><input id="loginClave" type="password" autocomplete="current-password"><button class="btn btn-primary" onclick="login()">Ingresar</button><div id="loginMsg" style="margin-top:12px"></div></div></div>
 <div id="appView" class="hidden"><div class="mobile-top"><button class="mini-btn blue" onclick="abrirMenuMobile()">☰ Menú</button><b>NODO Operativo</b><button class="mini-btn red" onclick="cerrarSesion()">Salir</button></div><div class="layout"><aside class="sidebar" id="sidebar"><img src="logo-nodo.png" class="logo" alt="NODO"><div class="card"><div id="operadorInfo"></div></div><button id="navInicio" class="nav-btn active" onclick="mostrarVista('inicio')">🏠 Inicio</button><button id="navSolicitudes" class="nav-btn" onclick="mostrarVista('solicitudes')">📋 Solicitudes<span id="badgeSolicitudes" class="badge-alert hidden">0</span></button><button id="navBilleteras" class="nav-btn" onclick="mostrarVista('billeteras')">💳 Billeteras</button><button id="navAgentes" class="nav-btn" onclick="mostrarVista('agentes')">🎮 Agente / Fichas</button><button id="navOperaciones" class="nav-btn" onclick="mostrarVista('operaciones')">📊 Operaciones</button><button id="navConciliacion" class="nav-btn" onclick="mostrarVista('conciliacion')">🧾 Conciliación CSV</button><button id="navChat" class="nav-btn" onclick="abrirChatSinSolicitud()">💬 Chat<span id="badgeChat" class="badge-alert badge-chat hidden">0</span></button><button class="nav-btn" onclick="cerrarSesion()">🚪 Cerrar sesión</button></aside>
 <main class="main">
 <section id="viewInicio"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><div><h1 style="font-size:26px">Inicio operativo</h1><div class="small">Resumen vivo de PC, solicitudes, billeteras y fichas.</div></div><button class="mini-btn blue" onclick="refrescarTodo(true)">🔄 Refresh operaciones</button></div><div id="alertas"></div><div class="top-grid"><div class="stat-card"><div class="stat-title">Turno actual</div><div class="stat-value" id="statTurno">-</div><div class="stat-sub" id="statTurnoHorario"></div></div><div class="stat-card"><div class="stat-title">Operaciones turno</div><div class="stat-value" id="statOpsTurno">0</div><div class="stat-sub">Cargas + retiros</div></div><div class="stat-card"><div class="stat-title">Neto turno</div><div class="stat-value" id="statNeto">$0</div><div class="stat-sub" id="statCargasRetiros">Cargas $0 · Retiros $0</div></div><div class="stat-card"><div class="stat-title">Pendientes</div><div class="stat-value" id="statPendientes">0</div><div class="stat-sub" id="statRetiros">Retiros pendientes: 0</div></div></div><div id="walletsInicio" class="wallet-grid"></div><div class="card"><h2 class="card-title">Solicitudes pendientes</h2><div id="tablaSolicitudes"></div></div><div class="card"><h2 class="card-title">Últimas operaciones</h2><div id="tablaOperacionesPanel"></div></div></section>
 <section id="viewSolicitudes" class="hidden"><div class="card"><h2 class="card-title">📋 Solicitudes</h2><div class="filters"><select id="filtroTipo" onchange="renderSolicitudes()"><option value="">Todos los tipos</option><option value="CARGA">Cargas</option><option value="RETIRO">Retiros</option></select><select id="filtroEstado" onchange="renderSolicitudes()"><option value="">Todos los estados</option><option value="PENDIENTE">Pendientes</option><option value="APROBADA">Aprobadas/Pagadas</option><option value="RECHAZADA">Rechazadas</option></select><input id="filtroSolicitudTexto" placeholder="Buscar usuario / nombre" oninput="renderSolicitudes()"></div><div id="tablaSolicitudesCompleta"></div></div></section>
-<section id="viewBilleteras" class="hidden"><div class="card"><h2 class="card-title">💳 Billeteras</h2><div id="walletsGrid" class="wallet-grid"></div><div class="history-table"><h3 style="margin:18px 0 10px">Historial de ajustes / movimientos</h3><div id="tablaMovimientosBilletera"></div></div></div></section>
+<section id="viewBilleteras" class="hidden"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h2 class="card-title">💳 Billeteras</h2><button class="mini-btn blue" onclick="abrirModalTransferenciaBilletera()">↔ Mover dinero</button></div><div id="walletsGrid" class="wallet-grid"></div><div class="history-table"><h3 style="margin:18px 0 10px">Historial de ajustes / movimientos</h3><div id="tablaMovimientosBilletera"></div></div></div></section>
 <section id="viewAgentes" class="hidden"><div class="card"><h2 class="card-title">🎮 Agente / Fichas</h2><div id="agentesGrid" class="wallet-grid"></div><div class="history-table"><h3 style="margin:18px 0 10px">Historial de movimientos de fichas</h3><div id="tablaMovimientosAgente"></div></div></div></section>
 <section id="viewOperaciones" class="hidden"><div class="card"><h2 class="card-title">📊 Operaciones</h2><div class="filters"><select id="opFiltroOrigen" onchange="renderOperacionesPanel()"><option value="">Origen: todos</option><option value="LANDING">Landing</option><option value="OPERADOR">Manual/Operador</option></select><select id="opFiltroTipo" onchange="renderOperacionesPanel()"><option value="">Tipo: todos</option><option value="CARGA">Carga</option><option value="RETIRO">Retiro</option><option value="AJUSTE">Ajuste</option></select><input id="opFiltroOperador" placeholder="Operador" oninput="renderOperacionesPanel()"><input id="opFiltroTexto" placeholder="Buscar usuario / billetera" oninput="renderOperacionesPanel()"><input id="opFiltroFecha" type="date" onchange="renderOperacionesPanel()"></div><div id="tablaOperacionesPanelCompleta"></div></div></section>
 <section id="viewConciliacion" class="hidden"><div class="card"><h2 class="card-title">🧾 Conciliación automática CSV</h2><p class="small" style="margin-bottom:12px">Subí el CSV descargado del agente. Requiere acción backend conciliarcsv.</p><input id="csvConciliacion" type="file" accept=".csv,text/csv"><button class="btn btn-primary" onclick="procesarCsvConciliacion()">Procesar CSV</button><div id="conciliacionMsg" style="margin-top:12px"></div><div id="tablaConciliacion" class="history-table"></div></div></section>
 </main></div></div><div id="mobileMenu" class="mobile-menu" onclick="cerrarMenuMobile(event)"></div>
-<div id="floatingCarga" class="floating-box hidden"><div class="floating-header"><span>⚡ Carga manual</span><button onclick="toggleCargaManual()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px">×</button></div><div id="floatingBody" class="floating-body"><label>Tipo</label><select id="manualTipo"><option value="CARGA">Carga</option><option value="RETIRO">RetIRO</option></select><label>Usuario</label><input id="manualUsuario"><label>Billetera</label><select id="manualBilletera"></select><label>Monto</label><input id="manualMonto" type="number"><button class="btn btn-primary" onclick="registrarCargaManual()">Registrar carga</button></div></div>
+<div id="floatingCarga" class="floating-box hidden"><div class="floating-header"><span>⚡ Carga manual</span><button onclick="toggleCargaManual()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px">×</button></div><div id="floatingBody" class="floating-body"><label>Tipo</label><select id="manualTipo"><option value="CARGA">Carga</option><option value="RETIRO">Retiro</option></select><label>Usuario</label><input id="manualUsuario"><label>Billetera</label><select id="manualBilletera"></select><label>Monto</label><input id="manualMonto" type="number"><button class="btn btn-primary" onclick="registrarCargaManual()">Registrar operación</button></div></div>
 <div id="modalOverlay" class="modal-overlay hidden"><div class="modal"><div id="modalTitle" class="modal-title">Modal</div><div id="modalBody"></div><div class="modal-actions"><button class="btn btn-gray" onclick="cerrarModal()">Cancelar</button><button id="modalSaveBtn" class="btn btn-primary">Guardar</button></div></div></div>
 <div id="selectorPcOverlay" class="modal-overlay hidden"><div class="modal"><div class="modal-title">Seleccionar PC operativa</div><p class="small">Elegí la PC que cubrís hoy.</p><div id="pcSelectorGrid" class="pc-selector"></div></div></div>
 <div id="chatDrawer" class="chat-drawer hidden">
@@ -113,11 +113,38 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 const API_URL="https://script.google.com/macros/s/AKfycbwdTCMp0DJMX2jyPatCxaTEZXW1pbrsMTFZHExXlzPr8usx6EnbfOf3RDpxzHIwhKT4/exec";
 let operador=null,pcOperativa=null,solicitudes=[],billeteras=[],agentes=[],movimientosBilletera=[],movimientosAgente=[],operacionesPanel=[],conciliacionRows=[];
 let ultimaCantidadPendientes=0,ultimoChatPendiente=0,lastSolicitudIds=new Set(),billeteraAjusteActual=null,chatSolicitudId="",chatImagenBase64="",chatImagenNombre="",timersIniciados=false;
+window.addEventListener('load',()=>{
+  const savedOperador = localStorage.getItem('nodo_operador');
+  const savedPc = localStorage.getItem('nodo_pc_operativa');
+  if(savedOperador && savedPc){
+    try{
+      operador = JSON.parse(savedOperador);
+      pcOperativa = savedPc;
+      finalizarLogin(false);
+    }catch(e){
+      localStorage.removeItem('nodo_operador');
+      localStorage.removeItem('nodo_pc_operativa');
+    }
+  }
+});
 function money(v){return Number(v||0).toLocaleString('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0})}
 async function api(data){const fd=new FormData();Object.keys(data).forEach(k=>fd.append(k,data[k]??""));const r=await fetch(API_URL,{method:'POST',body:fd});const text=await r.text();try{return JSON.parse(text)}catch(e){console.error("Respuesta no JSON:",text);return{ok:false,error:"Respuesta inválida del servidor"}}}
 function toast(msg,type="blue"){const div=document.createElement("div");div.className="toast";div.style.background=type==="red"?"#f04438":type==="green"?"#12b76a":"#3d5afe";div.innerText=msg;document.body.appendChild(div);setTimeout(()=>div.remove(),3500)}
 function setBox(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html}
 function normalizar(v){return String(v||"").trim().toUpperCase()}
+function esPendiente(s){
+  const e = normalizar(s.ESTADO);
+  return e.includes('PENDIENTE') || e === 'NUEVA' || e === 'NUEVO' || e === 'EN_REVISION' || e === 'PENDIENTE_PAGO';
+}
+function tiempoHace(f){
+  const d = new Date(f);
+  if(isNaN(d)) return '';
+  const diff = Math.max(0, Math.floor((Date.now() - d.getTime()) / 1000));
+  if(diff < 60) return `hace ${diff}s`;
+  if(diff < 3600) return `hace ${Math.floor(diff/60)}m`;
+  if(diff < 86400) return `hace ${Math.floor(diff/3600)}h`;
+  return `hace ${Math.floor(diff/86400)}d`;
+}
 async function login(){const usuario=document.getElementById('loginUsuario').value.trim();const clave=document.getElementById('loginClave').value.trim();if(!usuario||!clave){setBox("loginMsg",`<div class="alert-box">Completá usuario y clave.</div>`);return}setBox("loginMsg",`<div class="alert-box">Ingresando...</div>`);const r=await api({action:'login',usuario,clave});if(!r.ok){setBox("loginMsg",`<div class="err-box">${r.error||'Error'}</div>`);return}operador=r.operador;const esFranq=normalizar(operador.tipoOperador)==='FRANQUERO';if(operador.requiereSeleccionPc||esFranq){abrirSelectorPc(operador.pcsDisponibles||["P1","P2","P3","P4","P5"]);return}pcOperativa=operador.pc||operador.pcOperativa||"";finalizarLogin(true)}
 function abrirSelectorPc(lista){const grid=document.getElementById('pcSelectorGrid');grid.innerHTML="";[...new Set(lista.map(x=>String(x).trim().toUpperCase()).filter(Boolean))].forEach(pc=>{grid.innerHTML+=`<button class="pc-btn" onclick="seleccionarPcOperativa('${pc}')">${pc}</button>`});document.getElementById('selectorPcOverlay').classList.remove('hidden')}
 function seleccionarPcOperativa(pc){pcOperativa=pc;document.getElementById('selectorPcOverlay').classList.add('hidden');finalizarLogin(true)}
@@ -128,27 +155,142 @@ async function refrescarSolicitudesFino(){await cargarSolicitudes(true)}
 async function refrescarSaldos(){await cargarBilleteras();await cargarAgentes()}
 async function cargarBilleteras(){const r=await api({action:'getbilleteras',pc:pcOperativa});if(!r.ok)return;billeteras=r.billeteras||[];renderBilleteras();renderCargaManualBilleteras();renderInicio()}
 async function cargarAgentes(){const r=await api({action:'getagentes',pc:pcOperativa});if(!r.ok)return;agentes=r.agentes||[];renderAgentes();renderInicio()}
-async function cargarSolicitudes(silencioso=false){const r=await api({action:'listarsolicitudesoperador',usuario:operador?.usuario||"",operador:operador?.nombre||"",pcOperativa});if(!r.ok)return;solicitudes=r.solicitudes||[];renderSolicitudes();renderInicio();verificarNotificaciones(silencioso)}
-async function cargarMovimientosBilletera(){const r=await api({action:'listarmovimientosbilletera',pc:pcOperativa});movimientosBilletera=r.ok?(r.movimientos||[]):[];renderMovimientosBilletera()}
+async function cargarSolicitudes(silencioso=false){
+  const r = await api({
+    action:'listarsolicitudesoperador',
+    usuario:operador?.usuario || "",
+    operador:operador?.nombre || "",
+    pcOperativa,
+    pc:pcOperativa
+  });
+
+  if(!r.ok) return;
+
+  solicitudes = r.solicitudes || r.data || r.items || [];
+
+  renderSolicitudes();
+  renderInicio();
+  verificarNotificaciones(silencioso);
+}
+async function cargarMovimientosBilletera(){
+  const r = await api({action:'listarmovimientosbilletera',pc:pcOperativa});
+  movimientosBilletera = r.ok ? (r.movimientos || r.data || r.items || []) : [];
+  renderMovimientosBilletera();
+}
 async function cargarMovimientosAgente(){const r=await api({action:'listarmovimientosagente',pc:pcOperativa});movimientosAgente=r.ok?(r.movimientos||[]):[];renderMovimientosAgente()}
 async function cargarOperacionesPanel(){const r=await api({action:'listaroperacionespanel',pc:pcOperativa});operacionesPanel=r.ok?(r.operaciones||[]):[];renderOperacionesPanel();renderInicio()}
 function turnoActual(){const h=new Date().getHours();if(h>=6&&h<14)return{id:"TM",desde:6,hasta:14,label:"06:00 a 14:00"};if(h>=14&&h<22)return{id:"TT",desde:14,hasta:22,label:"14:00 a 22:00"};return{id:"TN",desde:22,hasta:6,label:"22:00 a 06:00"}}
 function enTurno(fecha){const d=new Date(fecha);if(isNaN(d))return false;const t=turnoActual();const now=new Date();const sameDay=d.toDateString()===now.toDateString();const h=d.getHours();if(t.id==="TM")return sameDay&&h>=6&&h<14;if(t.id==="TT")return sameDay&&h>=14&&h<22;if(t.id==="TN"){if(now.getHours()<6){const ayer=new Date(now);ayer.setDate(now.getDate()-1);return(d.toDateString()===ayer.toDateString()&&h>=22)||(sameDay&&h<6)}return sameDay&&h>=22}}
-function renderInicio(){const pendientes=solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE'));const retirosPendientes=pendientes.filter(s=>normalizar(s.TIPO_SOLICITUD)==='RETIRO');const opsTurno=operacionesPanel.filter(o=>enTurno(o.FECHA));const cargasTurno=opsTurno.filter(o=>normalizar(o.TIPO).includes("CARGA")).reduce((a,o)=>a+Number(o.MONTO||0),0);const retirosTurno=opsTurno.filter(o=>normalizar(o.TIPO).includes("RETIRO")).reduce((a,o)=>a+Number(o.MONTO||0),0);const t=turnoActual();setBox('statTurno',t.id);setBox('statTurnoHorario',t.label);setBox('statOpsTurno',opsTurno.length);setBox('statNeto',money(cargasTurno-retirosTurno));setBox('statCargasRetiros',`Cargas ${money(cargasTurno)} · Retiros ${money(retirosTurno)}`);setBox('statPendientes',pendientes.length);setBox('statRetiros',`Retiros pendientes: ${retirosPendientes.length}`);renderTarjetasInicio();renderAlertas()}
+function renderInicio(){const pendientes=solicitudes.filter(s=>esPendiente(s));const retirosPendientes=pendientes.filter(s=>normalizar(s.TIPO_SOLICITUD||s.TIPO)==='RETIRO');const opsTurno=operacionesPanel.filter(o=>enTurno(o.FECHA));const cargasTurno=opsTurno.filter(o=>normalizar(o.TIPO).includes("CARGA")).reduce((a,o)=>a+Number(o.MONTO||0),0);const retirosTurno=opsTurno.filter(o=>normalizar(o.TIPO).includes("RETIRO")).reduce((a,o)=>a+Number(o.MONTO||0),0);const t=turnoActual();setBox('statTurno',t.id);setBox('statTurnoHorario',t.label);setBox('statOpsTurno',opsTurno.length);setBox('statNeto',money(cargasTurno-retirosTurno));setBox('statCargasRetiros',`Cargas ${money(cargasTurno)} · Retiros ${money(retirosTurno)}`);setBox('statPendientes',pendientes.length);setBox('statRetiros',`Retiros pendientes: ${retirosPendientes.length}`);renderTarjetasInicio();renderAlertas()}
 function estadoBilleteraVisual(b){const activa=normalizar(b.ACTIVA)==='SI';const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0);const limite=Number(b.LIMITE_DESCARGA||0);if(!activa)return"paused";if(limite>0&&saldo>=limite)return"danger";if(limite>0&&saldo>=limite*.8)return"warn";return"ok"}
 function renderTarjetasInicio(){const box=document.getElementById('walletsInicio');if(!box)return;let html='';billeteras.forEach(b=>{const activa=normalizar(b.ACTIVA)==='SI';const enUso=normalizar(b.SELECCIONADA_MANUAL)==='SI';const cls=estadoBilleteraVisual(b);html+=`<div class="wallet-card ${cls}"><div class="wallet-name">💳 ${b.NOMBRE_VISIBLE||''}</div><div class="wallet-type">${b.TIPO||''} · ${activa?'ACTIVA':'PAUSADA'} ${enUso?' · EN USO':''}</div><div class="wallet-balance">${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}</div><div class="small">Última op: ${b.ULTIMA_OPERACION||'-'} · Usa: ${b.USADA_POR||b.OPERADOR_USO||'-'}</div></div>`});agentes.forEach(a=>{html+=`<div class="wallet-card ok"><div class="wallet-name">🎮 ${a.nombre||a.NOMBRE_AGENTE||''}</div><div class="wallet-type">Fichas disponibles · ${a.pc||a.PC||pcOperativa}</div><div class="wallet-balance">${money(a.saldo||a.SALDO_FICHAS||0)}</div></div>`});box.innerHTML=html||`<div class="alert-box">Sin billeteras/agentes configurados.</div>`}
-function renderAlertas(){let html='';const pendientes=solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE'));const retiros=pendientes.filter(s=>normalizar(s.TIPO_SOLICITUD)==='RETIRO');if(pendientes.length>0)html+=`<div class="alert-box">🔔 Hay ${pendientes.length} solicitud/es pendiente/s.</div>`;if(retiros.length>0)html+=`<div class="err-box">🚨 Hay ${retiros.length} retiro/s pendiente/s.</div>`;billeteras.forEach(b=>{const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0);const limite=Number(b.LIMITE_DESCARGA||0);if(limite>0&&saldo>=limite)html+=`<div class="err-box">⚠️ ${b.NOMBRE_VISIBLE||'Billetera'} superó el límite de descarga.</div>`;else if(limite>0&&saldo>=limite*.8)html+=`<div class="alert-box">🟡 ${b.NOMBRE_VISIBLE||'Billetera'} está cerca del límite.</div>`});agentes.forEach(a=>{const saldo=Number(a.saldo||a.SALDO_FICHAS||0);if(saldo<=0)html+=`<div class="err-box">🚨 El agente ${a.nombre||a.NOMBRE_AGENTE||''} no tiene fichas.</div>`});setBox('alertas',html)}
-function renderSolicitudes(){const tipo=document.getElementById('filtroTipo')?.value||'';const estado=document.getElementById('filtroEstado')?.value||'';const texto=normalizar(document.getElementById('filtroSolicitudTexto')?.value||'');let lista=solicitudes.slice();if(tipo)lista=lista.filter(s=>normalizar(s.TIPO_SOLICITUD)===tipo);if(estado==='PENDIENTE')lista=lista.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE'));if(estado==='APROBADA')lista=lista.filter(s=>['APROBADA_MANUAL','ACREDITADA','PAGADA'].includes(normalizar(s.ESTADO)));if(estado==='RECHAZADA')lista=lista.filter(s=>normalizar(s.ESTADO)==='RECHAZADA');if(texto)lista=lista.filter(s=>normalizar(`${s.USUARIO||''} ${s.NOMBRE_COMPLETO||''}`).includes(texto));setBox('tablaSolicitudes',tablaSolicitudesHTML(lista.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE'))));setBox('tablaSolicitudesCompleta',tablaSolicitudesHTML(lista))}
-function tablaSolicitudesHTML(lista){if(!lista.length)return`<div class="alert-box">No hay solicitudes para mostrar.</div>`;let html=`<div class="table-wrap"><table><thead><tr><th>Hora</th><th>Tipo</th><th>Usuario</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Tomó</th><th>Acción</th></tr></thead><tbody>`;lista.slice().reverse().forEach(s=>{const id=s.ID||s.SOLICITUD_ID||"";const tomado=s.QUIEN_TOMO||s.OPERADOR||"";const bloqueado=tomado&&operador&&tomado!==operador.nombre&&normalizar(s.ESTADO).includes("PENDIENTE");const esRetiro=normalizar(s.TIPO_SOLICITUD)==="RETIRO";html+=`<tr><td>${formatFecha(s.FECHA_CREACION)}<br><span class="small">${tiempoHace(s.FECHA_CREACION)}</span></td><td>${s.TIPO_SOLICITUD||''}</td><td><b>${s.USUARIO||''}</b><br><span class="small">${s.NOMBRE_COMPLETO||''}</span></td><td>${money(s.MONTO_REAL||s.MONTO_DECLARADO||0)}</td><td>${s.BILLETERA_NOMBRE||''}</td><td>${estadoBadge(s.ESTADO)}</td><td>${tomado||'-'}</td><td>${bloqueado?`<span class="badge badge-danger">Bloqueada</span>`:`<button class="mini-btn blue" onclick="tomarSolicitud('${id}')">Tomar</button> <button class="mini-btn green" onclick="abrirModalAprobar('${id}')">Aprobar</button> <button class="mini-btn red" onclick="abrirModalRechazar('${id}')">Rechazar</button> ${esRetiro?`<button class="mini-btn blue" onclick="abrirModalCerrarRetiro('${id}')">Cerrar retiro</button>`:''}`} <button class="mini-btn yellow" onclick="abrirChatSolicitud('${id}','${s.USUARIO||''}')">Chat</button></td></tr>`});html+=`</tbody></table></div>`;return html}
+function renderAlertas(){let html='';const pendientes=solicitudes.filter(s=>esPendiente(s));const retiros=pendientes.filter(s=>normalizar(s.TIPO_SOLICITUD||s.TIPO)==='RETIRO');if(pendientes.length>0)html+=`<div class="alert-box">🔔 Hay ${pendientes.length} solicitud/es pendiente/s.</div>`;if(retiros.length>0)html+=`<div class="err-box">🚨 Hay ${retiros.length} retiro/s pendiente/s.</div>`;billeteras.forEach(b=>{const saldo=Number(b.SALDO_REAL||b.SALDO_ESTIMADO||0);const limite=Number(b.LIMITE_DESCARGA||0);if(limite>0&&saldo>=limite)html+=`<div class="err-box">⚠️ ${b.NOMBRE_VISIBLE||'Billetera'} superó el límite de descarga.</div>`;else if(limite>0&&saldo>=limite*.8)html+=`<div class="alert-box">🟡 ${b.NOMBRE_VISIBLE||'Billetera'} está cerca del límite.</div>`});agentes.forEach(a=>{const saldo=Number(a.saldo||a.SALDO_FICHAS||0);if(saldo<=0)html+=`<div class="err-box">🚨 El agente ${a.nombre||a.NOMBRE_AGENTE||''} no tiene fichas.</div>`});setBox('alertas',html)}
+function renderSolicitudes(){
+  const tipo = document.getElementById('filtroTipo')?.value || '';
+  const estado = document.getElementById('filtroEstado')?.value || '';
+  const texto = normalizar(document.getElementById('filtroSolicitudTexto')?.value || '');
+
+  let lista = solicitudes.slice();
+
+  if(tipo){
+    lista = lista.filter(s => normalizar(s.TIPO_SOLICITUD || s.TIPO) === normalizar(tipo));
+  }
+
+  if(estado === 'PENDIENTE'){
+    lista = lista.filter(s => esPendiente(s));
+  }
+
+  if(estado === 'APROBADA'){
+    lista = lista.filter(s =>
+      ['APROBADA_MANUAL','ACREDITADA','PAGADA','APROBADA']
+        .includes(normalizar(s.ESTADO))
+    );
+  }
+
+  if(estado === 'RECHAZADA'){
+    lista = lista.filter(s => normalizar(s.ESTADO) === 'RECHAZADA');
+  }
+
+  if(texto){
+    lista = lista.filter(s =>
+      normalizar(`${s.USUARIO || s.USUARIO_JUGADOR || ''} ${s.NOMBRE_COMPLETO || s.NOMBRE || ''}`).includes(texto)
+    );
+  }
+
+  const pendientes = solicitudes.filter(s => esPendiente(s));
+
+  setBox('tablaSolicitudes', tablaSolicitudesHTML(pendientes));
+  setBox('tablaSolicitudesCompleta', tablaSolicitudesHTML(lista));
+}
+function tablaSolicitudesHTML(lista){
+  if(!lista.length){
+    return `<div class="alert-box">No hay solicitudes para mostrar.</div>`;
+  }
+
+  let html = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Tipo</th>
+            <th>Usuario</th>
+            <th>Monto</th>
+            <th>Billetera</th>
+            <th>Estado</th>
+            <th>Tomó</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  lista.slice().reverse().forEach(s=>{
+    const id = s.ID || s.SOLICITUD_ID || s.ID_SOLICITUD || "";
+    const tomado = s.QUIEN_TOMO || s.OPERADOR || "";
+    const estado = normalizar(s.ESTADO);
+    const tipo = normalizar(s.TIPO_SOLICITUD || s.TIPO);
+    const bloqueado = tomado && operador && tomado !== operador.nombre && estado.includes("PENDIENTE");
+    const esRetiro = tipo === "RETIRO";
+
+    html += `
+      <tr>
+        <td>${formatFecha(s.FECHA_CREACION || s.FECHA)}<br><span class="small">${tiempoHace(s.FECHA_CREACION || s.FECHA)}</span></td>
+        <td>${s.TIPO_SOLICITUD || s.TIPO || ''}</td>
+        <td><b>${s.USUARIO || s.USUARIO_JUGADOR || ''}</b><br><span class="small">${s.NOMBRE_COMPLETO || s.NOMBRE || ''}</span></td>
+        <td>${money(s.MONTO_REAL || s.MONTO_DECLARADO || s.MONTO || 0)}</td>
+        <td>${s.BILLETERA_NOMBRE || s.NOMBRE_BILLETERA || s.ID_BILLETERA || ''}</td>
+        <td>${estadoBadge(s.ESTADO)}</td>
+        <td>${tomado || '-'}</td>
+        <td>
+          ${
+            bloqueado
+              ? `<span class="badge badge-danger">Bloqueada</span>`
+              : `
+                <button class="mini-btn blue" onclick="tomarSolicitud('${id}')">Tomar</button>
+                <button class="mini-btn green" onclick="abrirModalAprobar('${id}')">Aprobar</button>
+                <button class="mini-btn red" onclick="abrirModalRechazar('${id}')">Rechazar</button>
+                ${esRetiro ? `<button class="mini-btn blue" onclick="abrirModalCerrarRetiro('${id}')">Cerrar retiro</button>` : ''}
+              `
+          }
+          <button class="mini-btn yellow" onclick="abrirChatSolicitud('${id}','${s.USUARIO || s.USUARIO_JUGADOR || ''}')">Chat</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  return html;
+}
 function renderOperacionesPanel(){const origen=normalizar(document.getElementById('opFiltroOrigen')?.value||'');const tipo=normalizar(document.getElementById('opFiltroTipo')?.value||'');const operadorFiltro=normalizar(document.getElementById('opFiltroOperador')?.value||'');const texto=normalizar(document.getElementById('opFiltroTexto')?.value||'');const fecha=document.getElementById('opFiltroFecha')?.value||'';let lista=operacionesPanel.slice();if(origen)lista=lista.filter(o=>normalizar(o.ORIGEN)===origen);if(tipo){if(tipo==='AJUSTE')lista=lista.filter(o=>normalizar(o.TIPO).includes('AJUSTE'));else lista=lista.filter(o=>normalizar(o.TIPO).includes(tipo))}if(operadorFiltro)lista=lista.filter(o=>normalizar(o.OPERADOR||o.QUIEN_TOMO||o.QUIEN_APROBO||'').includes(operadorFiltro));if(texto)lista=lista.filter(o=>normalizar(`${o.USUARIO||''} ${o.BILLETERA||''} ${o.ID_BILLETERA||''}`).includes(texto));if(fecha)lista=lista.filter(o=>{const d=new Date(o.FECHA);return !isNaN(d)&&d.toISOString().slice(0,10)===fecha});const html=tablaOperacionesHTML(lista);setBox('tablaOperacionesPanel',tablaOperacionesHTML(lista.slice(0,40)));setBox('tablaOperacionesPanelCompleta',html)}
 function tablaOperacionesHTML(lista){
-
   if(!lista.length){
-    return `
-      <div class="alert-box">
-        No hay operaciones registradas todavía.
-      </div>
-    `;
+    return `<div class="alert-box">No hay operaciones registradas todavía.</div>`;
   }
 
   let html = `
@@ -160,6 +302,7 @@ function tablaOperacionesHTML(lista){
             <th>Origen</th>
             <th>Tipo</th>
             <th>Usuario</th>
+            <th>Billetera</th>
             <th>Monto</th>
             <th>Estado</th>
             <th>Operador</th>
@@ -170,19 +313,18 @@ function tablaOperacionesHTML(lista){
   `;
 
   lista.slice(0,200).forEach(o=>{
-
-    const esManual =
-      String(o.ORIGEN || '').toUpperCase() === 'OPERADOR';
-
-    const idMovimiento =
-      o.ID_MOVIMIENTO || '';
+    const esManual = normalizar(o.ORIGEN) === 'OPERADOR';
+    const idMovimiento = o.ID_MOVIMIENTO || o.MOVIMIENTO_ID || o.ID || '';
+    const usuario = o.USUARIO || o.USUARIO_JUGADOR || o.USUARIO_MANUAL || o.JUGADOR || o.CLIENTE || '-';
+    const billetera = o.BILLETERA || o.BILLETERA_NOMBRE || o.NOMBRE_BILLETERA || o.ID_BILLETERA || '-';
 
     html += `
       <tr>
         <td>${formatFecha(o.FECHA)}</td>
         <td>${o.ORIGEN || ''}</td>
-        <td>${o.TIPO || '-'}</td>
-        <td>${o.USUARIO || o.USUARIO_JUGADOR || o.USUARIO_MANUAL || o.JUGADOR || '-'}</td>
+        <td>${o.TIPO || o.TIPO_SOLICITUD || o.TIPO_MOVIMIENTO || '-'}</td>
+        <td>${usuario}</td>
+        <td>${billetera}</td>
         <td>${money(o.MONTO || 0)}</td>
         <td>${o.ESTADO || ''}</td>
         <td>${o.OPERADOR || o.QUIEN_TOMO || o.QUIEN_APROBO || '-'}</td>
@@ -195,7 +337,6 @@ function tablaOperacionesHTML(lista){
         </td>
       </tr>
     `;
-
   });
 
   html += `
@@ -205,25 +346,25 @@ function tablaOperacionesHTML(lista){
   `;
 
   return html;
-
 }
 function renderBilleteras(){const box=document.getElementById('walletsGrid');if(!box)return;if(!billeteras.length){box.innerHTML=`<div class="alert-box">No hay billeteras configuradas para esta PC.</div>`;return}let html='';billeteras.forEach(b=>{const activa=normalizar(b.ACTIVA)==='SI';const enUso=normalizar(b.SELECCIONADA_MANUAL)==='SI';const cls=estadoBilleteraVisual(b);html+=`<div class="wallet-card ${cls}"><div class="wallet-name">${b.NOMBRE_VISIBLE||''}</div><div class="wallet-type">${b.TIPO||''} · ${b.PC||pcOperativa}</div><div class="wallet-balance">${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}</div><div style="margin-top:8px">${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">PAUSADA</span>'}${enUso?'<span class="badge badge-pending">EN USO</span>':''}</div><div class="small">Última op: ${b.ULTIMA_OPERACION||'-'} · Usa: ${b.USADA_POR||b.OPERADOR_USO||'-'}</div><div class="wallet-actions"><button class="mini-btn blue" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">Usar</button><button class="mini-btn green" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button><button class="mini-btn red" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Pausar</button><button class="mini-btn yellow" onclick="abrirModalAjusteBilletera('${b.ID_BILLETERA}')">Ajustar</button></div></div>`});box.innerHTML=html}
 function renderMovimientosBilletera(){
-
   const box = document.getElementById('tablaMovimientosBilletera');
-
   if(!box) return;
 
-  if(!movimientosBilletera.length){
+  const lista = movimientosBilletera.filter(m=>{
+    const tipo = normalizar(m.TIPO_SOLICITUD || m.TIPO_OPERACION || m.TIPO_MOVIMIENTO || m.TIPO || '');
+    return (
+      tipo.includes('AJUSTE') ||
+      tipo.includes('TRANSFER') ||
+      tipo.includes('MOVIMIENTO_BILLETERA') ||
+      tipo.includes('TRASPASO')
+    );
+  });
 
-    box.innerHTML = `
-      <div class="alert-box">
-        No hay movimientos de billetera todavía.
-      </div>
-    `;
-
+  if(!lista.length){
+    box.innerHTML = `<div class="alert-box">No hay ajustes o movimientos entre billeteras todavía.</div>`;
     return;
-
   }
 
   let html = `
@@ -234,7 +375,7 @@ function renderMovimientosBilletera(){
             <th>Fecha</th>
             <th>Tipo</th>
             <th>Billetera</th>
-            <th>Usuario</th>
+            <th>Destino</th>
             <th>Monto</th>
             <th>Antes</th>
             <th>Después</th>
@@ -245,35 +386,17 @@ function renderMovimientosBilletera(){
         <tbody>
   `;
 
-  movimientosBilletera.slice(0,80).forEach(m=>{
-
-    const tipo =
-      m.TIPO_SOLICITUD ||
-      m.TIPO_OPERACION ||
-      m.TIPO_MOVIMIENTO ||
-      m.TIPO ||
-      '';
-
-    const billetera =
-      m.BILLETERA_NOMBRE ||
-      m.NOMBRE_BILLETERA ||
-      m.ID_BILLETERA ||
-      m.BILLETERA ||
-      '';
-
-    const usuario =
-      m.USUARIO_JUGADOR ||
-      m.USUARIO_MANUAL ||
-      m.USUARIO ||
-      m.JUGADOR ||
-      '';
+  lista.slice(0,80).forEach(m=>{
+    const tipo = m.TIPO_SOLICITUD || m.TIPO_OPERACION || m.TIPO_MOVIMIENTO || m.TIPO || '';
+    const billetera = m.BILLETERA_NOMBRE || m.NOMBRE_BILLETERA || m.ID_BILLETERA || m.BILLETERA || '';
+    const destino = m.ID_BILLETERA_DESTINO || m.BILLETERA_DESTINO || m.DESTINO || '';
 
     html += `
       <tr>
         <td>${formatFecha(m.FECHA)}</td>
         <td>${tipo || '-'}</td>
         <td>${billetera || '-'}</td>
-        <td>${usuario || '-'}</td>
+        <td>${destino || '-'}</td>
         <td>${money(m.MONTO || 0)}</td>
         <td>${money(m.SALDO_ANTES || 0)}</td>
         <td>${money(m.SALDO_DESPUES || 0)}</td>
@@ -281,7 +404,6 @@ function renderMovimientosBilletera(){
         <td>${m.OBS || m.NOTA || m.OBSERVACIONES || ''}</td>
       </tr>
     `;
-
   });
 
   html += `
@@ -291,7 +413,6 @@ function renderMovimientosBilletera(){
   `;
 
   box.innerHTML = html;
-
 }
 function renderAgentes(){const box=document.getElementById('agentesGrid');if(!box)return;if(!agentes.length){box.innerHTML=`<div class="alert-box">No hay agentes configurados para esta PC.</div>`;return}let html='';agentes.forEach(a=>{html+=`<div class="wallet-card ok"><div class="wallet-name">🎮 ${a.nombre||a.NOMBRE_AGENTE||''}</div><div class="wallet-type">${a.pc||a.PC||pcOperativa}</div><div class="wallet-balance">${money(a.saldo||a.SALDO_FICHAS||0)}</div><div class="wallet-actions"><button class="mini-btn green" onclick="ajustarAgente('${a.agenteId||a.AGENTE_ID}','SUMA')">+ Fichas</button><button class="mini-btn red" onclick="ajustarAgente('${a.agenteId||a.AGENTE_ID}','RESTA')">- Fichas</button></div></div>`});box.innerHTML=html}
 function renderMovimientosAgente(){const box=document.getElementById('tablaMovimientosAgente');if(!box)return;if(!movimientosAgente.length){box.innerHTML=`<div class="alert-box">No hay movimientos de fichas todavía.</div>`;return}let html=`<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Agente</th><th>Monto</th><th>Antes</th><th>Después</th><th>Operador</th><th>Nota</th></tr></thead><tbody>`;movimientosAgente.slice(0,80).forEach(m=>{html+=`<tr><td>${formatFecha(m.FECHA)}</td><td>${m.TIPO||''}</td><td>${m.AGENTE_ID||''}</td><td>${money(m.MONTO||0)}</td><td>${money(m.SALDO_ANTES||0)}</td><td>${money(m.SALDO_DESPUES||0)}</td><td>${m.OPERADOR||''}</td><td>${m.OBS||m.NOTA||''}</td></tr>`});html+=`</tbody></table></div>`;box.innerHTML=html}
@@ -358,7 +479,44 @@ function turnoActual(){
 
 }
   
-function verificarNotificaciones(silencioso=false){const pendientes=solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE')).length;const retiros=solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE')&&normalizar(s.TIPO_SOLICITUD)==='RETIRO').length;const badge=document.getElementById('badgeSolicitudes');if(pendientes>0){badge.classList.remove('hidden');badge.innerText=pendientes}else badge.classList.add('hidden');const currentIds=new Set(solicitudes.filter(s=>normalizar(s.ESTADO).includes('PENDIENTE')).map(s=>String(s.ID)));let nuevas=0;currentIds.forEach(id=>{if(!lastSolicitudIds.has(id))nuevas++});if(!silencioso||lastSolicitudIds.size===0){lastSolicitudIds=currentIds;ultimaCantidadPendientes=pendientes;return}if(nuevas>0){reproducirAviso(retiros>0?"retiro":"solicitud");toast(`🔔 ${nuevas} nueva/s solicitud/es recibida/s`);document.getElementById('navSolicitudes').classList.add('chat-notify')}lastSolicitudIds=currentIds;ultimaCantidadPendientes=pendientes}
+function verificarNotificaciones(silencioso=false){
+  const pendientesLista = solicitudes.filter(s=>esPendiente(s));
+  const pendientes = pendientesLista.length;
+  const retiros = pendientesLista.filter(s=>normalizar(s.TIPO_SOLICITUD || s.TIPO)==='RETIRO').length;
+  const badge = document.getElementById('badgeSolicitudes');
+
+  if(pendientes>0){
+    badge.classList.remove('hidden');
+    badge.innerText = pendientes;
+  }else{
+    badge.classList.add('hidden');
+  }
+
+  const currentIds = new Set(
+    pendientesLista.map(s=>String(s.ID || s.SOLICITUD_ID || s.ID_SOLICITUD || ''))
+      .filter(Boolean)
+  );
+
+  let nuevas = 0;
+  currentIds.forEach(id=>{
+    if(!lastSolicitudIds.has(id)) nuevas++;
+  });
+
+  if(!silencioso || lastSolicitudIds.size===0){
+    lastSolicitudIds = currentIds;
+    ultimaCantidadPendientes = pendientes;
+    return;
+  }
+
+  if(nuevas>0){
+    reproducirAviso(retiros>0 ? "retiro" : "solicitud");
+    toast(`🔔 ${nuevas} nueva/s solicitud/es recibida/s`);
+    document.getElementById('navSolicitudes').classList.add('chat-notify');
+  }
+
+  lastSolicitudIds = currentIds;
+  ultimaCantidadPendientes = pendientes;
+}
 function reproducirAviso(tipo="solicitud"){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.type="sine";osc.frequency.value=tipo==="chat"?660:tipo==="retiro"?330:520;gain.gain.value=.08;osc.start();setTimeout(()=>{osc.stop();ctx.close()},tipo==="retiro"?450:220)}catch(e){}}
 async function refrescarChatPendiente(){if(!chatSolicitudId)return;const r=await api({action:'getchat',solicitudId:chatSolicitudId});if(!r.ok)return;const mensajes=r.mensajes||[];if(mensajes.length>ultimoChatPendiente){if(ultimoChatPendiente!==0){reproducirAviso("chat");toast('💬 Nuevo mensaje en chat');document.getElementById('navChat').classList.add('chat-notify')}ultimoChatPendiente=mensajes.length;renderChatMensajes(mensajes)}}
 function abrirModal(title,body,saveFn,saveText="Guardar"){setBox("modalTitle",title);setBox("modalBody",body);const btn=document.getElementById("modalSaveBtn");btn.innerText=saveText;btn.onclick=saveFn;document.getElementById("modalOverlay").classList.remove("hidden")}function cerrarModal(){document.getElementById("modalOverlay").classList.add("hidden")}function getSolicitudById(id){return solicitudes.find(x=>String(x.ID||x.SOLICITUD_ID)===String(id))||{}}
@@ -371,18 +529,10 @@ async function cambiarEstadoBilletera(id,estado){const r=await api({action:'actu
 function abrirModalAjusteBilletera(id){billeteraAjusteActual=id;const b=billeteras.find(x=>String(x.ID_BILLETERA)===String(id));abrirModal(b?`Ajustar ${b.NOMBRE_VISIBLE||id}`:'Ajustar billetera',`<label>Tipo de ajuste</label><select id="ajTipo"><option value="AJUSTE_POSITIVO">➕ Sumar saldo</option><option value="AJUSTE_NEGATIVO">➖ Restar saldo</option></select><label>Monto</label><input id="ajMonto" type="number"><label>Nota / motivo</label><textarea id="ajNota"></textarea>`,guardarAjusteBilletera,"Guardar ajuste")}async function guardarAjusteBilletera(){const monto=document.getElementById("ajMonto").value;const tipo=document.getElementById("ajTipo").value;const nota=document.getElementById("ajNota").value;if(!billeteraAjusteActual||!monto){alert("Completá monto.");return}const r=await api({action:'ajustarsaldobilletera',usuario:operador.usuario,operador:operador.nombre,idBilletera:billeteraAjusteActual,tipoMovimiento:tipo,monto,motivoAjuste:nota});if(!r.ok){alert(r.error||'Error');return}cerrarModal();await cargarBilleteras();await cargarMovimientosBilletera();await cargarOperacionesPanel()}
 async function ajustarAgente(id,tipo){const monto=prompt(tipo==='SUMA'?'Monto a sumar en fichas':'Monto a restar en fichas');if(!monto)return;const obs=prompt('Motivo del ajuste')||'';const r=await api({action:'ajustarsaldoagente',usuario:operador.usuario,operador:operador.nombre,agenteId:id,tipo,monto,obs});if(!r.ok){alert(r.error||'Error');return}await cargarAgentes();await cargarMovimientosAgente();await cargarOperacionesPanel()}
 async function registrarCargaManual(){
-
-  const tipoSolicitud =
-    document.getElementById('manualTipo').value;
-
-  const usuario =
-    document.getElementById('manualUsuario').value.trim();
-
-  const idBilletera =
-    document.getElementById('manualBilletera').value;
-
-  const monto =
-    document.getElementById('manualMonto').value;
+  const tipoSolicitud = document.getElementById('manualTipo').value;
+  const usuario = document.getElementById('manualUsuario').value.trim();
+  const idBilletera = document.getElementById('manualBilletera').value;
+  const monto = document.getElementById('manualMonto').value;
 
   if(!tipoSolicitud || !usuario || !idBilletera || !monto){
     alert('Completá tipo, usuario, billetera y monto.');
@@ -394,10 +544,19 @@ async function registrarCargaManual(){
     usuario:operador.usuario,
     operador:operador.nombre,
     pc:pcOperativa,
+    pcOperativa:pcOperativa,
     usuarioJugador:usuario,
-    idBilletera,
-    tipoSolicitud,
-    monto
+    usuarioManual:usuario,
+    jugador:usuario,
+    cliente:usuario,
+    idBilletera:idBilletera,
+    billeteraId:idBilletera,
+    tipoSolicitud:tipoSolicitud,
+    tipoOperacion:tipoSolicitud,
+    tipo:tipoSolicitud,
+    monto:monto,
+    montoReal:monto,
+    importe:monto
   });
 
   if(!r.ok){
@@ -416,9 +575,81 @@ async function registrarCargaManual(){
   );
 
   await refrescarTodo(false);
-
 }
 
+
+
+function abrirModalTransferenciaBilletera(){
+  if(!billeteras.length){
+    alert('No hay billeteras cargadas.');
+    return;
+  }
+
+  const opciones = billeteras.map(b=>{
+    const id = b.ID_BILLETERA || b.BILLETERA_ID || '';
+    const nombre = b.NOMBRE_VISIBLE || b.NOMBRE_BILLETERA || id;
+    const saldo = money(b.SALDO_REAL || b.SALDO_ESTIMADO || 0);
+    return `<option value="${id}">${nombre} · ${saldo}</option>`;
+  }).join('');
+
+  abrirModal(
+    'Mover dinero entre billeteras',
+    `
+      <label>Billetera origen</label>
+      <select id="movBilOrigen">${opciones}</select>
+
+      <label>Billetera destino</label>
+      <select id="movBilDestino">${opciones}</select>
+
+      <label>Monto</label>
+      <input id="movBilMonto" type="number">
+
+      <label>Nota / motivo</label>
+      <textarea id="movBilNota" placeholder="Ej: movimiento interno de saldo"></textarea>
+    `,
+    guardarTransferenciaBilletera,
+    'Mover dinero'
+  );
+}
+
+async function guardarTransferenciaBilletera(){
+  const origen = document.getElementById('movBilOrigen').value;
+  const destino = document.getElementById('movBilDestino').value;
+  const monto = document.getElementById('movBilMonto').value;
+  const nota = document.getElementById('movBilNota').value;
+
+  if(!origen || !destino || !monto){
+    alert('Completá origen, destino y monto.');
+    return;
+  }
+
+  if(origen === destino){
+    alert('Origen y destino no pueden ser la misma billetera.');
+    return;
+  }
+
+  const r = await api({
+    action:'transferirbilletera',
+    usuario:operador.usuario,
+    operador:operador.nombre,
+    pc:pcOperativa,
+    idBilleteraOrigen:origen,
+    idBilleteraDestino:destino,
+    monto:monto,
+    obs:nota
+  });
+
+  if(!r.ok){
+    alert(r.error || 'Error al mover dinero. Falta configurar transferirbilletera en Apps Script.');
+    return;
+  }
+
+  cerrarModal();
+  toast('Movimiento entre billeteras registrado','green');
+  await cargarBilleteras();
+  await cargarMovimientosBilletera();
+  await cargarOperacionesPanel();
+}
 
 function abrirChatSinSolicitud(){
 
