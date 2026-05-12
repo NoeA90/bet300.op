@@ -110,7 +110,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 </div>
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbyCKG4XxoHNP-IvOM6qRyN5XZIdBx1KQn1_TclvVmI4w6PXa0-10dwojwNeaAy1VSuv/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbw-8-NUAtQjZrBtJcpK-zGA7VrJ6z7xiT_BhA4YQokwPFGgU98X6bg-j7vGFs9iCDbN/exec";
 let operador=null,pcOperativa=null,solicitudes=[],billeteras=[],agentes=[],movimientosBilletera=[],movimientosAgente=[],operacionesPanel=[],conciliacionRows=[];
 let ultimaCantidadPendientes=0,ultimoChatPendiente=0,lastSolicitudIds=new Set(),billeteraAjusteActual=null,chatSolicitudId="",chatImagenBase64="",chatImagenNombre="",timersIniciados=false;
 window.addEventListener('load',()=>{
@@ -289,7 +289,6 @@ function tablaSolicitudesHTML(lista){
 }
 function renderOperacionesPanel(){const origen=normalizar(document.getElementById('opFiltroOrigen')?.value||'');const tipo=normalizar(document.getElementById('opFiltroTipo')?.value||'');const operadorFiltro=normalizar(document.getElementById('opFiltroOperador')?.value||'');const texto=normalizar(document.getElementById('opFiltroTexto')?.value||'');const fecha=document.getElementById('opFiltroFecha')?.value||'';let lista=operacionesPanel.slice();if(origen)lista=lista.filter(o=>normalizar(o.ORIGEN)===origen);if(tipo){if(tipo==='AJUSTE')lista=lista.filter(o=>normalizar(o.TIPO).includes('AJUSTE'));else lista=lista.filter(o=>normalizar(o.TIPO).includes(tipo))}if(operadorFiltro)lista=lista.filter(o=>normalizar(o.OPERADOR||o.QUIEN_TOMO||o.QUIEN_APROBO||'').includes(operadorFiltro));if(texto)lista=lista.filter(o=>normalizar(`${o.USUARIO||''} ${o.BILLETERA||''} ${o.ID_BILLETERA||''}`).includes(texto));if(fecha)lista=lista.filter(o=>{const d=new Date(o.FECHA);return !isNaN(d)&&d.toISOString().slice(0,10)===fecha});const html=tablaOperacionesHTML(lista);setBox('tablaOperacionesPanel',tablaOperacionesHTML(lista.slice(0,40)));setBox('tablaOperacionesPanelCompleta',html)}
 function tablaOperacionesHTML(lista){
-
   if(!lista.length){
     return `<div class="alert-box">No hay operaciones registradas todavía.</div>`;
   }
@@ -314,66 +313,21 @@ function tablaOperacionesHTML(lista){
   `;
 
   lista.slice(0,200).forEach(o=>{
-
-    const esManual =
-      String(o.ORIGEN || '').toUpperCase() === 'OPERADOR';
-
-    const idMovimiento =
-      o.ID_MOVIMIENTO ||
-      o.MOVIMIENTO_ID ||
-      o.ID ||
-      '';
-
-    const usuario =
-      o.USUARIO ||
-      o.USUARIO_JUGADOR ||
-      o.USUARIO_MANUAL ||
-      o.JUGADOR ||
-      o.CLIENTE ||
-      o.USR ||
-      '-';
-
-    const billetera =
-      o.NOMBRE_VISIBLE ||
-      o.BILLETERA_NOMBRE ||
-      o.NOMBRE_BILLETERA ||
-      o.BILLETERA ||
-      o.BILLETERA_ALIAS ||
-      '-';
+    const esManual = normalizar(o.ORIGEN) === 'OPERADOR';
+    const idMovimiento = o.ID_MOVIMIENTO || o.MOVIMIENTO_ID || o.ID || '';
+    const usuario = o.USUARIO || o.USUARIO_JUGADOR || o.USUARIO_MANUAL || o.JUGADOR || o.CLIENTE || '-';
+    const billetera = o.BILLETERA || o.BILLETERA_NOMBRE || o.NOMBRE_BILLETERA || o.ID_BILLETERA || '-';
 
     html += `
       <tr>
         <td>${formatFecha(o.FECHA)}</td>
-
         <td>${o.ORIGEN || ''}</td>
-
-        <td>
-          ${
-            o.TIPO_SOLICITUD ||
-            o.TIPO_OPERACION ||
-            o.TIPO_MOVIMIENTO ||
-            o.TIPO ||
-            '-'
-          }
-        </td>
-
+        <td>${o.TIPO || o.TIPO_SOLICITUD || o.TIPO_MOVIMIENTO || '-'}</td>
         <td>${usuario}</td>
-
         <td>${billetera}</td>
-
         <td>${money(o.MONTO || 0)}</td>
-
         <td>${o.ESTADO || ''}</td>
-
-        <td>
-          ${
-            o.OPERADOR ||
-            o.QUIEN_TOMO ||
-            o.QUIEN_APROBO ||
-            '-'
-          }
-        </td>
-
+        <td>${o.OPERADOR || o.QUIEN_TOMO || o.QUIEN_APROBO || '-'}</td>
         <td>
           ${
             esManual && idMovimiento
@@ -383,7 +337,6 @@ function tablaOperacionesHTML(lista){
         </td>
       </tr>
     `;
-
   });
 
   html += `
@@ -576,60 +529,34 @@ async function cambiarEstadoBilletera(id,estado){const r=await api({action:'actu
 function abrirModalAjusteBilletera(id){billeteraAjusteActual=id;const b=billeteras.find(x=>String(x.ID_BILLETERA)===String(id));abrirModal(b?`Ajustar ${b.NOMBRE_VISIBLE||id}`:'Ajustar billetera',`<label>Tipo de ajuste</label><select id="ajTipo"><option value="AJUSTE_POSITIVO">➕ Sumar saldo</option><option value="AJUSTE_NEGATIVO">➖ Restar saldo</option></select><label>Monto</label><input id="ajMonto" type="number"><label>Nota / motivo</label><textarea id="ajNota"></textarea>`,guardarAjusteBilletera,"Guardar ajuste")}async function guardarAjusteBilletera(){const monto=document.getElementById("ajMonto").value;const tipo=document.getElementById("ajTipo").value;const nota=document.getElementById("ajNota").value;if(!billeteraAjusteActual||!monto){alert("Completá monto.");return}const r=await api({action:'ajustarsaldobilletera',usuario:operador.usuario,operador:operador.nombre,idBilletera:billeteraAjusteActual,tipoMovimiento:tipo,monto,motivoAjuste:nota});if(!r.ok){alert(r.error||'Error');return}cerrarModal();await cargarBilleteras();await cargarMovimientosBilletera();await cargarOperacionesPanel()}
 async function ajustarAgente(id,tipo){const monto=prompt(tipo==='SUMA'?'Monto a sumar en fichas':'Monto a restar en fichas');if(!monto)return;const obs=prompt('Motivo del ajuste')||'';const r=await api({action:'ajustarsaldoagente',usuario:operador.usuario,operador:operador.nombre,agenteId:id,tipo,monto,obs});if(!r.ok){alert(r.error||'Error');return}await cargarAgentes();await cargarMovimientosAgente();await cargarOperacionesPanel()}
 async function registrarCargaManual(){
-
-  const tipoSolicitud =
-    document.getElementById('manualTipo').value;
-
-  const usuario =
-    document.getElementById('manualUsuario').value.trim();
-
-  const idBilletera =
-    document.getElementById('manualBilletera').value;
-
-  const monto =
-    document.getElementById('manualMonto').value;
+  const tipoSolicitud = document.getElementById('manualTipo').value;
+  const usuario = document.getElementById('manualUsuario').value.trim();
+  const idBilletera = document.getElementById('manualBilletera').value;
+  const monto = document.getElementById('manualMonto').value;
 
   if(!tipoSolicitud || !usuario || !idBilletera || !monto){
     alert('Completá tipo, usuario, billetera y monto.');
     return;
   }
 
-  const billeteraObj =
-    billeteras.find(
-      x => String(x.ID_BILLETERA) === String(idBilletera)
-    ) || {};
-
   const r = await api({
-
     action:'registraroperacionmanual',
-
     usuario:operador.usuario,
     operador:operador.nombre,
-
     pc:pcOperativa,
     pcOperativa:pcOperativa,
-
     usuarioJugador:usuario,
     usuarioManual:usuario,
-    usuario:usuario,
     jugador:usuario,
     cliente:usuario,
-
     idBilletera:idBilletera,
-
-    billeteraNombre:
-      billeteraObj.NOMBRE_VISIBLE || '',
-
-    nombreBilletera:
-      billeteraObj.NOMBRE_VISIBLE || '',
-
+    billeteraId:idBilletera,
     tipoSolicitud:tipoSolicitud,
     tipoOperacion:tipoSolicitud,
     tipo:tipoSolicitud,
-
     monto:monto,
-    montoReal:monto
-
+    montoReal:monto,
+    importe:monto
   });
 
   if(!r.ok){
@@ -648,8 +575,8 @@ async function registrarCargaManual(){
   );
 
   await refrescarTodo(false);
-
 }
+
 
 
 function abrirModalTransferenciaBilletera(){
@@ -723,108 +650,7 @@ async function guardarTransferenciaBilletera(){
   await cargarMovimientosBilletera();
   await cargarOperacionesPanel();
 }
-function abrirModalTransferenciaBilletera(){
 
-  const opciones = billeteras.map(b => {
-
-    return `
-      <option value="${b.ID_BILLETERA}">
-        ${b.NOMBRE_VISIBLE} · ${money(b.SALDO_REAL || 0)}
-      </option>
-    `;
-
-  }).join('');
-
-  abrirModal(
-
-    'Mover dinero entre billeteras',
-
-    `
-      <label>Billetera origen</label>
-
-      <select id="movBilOrigen">
-        ${opciones}
-      </select>
-
-      <label>Billetera destino</label>
-
-      <select id="movBilDestino">
-        ${opciones}
-      </select>
-
-      <label>Monto</label>
-
-      <input id="movBilMonto" type="number">
-
-      <label>Nota</label>
-
-      <textarea id="movBilObs"></textarea>
-    `,
-
-    guardarTransferenciaBilletera,
-
-    'Mover dinero'
-
-  );
-
-}
-
-async function guardarTransferenciaBilletera(){
-
-  const origen =
-    document.getElementById('movBilOrigen').value;
-
-  const destino =
-    document.getElementById('movBilDestino').value;
-
-  const monto =
-    document.getElementById('movBilMonto').value;
-
-  const obs =
-    document.getElementById('movBilObs').value;
-
-  if(!origen || !destino || !monto){
-    alert('Completá todos los campos.');
-    return;
-  }
-
-  if(origen === destino){
-    alert('No podés mover a la misma billetera.');
-    return;
-  }
-
-  const r = await api({
-
-    action:'transferirbilletera',
-
-    usuario:operador.usuario,
-    operador:operador.nombre,
-
-    pc:pcOperativa,
-
-    idBilleteraOrigen:origen,
-    idBilleteraDestino:destino,
-
-    monto:monto,
-    observaciones:obs
-
-  });
-
-  if(!r.ok){
-    alert(r.error || 'Error');
-    return;
-  }
-
-  cerrarModal();
-
-  toast(
-    'Movimiento entre billeteras realizado',
-    'green'
-  );
-
-  await refrescarTodo(false);
-
-}
 function abrirChatSinSolicitud(){
 
   chatSolicitudId = "";
