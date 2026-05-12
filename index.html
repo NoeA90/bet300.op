@@ -110,7 +110,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 </div>
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbxhf-t-iay8OzNcK_35yIZfXP7JL00KUnBsTyBn81CgWM9vAAbpR6_HtllH6l2n8KZ-/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbwdTCMp0DJMX2jyPatCxaTEZXW1pbrsMTFZHExXlzPr8usx6EnbfOf3RDpxzHIwhKT4/exec";
 let operador=null,pcOperativa=null,solicitudes=[],billeteras=[],agentes=[],movimientosBilletera=[],movimientosAgente=[],operacionesPanel=[],conciliacionRows=[];
 let ultimaCantidadPendientes=0,ultimoChatPendiente=0,lastSolicitudIds=new Set(),billeteraAjusteActual=null,chatSolicitudId="",chatImagenBase64="",chatImagenNombre="",timersIniciados=false;
 function money(v){return Number(v||0).toLocaleString('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0})}
@@ -182,7 +182,7 @@ function tablaOperacionesHTML(lista){
         <td>${formatFecha(o.FECHA)}</td>
         <td>${o.ORIGEN || ''}</td>
         <td>${o.TIPO || '-'}</td>
-        <td>${o.USUARIO || '-'}</td>
+        <td>${o.USUARIO || o.USUARIO_JUGADOR || o.USUARIO_MANUAL || o.JUGADOR || '-'}</td>
         <td>${money(o.MONTO || 0)}</td>
         <td>${o.ESTADO || ''}</td>
         <td>${o.OPERADOR || o.QUIEN_TOMO || o.QUIEN_APROBO || '-'}</td>
@@ -208,7 +208,91 @@ function tablaOperacionesHTML(lista){
 
 }
 function renderBilleteras(){const box=document.getElementById('walletsGrid');if(!box)return;if(!billeteras.length){box.innerHTML=`<div class="alert-box">No hay billeteras configuradas para esta PC.</div>`;return}let html='';billeteras.forEach(b=>{const activa=normalizar(b.ACTIVA)==='SI';const enUso=normalizar(b.SELECCIONADA_MANUAL)==='SI';const cls=estadoBilleteraVisual(b);html+=`<div class="wallet-card ${cls}"><div class="wallet-name">${b.NOMBRE_VISIBLE||''}</div><div class="wallet-type">${b.TIPO||''} · ${b.PC||pcOperativa}</div><div class="wallet-balance">${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}</div><div style="margin-top:8px">${activa?'<span class="badge badge-ok">ACTIVA</span>':'<span class="badge badge-danger">PAUSADA</span>'}${enUso?'<span class="badge badge-pending">EN USO</span>':''}</div><div class="small">Última op: ${b.ULTIMA_OPERACION||'-'} · Usa: ${b.USADA_POR||b.OPERADOR_USO||'-'}</div><div class="wallet-actions"><button class="mini-btn blue" onclick="seleccionarBilletera('${b.ID_BILLETERA}')">Usar</button><button class="mini-btn green" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','SI')">Activar</button><button class="mini-btn red" onclick="cambiarEstadoBilletera('${b.ID_BILLETERA}','NO')">Pausar</button><button class="mini-btn yellow" onclick="abrirModalAjusteBilletera('${b.ID_BILLETERA}')">Ajustar</button></div></div>`});box.innerHTML=html}
-function renderMovimientosBilletera(){const box=document.getElementById('tablaMovimientosBilletera');if(!box)return;if(!movimientosBilletera.length){box.innerHTML=`<div class="alert-box">No hay movimientos de billetera todavía.</div>`;return}let html=`<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Billetera</th><th>Monto</th><th>Antes</th><th>Después</th><th>Operador</th><th>Nota</th></tr></thead><tbody>`;movimientosBilletera.slice(0,80).forEach(m=>{html+=`<tr><td>${formatFecha(m.FECHA)}</td><td>${m.TIPO||m.TIPO_MOVIMIENTO||''}</td><td>${m.ID_BILLETERA||''}</td><td>${money(m.MONTO||0)}</td><td>${money(m.SALDO_ANTES||0)}</td><td>${money(m.SALDO_DESPUES||0)}</td><td>${m.OPERADOR||''}</td><td>${m.OBS||m.NOTA||''}</td></tr>`});html+=`</tbody></table></div>`;box.innerHTML=html}
+function renderMovimientosBilletera(){
+
+  const box = document.getElementById('tablaMovimientosBilletera');
+
+  if(!box) return;
+
+  if(!movimientosBilletera.length){
+
+    box.innerHTML = `
+      <div class="alert-box">
+        No hay movimientos de billetera todavía.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  let html = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Billetera</th>
+            <th>Usuario</th>
+            <th>Monto</th>
+            <th>Antes</th>
+            <th>Después</th>
+            <th>Operador</th>
+            <th>Nota</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  movimientosBilletera.slice(0,80).forEach(m=>{
+
+    const tipo =
+      m.TIPO_SOLICITUD ||
+      m.TIPO_OPERACION ||
+      m.TIPO_MOVIMIENTO ||
+      m.TIPO ||
+      '';
+
+    const billetera =
+      m.BILLETERA_NOMBRE ||
+      m.NOMBRE_BILLETERA ||
+      m.ID_BILLETERA ||
+      m.BILLETERA ||
+      '';
+
+    const usuario =
+      m.USUARIO_JUGADOR ||
+      m.USUARIO_MANUAL ||
+      m.USUARIO ||
+      m.JUGADOR ||
+      '';
+
+    html += `
+      <tr>
+        <td>${formatFecha(m.FECHA)}</td>
+        <td>${tipo || '-'}</td>
+        <td>${billetera || '-'}</td>
+        <td>${usuario || '-'}</td>
+        <td>${money(m.MONTO || 0)}</td>
+        <td>${money(m.SALDO_ANTES || 0)}</td>
+        <td>${money(m.SALDO_DESPUES || 0)}</td>
+        <td>${m.OPERADOR || '-'}</td>
+        <td>${m.OBS || m.NOTA || m.OBSERVACIONES || ''}</td>
+      </tr>
+    `;
+
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  box.innerHTML = html;
+
+}
 function renderAgentes(){const box=document.getElementById('agentesGrid');if(!box)return;if(!agentes.length){box.innerHTML=`<div class="alert-box">No hay agentes configurados para esta PC.</div>`;return}let html='';agentes.forEach(a=>{html+=`<div class="wallet-card ok"><div class="wallet-name">🎮 ${a.nombre||a.NOMBRE_AGENTE||''}</div><div class="wallet-type">${a.pc||a.PC||pcOperativa}</div><div class="wallet-balance">${money(a.saldo||a.SALDO_FICHAS||0)}</div><div class="wallet-actions"><button class="mini-btn green" onclick="ajustarAgente('${a.agenteId||a.AGENTE_ID}','SUMA')">+ Fichas</button><button class="mini-btn red" onclick="ajustarAgente('${a.agenteId||a.AGENTE_ID}','RESTA')">- Fichas</button></div></div>`});box.innerHTML=html}
 function renderMovimientosAgente(){const box=document.getElementById('tablaMovimientosAgente');if(!box)return;if(!movimientosAgente.length){box.innerHTML=`<div class="alert-box">No hay movimientos de fichas todavía.</div>`;return}let html=`<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Agente</th><th>Monto</th><th>Antes</th><th>Después</th><th>Operador</th><th>Nota</th></tr></thead><tbody>`;movimientosAgente.slice(0,80).forEach(m=>{html+=`<tr><td>${formatFecha(m.FECHA)}</td><td>${m.TIPO||''}</td><td>${m.AGENTE_ID||''}</td><td>${money(m.MONTO||0)}</td><td>${money(m.SALDO_ANTES||0)}</td><td>${money(m.SALDO_DESPUES||0)}</td><td>${m.OPERADOR||''}</td><td>${m.OBS||m.NOTA||''}</td></tr>`});html+=`</tbody></table></div>`;box.innerHTML=html}
 function renderCargaManualBilleteras(){const sel=document.getElementById('manualBilletera');if(!sel)return;sel.innerHTML='';billeteras.filter(b=>normalizar(b.ACTIVA)==='SI').forEach(b=>{const opt=document.createElement('option');opt.value=b.ID_BILLETERA;opt.textContent=`${b.NOMBRE_VISIBLE} · ${money(b.SALDO_REAL||b.SALDO_ESTIMADO||0)}`;sel.appendChild(opt)})}
