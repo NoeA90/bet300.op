@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NODO · OPERATIVO V21 · Panel Único Fase 1</title>
+<title>NODO · OPERATIVO V21 · Panel Único Preview Login</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
@@ -274,7 +274,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div class="login-card">
     <img src="logo-nodo.png" class="logo" alt="NODO">
     <h2 style="margin-bottom:6px">PANEL OPERATIVO LITE</h2>
-    <div class="small" style="margin-bottom:16px">Versión V21 · Panel Único Fase 1</div>
+    <div class="small" style="margin-bottom:16px">Versión V21 · Panel Único Preview Login</div>
     <label>Usuario</label>
     <input id="loginUsuario" autocomplete="username">
     <label>Clave</label>
@@ -11965,6 +11965,125 @@ body.nodo-v21-panel-unico .nodo-v21-hidden-old{display:none!important}
  function boot(){montar();render()}
  const oldCentro=window.renderCentroOperativo;if(typeof oldCentro==='function'&&!oldCentro.__v21PanelUnico){window.renderCentroOperativo=function(){const r=oldCentro.apply(this,arguments);setTimeout(boot,130);return r};window.renderCentroOperativo.__v21PanelUnico=true;try{renderCentroOperativo=window.renderCentroOperativo}catch(e){}}
  document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,900)); window.addEventListener('load',()=>setTimeout(boot,1400)); setTimeout(boot,1600);
+})();
+</script>
+
+
+<style id="nodo-v21-preview-login-css">
+  #loginMsg .nodo-preview-login-ok{
+    background:#123322;
+    color:#b9f7cb;
+    padding:14px;
+    border-radius:14px;
+    margin-top:12px;
+    font-weight:800;
+  }
+  #loginMsg .nodo-preview-login-warn{
+    background:#38280d;
+    color:#ffd98f;
+    padding:14px;
+    border-radius:14px;
+    margin-top:12px;
+    font-weight:800;
+  }
+</style>
+
+<script id="nodo-v21-preview-login-js">
+(function(){
+  if(window.__NODO_V21_PREVIEW_LOGIN__) return;
+  window.__NODO_V21_PREVIEW_LOGIN__ = true;
+
+  function $(id){return document.getElementById(id);}
+  function hasElectronBridge(){
+    return !!(window.chunior || window.ctrlElectron || window.electronAPI);
+  }
+
+  function entrarPreview(usuario){
+    try{
+      window.operadorActual = window.operadorActual || {
+        usuario: usuario || 'preview',
+        nombre: usuario || 'Preview',
+        rol: 'preview',
+        pc_codigo: window.pcOperativa || 'P4'
+      };
+    }catch(e){}
+
+    const login = $('loginView');
+    const app = $('appView');
+    if(login) login.classList.add('hidden');
+    if(app) app.classList.remove('hidden');
+
+    try{
+      localStorage.setItem('nodo_v21_preview_login', '1');
+      localStorage.setItem('nodo_v21_preview_usuario', usuario || 'preview');
+    }catch(e){}
+
+    try{
+      if(typeof inicializarPanel === 'function') inicializarPanel();
+    }catch(e){}
+    try{
+      if(typeof cargarConfig === 'function') cargarConfig();
+    }catch(e){}
+    try{
+      if(typeof refrescarTodo === 'function') refrescarTodo(true);
+    }catch(e){}
+    try{
+      if(typeof mostrarVista === 'function') mostrarVista('inicio');
+    }catch(e){}
+    try{
+      if(typeof renderCentroOperativo === 'function') renderCentroOperativo();
+    }catch(e){}
+    try{
+      if(typeof window.nodoV21Render === 'function') window.nodoV21Render();
+    }catch(e){}
+
+    setTimeout(() => {
+      try{ if(typeof renderCentroOperativo === 'function') renderCentroOperativo(); }catch(e){}
+      try{ if(typeof window.nodoV21Render === 'function') window.nodoV21Render(); }catch(e){}
+    }, 900);
+  }
+
+  const oldLogin = window.login;
+  window.login = async function(){
+    const usuario = String(($('loginUsuario') || {}).value || '').trim();
+    const clave = String(($('loginClave') || {}).value || '').trim();
+    const msg = $('loginMsg');
+
+    if(!usuario || !clave){
+      if(msg) msg.innerHTML = '<div class="err-box">Ingresá usuario y clave.</div>';
+      return;
+    }
+
+    // En Electron dejamos que intente el login original contra Chunior.
+    if(hasElectronBridge() && typeof oldLogin === 'function'){
+      try{
+        return await oldLogin.apply(this, arguments);
+      }catch(e){
+        if(msg) msg.innerHTML = '<div class="nodo-preview-login-warn">No respondió Chunior/Electron. Entrando en modo preview para revisar el panel.</div>';
+        setTimeout(() => entrarPreview(usuario), 500);
+        return;
+      }
+    }
+
+    // En navegador/Vercel: modo preview directo.
+    if(msg){
+      msg.innerHTML = '<div class="nodo-preview-login-ok">Modo preview activo: Chunior no está disponible en navegador, pero podés revisar el panel.</div>';
+    }
+    setTimeout(() => entrarPreview(usuario), 350);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const app = $('appView');
+    if(app) app.classList.add('hidden');
+
+    // Para no dejarte trabada si ya lo habías abierto antes.
+    try{
+      if(localStorage.getItem('nodo_v21_preview_login') === '1' && !hasElectronBridge()){
+        const u = localStorage.getItem('nodo_v21_preview_usuario') || 'preview';
+        setTimeout(() => entrarPreview(u), 500);
+      }
+    }catch(e){}
+  });
 })();
 </script>
 
