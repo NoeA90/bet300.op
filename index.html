@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NODO · OPERATIVO V21 · Fase 2 Layout Fix</title>
+<title>NODO · OPERATIVO V21 · Final Clean</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
@@ -274,7 +274,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div class="login-card">
     <img src="logo-nodo.png" class="logo" alt="NODO">
     <h2 style="margin-bottom:6px">PANEL OPERATIVO LITE</h2>
-    <div class="small" style="margin-bottom:16px">Versión V21 · Fase 2 Layout Fix</div>
+    <div class="small" style="margin-bottom:16px">Versión V21 · Final Clean</div>
     <label>Usuario</label>
     <input id="loginUsuario" autocomplete="username">
     <label>Clave</label>
@@ -12664,6 +12664,73 @@ body.nodo-v21-layout-fix .nodo-v21-right-stack .card{
   document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 900));
   window.addEventListener('load', () => setTimeout(boot, 1300));
   setTimeout(boot, 1700);
+})();
+</script>
+
+
+<style id="nodo-v21-final-clean-css">
+body.nodo-v21-final-clean #viewInicio{display:flex!important;flex-direction:column!important;gap:14px!important}
+body.nodo-v21-final-clean #nodoV21TopClean{order:2!important;display:grid!important;grid-template-columns:minmax(460px,.98fr) minmax(430px,1.02fr)!important;gap:14px!important;align-items:start!important;width:100%!important}
+body.nodo-v21-final-clean #nodoV21LeftClean,body.nodo-v21-final-clean #nodoV21RightClean{display:flex!important;flex-direction:column!important;gap:14px!important;min-width:0!important}
+body.nodo-v21-final-clean .ops-kpis,body.nodo-v21-final-clean .top-grid{order:1!important}
+body.nodo-v21-final-clean #nodoV21QuickShell{display:flex!important;flex-direction:column!important;gap:14px!important;margin:0!important;width:100%!important}
+body.nodo-v21-final-clean #nodoV21QuickShell>.nodo-v21-card:nth-child(1){order:1!important}
+body.nodo-v21-final-clean #nodoV21QuickShell>.nodo-v21-card:nth-child(2){order:2!important}
+body.nodo-v21-final-clean #nodoV21QuickDetected,body.nodo-v21-final-clean .nodo-v21-detected{display:none!important}
+body.nodo-v21-final-clean .nodo-v21-force-hide,body.nodo-v21-final-clean .nodo-v21-hide-old-quick,body.nodo-v21-final-clean .nodo-v21-clean-hide{display:none!important}
+body.nodo-v21-final-clean #nodoV21LandingCleanCard,body.nodo-v21-final-clean #nodoV21ManualCleanCard{background:rgba(17,24,39,.90)!important;border:1px solid rgba(148,163,184,.14)!important;border-radius:24px!important;padding:18px!important;box-shadow:0 18px 45px rgba(0,0,0,.18)!important}
+body.nodo-v21-final-clean .nodo-v21-clean-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin-bottom:12px!important}
+body.nodo-v21-final-clean .nodo-v21-clean-head h3{margin:0!important;font-size:18px!important;font-weight:950!important;letter-spacing:-.02em!important}
+body.nodo-v21-final-clean .nodo-v21-clean-sub{color:#94A3B8!important;font-size:12px!important;margin-top:3px!important}
+body.nodo-v21-final-clean .nodo-v21-clean-table{overflow:auto!important;border-radius:18px!important;border:1px solid rgba(148,163,184,.12)!important;max-height:430px!important}
+body.nodo-v21-final-clean .nodo-v21-clean-table table{width:100%!important;min-width:720px!important;border-collapse:collapse!important}
+body.nodo-v21-final-clean .nodo-v21-clean-table th,body.nodo-v21-final-clean .nodo-v21-clean-table td{padding:11px 12px!important;border-bottom:1px solid rgba(148,163,184,.10)!important;font-size:12px!important;vertical-align:middle!important;white-space:normal!important}
+body.nodo-v21-final-clean .nodo-v21-clean-table th{font-size:10px!important;color:#94A3B8!important;text-transform:uppercase!important;letter-spacing:.08em!important;background:rgba(15,23,42,.75)!important}
+body.nodo-v21-final-clean .nodo-v21-empty{border:1px dashed rgba(148,163,184,.18)!important;border-radius:16px!important;color:#94A3B8!important;padding:18px!important;text-align:center!important}
+body.nodo-v21-final-clean .nodo-job-wallet-chip{display:inline-flex!important;align-items:center!important;max-width:230px!important;border-radius:999px!important;padding:7px 10px!important;background:rgba(59,130,246,.13)!important;border:1px solid rgba(59,130,246,.24)!important;color:#BFDBFE!important;font-size:12px!important;font-weight:900!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+body.nodo-v21-final-clean .nodo-job-wallet-chip.na{background:rgba(148,163,184,.10)!important;border-color:rgba(148,163,184,.17)!important;color:#CBD5E1!important}
+body.nodo-v21-final-clean .nav-btn,body.nodo-v21-final-clean .sidebar .nav-btn{font-size:0!important;overflow:visible!important;position:relative!important}
+body.nodo-v21-final-clean .nav-btn .nav-icon,body.nodo-v21-final-clean .sidebar .nav-btn .nav-icon{display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:22px!important;line-height:1!important;min-width:24px!important;min-height:24px!important;opacity:1!important;visibility:visible!important}
+body.nodo-v21-final-clean .nav-btn .nav-text,body.nodo-v21-final-clean .sidebar .nav-btn .nav-text{display:none!important}
+body.nodo-v21-final-clean .sidebar{overflow-x:hidden!important}
+@media(max-width:1280px){body.nodo-v21-final-clean #nodoV21TopClean{grid-template-columns:1fr!important}}
+</style>
+
+<script id="nodo-v21-final-clean-js">
+(function(){
+ if(window.__NODO_V21_FINAL_CLEAN__)return;window.__NODO_V21_FINAL_CLEAN__=true;
+ function $(id){return document.getElementById(id)}
+ function esc(v){if(typeof escapeHtml==='function')return escapeHtml(v);return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
+ function attr(v){if(typeof escapeAttr==='function')return escapeAttr(v);return esc(v).replaceAll('`','&#96;')}
+ function norm(v){try{return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase()}catch(e){return String(v??'').trim().toUpperCase()}}
+ function money(v){if(typeof window.money==='function')return window.money(v);return '$ '+Number(v||0).toLocaleString('es-AR')}
+ function fecha(v){if(typeof formatFecha==='function')return formatFecha(v);try{const d=new Date(v);if(isNaN(d))return esc(v||'');return d.toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',',' ·')}catch(e){return esc(v||'')}}
+ function jobs(){try{return Array.isArray(window.workerJobs)?window.workerJobs:(Array.isArray(workerJobs)?workerJobs:[])}catch(e){return[]}}
+ function solis(){try{return Array.isArray(window.solicitudes)?window.solicitudes:(Array.isArray(solicitudes)?solicitudes:[])}catch(e){return[]}}
+ function wallets(){const out=[];try{if(Array.isArray(window.billeteras))out.push(...window.billeteras);if(typeof billeteras!=='undefined'&&Array.isArray(billeteras))out.push(...billeteras);if(Array.isArray(window.saldosOperativos?.billeteras))out.push(...window.saldosOperativos.billeteras);if(Array.isArray(window.wallets))out.push(...window.wallets)}catch(e){}const seen=new Set();return out.filter(w=>{const k=String(w.id||w.ID||w.id_billetera||w.billetera_id||w.nombre_visible||w.nombre||'');if(!k||seen.has(k))return false;seen.add(k);return true})}
+ function parsePayload(v){if(!v)return{};if(typeof v==='object')return v;try{return JSON.parse(String(v))}catch(e){return{}}}
+ function walletId(w){return w.id??w.ID??w.id_billetera??w.billetera_id??''}
+ function walletName(w){return w.nombre_visible||w.nombre||w.NOMBRE||w.alias||w.titular||('Billetera '+walletId(w))}
+ function walletTipo(w){return w.banco||w.tipo||w.TIPO||w.provider||''}
+ function resolveJobWallet(job){if(!job)return null;const p=parsePayload(job.payload);const rawId=job.billetera_id??job.id_billetera??job.wallet_id??p.billetera_id??p.id_billetera??p.wallet_id??p.billeteraImpactada??p.billetera??'';const rawName=job.billetera_nombre??job.nombre_billetera??job.wallet_nombre??p.billetera_nombre??p.nombre_billetera??p.wallet_nombre??'';const list=wallets();let found=null;if(rawId!==''&&rawId!==null&&rawId!==undefined)found=list.find(w=>String(walletId(w))===String(rawId));if(!found&&rawName)found=list.find(w=>norm(walletName(w)).includes(norm(rawName))||norm(rawName).includes(norm(walletName(w))));if(found)return{id:walletId(found),name:walletName(found),tipo:walletTipo(found)};if(rawName||rawId)return{id:rawId,name:rawName||('ID '+rawId),tipo:''};return null}
+ window.walletLabelForJob=function(job){const w=resolveJobWallet(job);if(!w)return'<span class="nodo-job-wallet-chip na">— No aplica</span>';return`<span class="nodo-job-wallet-chip">💳 ${esc(w.name)}</span>`}
+ function jobId(j){return j.id||j.job_id||j.worker_job_id||j.WORKER_JOB_ID||''}
+ function tipo(j){return j.tipo_accion||j.tipo||j.TIPO||j.TIPO_SOLICITUD||''}
+ function usuario(j){return j.usuario||j.USUARIO||j.USUARIO_JUGADOR||j.alias||''}
+ function monto(j){return j.monto||j.MONTO_DECLARADO||j.MONTO_REAL||0}
+ function estado(j){return j.estado||j.ESTADO||j.ESTADO_WORKER||''}
+ function estadoHtml(e,error){const n=norm(e);if(['COMPLETADO','OK','FINALIZADO'].includes(n))return'<span class="nodo-ok-chip">✅ OK</span>';if(n.includes('ERROR')||n==='REINTENTAR'||n==='REQUIERE_MANUAL'||error)return'<button class="nodo-error-click">⚠️ Error / revisar logs</button>';if(n==='PENDIENTE'||n==='EN_COLA_WORKER'||n==='PROCESANDO')return`<span class="nodo-run-chip">⏳ ${esc(e||'Pendiente')}</span>`;if(n==='CANCELADO'||n==='CANCELADA')return'<span class="nodo-err-chip">🚫 Cancelado</span>';return`<span class="nodo-warn-chip">${esc(e||'Sin estado')}</span>`}
+ function actionsHtml(id,final){if(!id)return'';let html='<div class="ops-compact-actions">';html+=`<button class="mini-btn blue" onclick="abrirWorkerLogsUxFina&&abrirWorkerLogsUxFina('${attr(id)}')">Logs</button>`;html+=`<button class="mini-btn yellow" onclick="abrirEditarBilleteraJobV20&&abrirEditarBilleteraJobV20('${attr(id)}')">Billetera</button>`;if(!final){html+=`<button class="mini-btn green" onclick="workerPanelReintentarJob&&workerPanelReintentarJob('${attr(id)}')">Reintentar</button>`;html+=`<button class="mini-btn red" onclick="workerPanelCancelarJob&&workerPanelCancelarJob('${attr(id)}')">Cancelar</button>`}return html+'</div>'}
+ function renderLanding(){const box=$('nodoV21LandingSolicitudes');if(!box)return;const arr=solis().slice().sort((a,b)=>new Date(b.FECHA_CREACION||b.FECHA||b.created_at||0)-new Date(a.FECHA_CREACION||a.FECHA||a.created_at||0)).slice(0,60);if(!arr.length){box.innerHTML='<div class="nodo-v21-empty">No hay solicitudes de landing para mostrar.</div>';return}box.innerHTML=`<div class="nodo-v21-clean-table"><table><thead><tr><th>Hora</th><th>Usuario</th><th>Tipo</th><th>Monto</th><th>Billetera</th><th>Estado</th><th>Job</th></tr></thead><tbody>${arr.map(s=>{const id=s.WORKER_JOB_ID||s.worker_job_id||'';const linked=jobs().find(j=>String(jobId(j))===String(id))||{};const st=s.ESTADO_WORKER||s.ESTADO||linked.estado||'';const wallet=s.BILLETERA_NOMBRE||s.billetera_nombre||(id?window.walletLabelForJob(linked):'<span class="nodo-job-wallet-chip na">—</span>');return`<tr><td>${fecha(s.FECHA_CREACION||s.FECHA||s.created_at)}</td><td><b>${esc(usuario(s)||'-')}</b></td><td>${esc(String(tipo(s)||'-').replaceAll('_',' '))}</td><td><b>${money(monto(s))}</b></td><td>${wallet}</td><td onclick="${id?`abrirWorkerLogsUxFina&&abrirWorkerLogsUxFina('${attr(id)}')`:''}">${estadoHtml(st,s.WORKER_ERROR||linked.error_mensaje)}</td><td>${id?'#'+esc(id):'-'}</td></tr>`}).join('')}</tbody></table></div>`}
+ function renderManualJobs(){const box=$('nodoV21ManualJobs');if(!box)return;const arr=jobs().filter(j=>!(j.solicitud_id||j.SOLICITUD_ID||parsePayload(j.payload).solicitud_id)).sort((a,b)=>new Date(b.created_at||b.updated_at||0)-new Date(a.created_at||a.updated_at||0)).slice(0,60);if(!arr.length){box.innerHTML='<div class="nodo-v21-empty">Sin jobs manuales recientes.</div>';return}box.innerHTML=`<div class="nodo-v21-clean-table"><table><thead><tr><th>Hora</th><th>Usuario</th><th>Operación</th><th>Billetera</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${arr.map(j=>{const id=jobId(j);const st=estado(j);const final=['COMPLETADO','OK','FINALIZADO','CANCELADO','CANCELADA'].includes(norm(st));return`<tr><td>${fecha(j.created_at||j.updated_at)}<br><span class="ops-origin manual">MANUAL</span></td><td><b>${esc(usuario(j)||'-')}</b><br><span class="small">#${esc(id||'-')}</span></td><td>${esc(String(tipo(j)||'-').replaceAll('_',' '))}<br><b>${money(monto(j))}</b></td><td>${window.walletLabelForJob(j)}</td><td onclick="${id?`abrirWorkerLogsUxFina&&abrirWorkerLogsUxFina('${attr(id)}')`:''}">${estadoHtml(st,j.error_mensaje||j.error)}</td><td>${actionsHtml(id,final)}</td></tr>`}).join('')}</tbody></table></div>`}
+ function ensureFinalLayout(){const view=$('viewInicio');const quick=$('nodoV21QuickShell');if(!view||!quick)return;document.body.classList.add('nodo-v21-final-clean');let top=$('nodoV21TopClean');if(!top){top=document.createElement('div');top.id='nodoV21TopClean';top.innerHTML='<div id="nodoV21LeftClean"></div><div id="nodoV21RightClean"></div>';const kpis=view.querySelector('.ops-kpis,.top-grid');if(kpis&&kpis.parentElement===view)kpis.insertAdjacentElement('afterend',top);else view.prepend(top)}const left=$('nodoV21LeftClean'),right=$('nodoV21RightClean');if(left&&quick.parentElement!==left)left.appendChild(quick);const qcards=Array.from(quick.children||[]);const walletCard=qcards.find(c=>norm(c.textContent).includes('BILLETERAS RAPIDAS')||norm(c.textContent).includes('BILLETERAS RÁPIDAS'));const operCard=qcards.find(c=>norm(c.textContent).includes('OPERACION RAPIDA')||norm(c.textContent).includes('OPERACIÓN RÁPIDA'));if(walletCard)walletCard.style.order='1';if(operCard)operCard.style.order='2';if(right&&!$('nodoV21LandingCleanCard')){const landing=document.createElement('div');landing.id='nodoV21LandingCleanCard';landing.innerHTML='<div class="nodo-v21-clean-head"><div><h3>📋 Solicitudes Landing</h3><div class="nodo-v21-clean-sub">Acá se ven las solicitudes que llegan desde landing/chat interno.</div></div><button class="mini-btn gray" onclick="nodoV21FinalRender()">Recargar</button></div><div id="nodoV21LandingSolicitudes"></div>';right.appendChild(landing)}if(right&&!$('nodoV21ManualCleanCard')){const manual=document.createElement('div');manual.id='nodoV21ManualCleanCard';manual.innerHTML='<div class="nodo-v21-clean-head"><div><h3>⚙️ Manuales / Worker</h3><div class="nodo-v21-clean-sub">Jobs enviados por operación rápida o chat.</div></div></div><div id="nodoV21ManualJobs"></div>';right.appendChild(manual)}
+ const blocks=Array.from(view.querySelectorAll('.card,.ops-panel,section,div')).filter(el=>el&&el.id!=='nodoV21TopClean'&&!el.closest('#nodoV21TopClean')&&!el.closest('#nodoV21QuickShell'));blocks.forEach(el=>{const t=norm(el.textContent||'');if(t.includes('ACCION RAPIDA')||t.includes('ACCIÓN RÁPIDA')||t.includes('USUARIO AGENTES')||t.includes('COLA OPERATIVA')||t.includes('HISTORIAL RECIENTE')||t.includes('HISTORIAL UNIFICADO')||t.includes('PANEL UNICO OPERATIVO')||t.includes('PANEL ÚNICO OPERATIVO')||t.includes('CHUNIOR INTEGRADO'))el.classList.add('nodo-v21-clean-hide')});Array.from(view.querySelectorAll('*')).filter(el=>/MODO AUTOMATICO|MODO AUTOMÁTICO|MONTO VACIO|MONTO VACÍO|MONTO POSITIVO|MONTO NEGATIVO/i.test(el.textContent||'')).forEach(el=>{if(el.closest('#nodoV21QuickShell'))el.classList.add('nodo-v21-clean-hide')});fixSidebarIcons();renderLanding();renderManualJobs()}
+ function fixSidebarIcons(){document.querySelectorAll('.sidebar .nav-btn,.nav-btn').forEach(btn=>{if(btn.dataset.iconFixed==='1')return;const badges=Array.from(btn.querySelectorAll('.badge-alert,.badge'));badges.forEach(b=>b.remove());let text=(btn.textContent||'').trim();let icon='•';if(text.startsWith('🏠'))icon='🏠';else if(text.includes('Pagos')||text.includes('💚'))icon='💚';else if(text.includes('Billetera')||text.includes('💳'))icon='💳';else if(text.includes('Chat')||text.includes('💬'))icon='💬';else if(text.includes('Worker')||text.includes('⚙'))icon='⚙️';else if(text.includes('Ajust')||text.includes('🧾'))icon='🧾';else{const m=text.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic}|\S)/u);icon=m?m[0]:'•'}const label=text.replace(icon,'').trim();btn.innerHTML=`<span class="nav-icon">${esc(icon)}</span><span class="nav-text">${esc(label)}</span>`;badges.forEach(b=>btn.appendChild(b));btn.dataset.iconFixed='1';if(label)btn.title=label})}
+ window.nodoV21FinalRender=ensureFinalLayout;
+ const oldCentro=window.renderCentroOperativo;if(typeof oldCentro==='function'&&!oldCentro.__v21FinalClean){window.renderCentroOperativo=function(){const r=oldCentro.apply(this,arguments);setTimeout(ensureFinalLayout,140);setTimeout(ensureFinalLayout,650);return r};window.renderCentroOperativo.__v21FinalClean=true;try{renderCentroOperativo=window.renderCentroOperativo}catch(e){}}
+ const oldInicio=window.renderInicio;if(typeof oldInicio==='function'&&!oldInicio.__v21FinalClean){window.renderInicio=function(){const r=oldInicio.apply(this,arguments);setTimeout(ensureFinalLayout,140);setTimeout(ensureFinalLayout,650);return r};window.renderInicio.__v21FinalClean=true;try{renderInicio=window.renderInicio}catch(e){}}
+ const oldWorker=window.renderWorkerJobs;if(typeof oldWorker==='function'&&!oldWorker.__v21FinalClean){window.renderWorkerJobs=function(){const r=oldWorker.apply(this,arguments);setTimeout(()=>{renderManualJobs();renderLanding()},150);return r};window.renderWorkerJobs.__v21FinalClean=true;try{renderWorkerJobs=window.renderWorkerJobs}catch(e){}}
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(ensureFinalLayout,900));window.addEventListener('load',()=>setTimeout(ensureFinalLayout,1400));setTimeout(ensureFinalLayout,1700);
 })();
 </script>
 
