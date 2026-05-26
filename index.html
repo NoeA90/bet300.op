@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NODO · OPERATIVO V21 · Panel Único Preview Login</title>
+<title>NODO · OPERATIVO V21 · Fase 2 Acción Repo</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
@@ -274,7 +274,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div class="login-card">
     <img src="logo-nodo.png" class="logo" alt="NODO">
     <h2 style="margin-bottom:6px">PANEL OPERATIVO LITE</h2>
-    <div class="small" style="margin-bottom:16px">Versión V21 · Panel Único Preview Login</div>
+    <div class="small" style="margin-bottom:16px">Versión V21 · Fase 2 Acción Repo</div>
     <label>Usuario</label>
     <input id="loginUsuario" autocomplete="username">
     <label>Clave</label>
@@ -11872,218 +11872,582 @@ body.nodo-v20-organizada .nodo-billetera-impactada-hint b{
 </script>
 
 
-<style id="nodo-v21-panel-unico-fase1-css">
-body.nodo-v21-panel-unico .nodo-v21-hero{display:grid;grid-template-columns:1.35fr .9fr;gap:14px;margin:0 0 14px}
-body.nodo-v21-panel-unico .nodo-v21-cardx{background:rgba(17,24,39,.9);border:1px solid rgba(148,163,184,.14);border-radius:24px;padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.18)}
-body.nodo-v21-panel-unico .nodo-v21-cardx.hero{background:linear-gradient(135deg,rgba(59,130,246,.13),rgba(34,197,94,.08));border-color:rgba(59,130,246,.24)}
-body.nodo-v21-panel-unico .nodo-v21-cardx h2{margin:0 0 7px;font-size:23px;letter-spacing:-.03em}
-body.nodo-v21-panel-unico .nodo-v21-cardx p,.nodo-v21-sub{color:#94A3B8;font-size:13px;line-height:1.45;margin:0}
-body.nodo-v21-panel-unico .nodo-v21-grid{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(480px,1.1fr);gap:14px;align-items:start}
-body.nodo-v21-panel-unico .nodo-v21-full{grid-column:1/-1}
-body.nodo-v21-panel-unico .nodo-v21-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-body.nodo-v21-panel-unico .nodo-v21-head h3{margin:0;font-size:18px;font-weight:950;letter-spacing:-.02em}
-body.nodo-v21-panel-unico .nodo-v21-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-body.nodo-v21-panel-unico .nodo-v21-tab{border:none;border-radius:999px;padding:9px 13px;font-size:12px;font-weight:950;cursor:pointer;background:rgba(255,255,255,.07);color:#CBD5E1;border:1px solid rgba(148,163,184,.13)}
-body.nodo-v21-panel-unico .nodo-v21-tab.active{background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-color:rgba(96,165,250,.42)}
-body.nodo-v21-panel-unico .nodo-v21-dot{width:10px;height:10px;border-radius:999px;background:#F59E0B;display:inline-block;box-shadow:0 0 14px rgba(245,158,11,.45)}
-body.nodo-v21-panel-unico .nodo-v21-dot.ok{background:#22C55E;box-shadow:0 0 14px rgba(34,197,94,.45)}
-body.nodo-v21-panel-unico .nodo-v21-table{overflow:auto;border-radius:18px;border:1px solid rgba(148,163,184,.12);max-height:430px}
-body.nodo-v21-panel-unico .nodo-v21-table table{width:100%;border-collapse:collapse;min-width:760px}
-body.nodo-v21-panel-unico .nodo-v21-table th,body.nodo-v21-panel-unico .nodo-v21-table td{padding:12px 13px;border-bottom:1px solid rgba(148,163,184,.10);font-size:12px;vertical-align:middle}
-body.nodo-v21-panel-unico .nodo-v21-table th{font-size:10px;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;background:rgba(15,23,42,.75)}
-body.nodo-v21-panel-unico .nodo-v21-origin{display:inline-flex;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:950}
-body.nodo-v21-panel-unico .nodo-v21-origin.manual{background:rgba(168,85,247,.14);color:#DDD6FE}
-body.nodo-v21-panel-unico .nodo-v21-origin.landing{background:rgba(245,158,11,.14);color:#FDE68A}
-body.nodo-v21-panel-unico .nodo-v21-empty{border:1px dashed rgba(148,163,184,.18);border-radius:16px;padding:18px;text-align:center;color:#94A3B8;font-size:13px}
-body.nodo-v21-panel-unico .nodo-v21-actions{display:flex;gap:6px;flex-wrap:wrap}
-body.nodo-v21-panel-unico .nodo-v21-actions .mini-btn{padding:7px 9px!important;border-radius:10px!important;font-size:11px!important}
-body.nodo-v21-panel-unico .nodo-v21-filter-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:10px}
-body.nodo-v21-panel-unico .nodo-v21-filter-row input,body.nodo-v21-panel-unico .nodo-v21-filter-row select{margin:0!important;padding:10px 12px!important;border-radius:13px!important}
-body.nodo-v21-panel-unico .nodo-v21-hidden-old{display:none!important}
-@media(max-width:1220px){body.nodo-v21-panel-unico .nodo-v21-grid,body.nodo-v21-panel-unico .nodo-v21-hero{grid-template-columns:1fr}}
+<style id="nodo-v21-quick-repo-style-css">
+/* =========================================================
+   NODO V21 · FASE 2 · ACCIÓN RÁPIDA REPO STYLE
+   Billeteras arriba + operación abajo.
+========================================================= */
+body.nodo-v21-quick-repo .nodo-v21-quick-shell{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-bottom:14px;
+}
+body.nodo-v21-quick-repo .nodo-v21-card{
+  background:rgba(17,24,39,.90);
+  border:1px solid rgba(148,163,184,.14);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+body.nodo-v21-quick-repo .nodo-v21-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+}
+body.nodo-v21-quick-repo .nodo-v21-head h3{
+  margin:0;
+  font-size:18px;
+  font-weight:950;
+  letter-spacing:-.02em;
+}
+body.nodo-v21-quick-repo .nodo-v21-sub{
+  color:#94A3B8;
+  font-size:12px;
+  margin-top:3px;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-mini{
+  border:1px solid rgba(148,163,184,.16);
+  background:linear-gradient(135deg,rgba(34,197,94,.10),rgba(59,130,246,.07));
+  border-radius:18px;
+  padding:13px;
+  min-height:112px;
+  position:relative;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-mini.active{
+  border-color:rgba(34,197,94,.48);
+  box-shadow:0 0 0 1px rgba(34,197,94,.20),0 0 24px rgba(34,197,94,.07);
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-mini .tag{
+  position:absolute;
+  top:8px;
+  right:8px;
+  border-radius:999px;
+  padding:3px 7px;
+  background:rgba(34,197,94,.16);
+  color:#BBF7D0;
+  font-size:9px;
+  font-weight:950;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-mini .name{
+  font-size:14px;
+  font-weight:950;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:130px;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-mini .saldo{
+  font-size:22px;
+  font-weight:950;
+  color:#BBF7D0;
+  margin:7px 0 3px;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-mini .meta{
+  font-size:11px;
+  color:#94A3B8;
+}
+body.nodo-v21-quick-repo .nodo-v21-wallet-actions{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+body.nodo-v21-quick-repo .nodo-v21-quick-grid{
+  display:grid;
+  grid-template-columns:1.2fr 130px 1fr 1fr 128px;
+  gap:10px;
+  align-items:end;
+}
+body.nodo-v21-quick-repo .nodo-v21-quick-grid label{
+  display:block;
+  font-size:11px!important;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#CBD5E1!important;
+  font-weight:950!important;
+  margin-bottom:6px;
+}
+body.nodo-v21-quick-repo .nodo-v21-quick-grid input,
+body.nodo-v21-quick-repo .nodo-v21-quick-grid select{
+  margin:0!important;
+  width:100%!important;
+  border:none!important;
+  border-radius:15px!important;
+  padding:13px 14px!important;
+  background:#F8FAFC!important;
+  color:#111827!important;
+  font-size:14px!important;
+  outline:none!important;
+}
+body.nodo-v21-quick-repo .nodo-v21-quick-actions{
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+body.nodo-v21-quick-repo .nodo-v21-quick-actions button{
+  min-height:43px;
+}
+body.nodo-v21-quick-repo .nodo-v21-detected{
+  margin-top:10px;
+  border:1px solid rgba(59,130,246,.20);
+  background:rgba(59,130,246,.10);
+  color:#BFDBFE;
+  border-radius:14px;
+  padding:10px 12px;
+  font-size:12px;
+  font-weight:850;
+}
+body.nodo-v21-quick-repo .nodo-v21-detected b{
+  color:#fff;
+}
+body.nodo-v21-quick-repo .nodo-v21-job-msg{
+  margin-top:10px;
+}
+body.nodo-v21-quick-repo .nodo-v21-hide-old-quick{
+  display:none!important;
+}
+@media(max-width:1180px){
+  body.nodo-v21-quick-repo .nodo-v21-quick-grid{
+    grid-template-columns:1fr 120px 1fr;
+  }
+  body.nodo-v21-quick-repo .nodo-v21-quick-grid > div:nth-child(4){
+    grid-column:1 / 3;
+  }
+  body.nodo-v21-quick-grid > button{}
+}
+@media(max-width:760px){
+  body.nodo-v21-quick-repo .nodo-v21-quick-grid,
+  body.nodo-v21-quick-repo .nodo-v21-quick-actions{
+    grid-template-columns:1fr;
+  }
+}
 </style>
 
-<script id="nodo-v21-panel-unico-fase1-js">
+<script id="nodo-v21-quick-repo-style-js">
 (function(){
- if(window.__NODO_V21_PANEL_UNICO_FASE1__) return;
- window.__NODO_V21_PANEL_UNICO_FASE1__=true;
- const V21={vista:'todo'};
- function $(id){return document.getElementById(id)}
- function esc(v){if(typeof escapeHtml==='function')return escapeHtml(v);return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
- function attr(v){if(typeof escapeAttr==='function')return escapeAttr(v);return esc(v).replaceAll('`','&#96;')}
- function norm(v){try{return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase()}catch(e){return String(v??'').trim().toUpperCase()}}
- function money(v){if(typeof window.money==='function')return window.money(v);return '$ '+Number(v||0).toLocaleString('es-AR')}
- function fecha(v){if(typeof formatFecha==='function')return formatFecha(v);try{const d=new Date(v);if(isNaN(d))return esc(v||'');return d.toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',',' ·')}catch(e){return esc(v||'')}}
- function jobs(){try{return Array.isArray(window.workerJobs)?window.workerJobs:(Array.isArray(workerJobs)?workerJobs:[])}catch(e){return[]}}
- function solis(){try{return Array.isArray(window.solicitudes)?window.solicitudes:(Array.isArray(solicitudes)?solicitudes:[])}catch(e){return[]}}
- function jid(j){return j.id||j.job_id||j.worker_job_id||''}
- function est(j){return j.estado||j.ESTADO||j.estado_worker||''}
- function tip(j){return j.tipo_accion||j.tipo||j.TIPO||j.TIPO_SOLICITUD||''}
- function usu(j){return j.usuario||j.USUARIO||j.USUARIO_JUGADOR||j.alias||''}
- function mon(j){return j.monto||j.MONTO_DECLARADO||j.MONTO_REAL||0}
- function isLandingJob(j){return !!(j.solicitud_id||j.SOLICITUD_ID||j.solicitudId||(j.payload&&j.payload.solicitud_id))}
- function estadoChip(e,err){const n=norm(e);if(['COMPLETADO','OK','FINALIZADO'].includes(n))return '<span class="nodo-ok-chip">✅ OK</span>';if(n.includes('ERROR')||n==='REINTENTAR'||n==='REQUIERE_MANUAL'||err)return '<button class="nodo-error-click">⚠️ Error / logs</button>';if(n==='PENDIENTE'||n==='EN_COLA_WORKER'||n==='PROCESANDO')return `<span class="nodo-run-chip">⏳ ${esc(e||'Pendiente')}</span>`;if(n==='CANCELADO'||n==='CANCELADA')return '<span class="nodo-err-chip">🚫 Cancelado</span>';return `<span class="nodo-warn-chip">${esc(e||'Sin estado')}</span>`}
- function walletHtml(j){try{if(typeof window.walletLabelForJob==='function')return window.walletLabelForJob(j)}catch(e){}return '<span class="nodo-wallet-job-chip na">— No aplica</span>'}
- function acciones(j){const id=jid(j);if(!id)return '';const e=norm(est(j));const final=['COMPLETADO','OK','FINALIZADO','CANCELADO','CANCELADA'].includes(e);let h='<div class="nodo-v21-actions">';h+=`<button class="mini-btn blue" onclick="abrirWorkerLogsUxFina&&abrirWorkerLogsUxFina('${attr(id)}')">Logs</button>`;h+=`<button class="mini-btn yellow" onclick="abrirEditarBilleteraJobV20&&abrirEditarBilleteraJobV20('${attr(id)}')">Billetera</button>`;if(!final){h+=`<button class="mini-btn green" onclick="workerPanelReintentarJob&&workerPanelReintentarJob('${attr(id)}')">Reintentar</button>`;h+=`<button class="mini-btn red" onclick="workerPanelCancelarJob&&workerPanelCancelarJob('${attr(id)}')">Cancelar</button>`}return h+'</div>'}
- function rowJob(j,origen){return `<tr><td>${fecha(j.created_at||j.updated_at||j.FECHA_CREACION||j.FECHA)}<br><span class="nodo-v21-origin ${origen==='LANDING'?'landing':'manual'}">${origen}</span></td><td><b>${esc(usu(j)||'-')}</b><br><span class="small">${jid(j)?'Job #'+esc(jid(j)):'Sin job'}</span></td><td>${esc((tip(j)||'-').replaceAll('_',' '))}<br><b>${money(mon(j))}</b></td><td>${j.BILLETERA_NOMBRE||j.billetera_nombre?esc(j.BILLETERA_NOMBRE||j.billetera_nombre):walletHtml(j)}</td><td onclick="${jid(j)?`abrirWorkerLogsUxFina&&abrirWorkerLogsUxFina('${attr(jid(j))}')`:''}">${estadoChip(est(j),j.error_mensaje||j.error||j.WORKER_ERROR)}</td><td>${jid(j)?acciones(j):'<span class="small">Esperando job</span>'}</td></tr>`}
- function tabla(id,rows,empty){const box=$(id);if(!box)return;if(!rows.length){box.innerHTML=`<div class="nodo-v21-empty">${empty}</div>`;return}box.innerHTML=`<div class="nodo-v21-table"><table><thead><tr><th>Hora</th><th>Usuario</th><th>Operación</th><th>Billetera</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`}
- function render(){
-   const manuales=jobs().filter(j=>!isLandingJob(j)).sort((a,b)=>new Date(b.created_at||b.updated_at||0)-new Date(a.created_at||a.updated_at||0)).slice(0,45);
-   const landingS=solis().slice().sort((a,b)=>new Date(b.FECHA_CREACION||b.FECHA||b.created_at||0)-new Date(a.FECHA_CREACION||a.FECHA||a.created_at||0)).slice(0,45);
-   const landingRows=landingS.map(s=>{const j=jobs().find(x=>String(jid(x))===String(s.WORKER_JOB_ID||s.worker_job_id||''))||{};return rowJob({...j,...s,id:j.id||s.WORKER_JOB_ID||'',usuario:usu(s),tipo_accion:tip(s),monto:mon(s),estado:s.ESTADO_WORKER||s.ESTADO||j.estado},'LANDING')});
-   tabla('nodoV21ManualesTabla',manuales.map(j=>rowJob(j,'MANUAL')),'Sin jobs manuales recientes.');
-   tabla('nodoV21LandingTabla',landingRows,'Sin solicitudes landing recientes.');
-   if($('nodoV21ManualCount'))$('nodoV21ManualCount').textContent=manuales.length;
-   if($('nodoV21LandingCount'))$('nodoV21LandingCount').textContent=landingS.length;
-   renderHistorial();
-   updateChunior();
- }
- function renderHistorial(){
-   const box=$('nodoV21HistorialTabla');if(!box)return;
-   const origen=norm($('nodoV21FiltroOrigen')?.value||''), tipoF=norm($('nodoV21FiltroTipo')?.value||''), txt=norm($('nodoV21FiltroBuscar')?.value||'');
-   let arr=[];
-   jobs().forEach(j=>arr.push({fecha:j.created_at||j.updated_at,origen:isLandingJob(j)?'LANDING_JOB':'MANUAL',usuario:usu(j),tipo:tip(j),monto:mon(j),estado:est(j),job:jid(j)}));
-   solis().forEach(s=>arr.push({fecha:s.FECHA_CREACION||s.FECHA||s.created_at,origen:'LANDING',usuario:usu(s),tipo:tip(s),monto:mon(s),estado:s.ESTADO_WORKER||s.ESTADO||'',job:s.WORKER_JOB_ID||''}));
-   if(origen)arr=arr.filter(x=>norm(x.origen).includes(origen)); if(tipoF)arr=arr.filter(x=>norm(x.tipo).includes(tipoF)); if(txt)arr=arr.filter(x=>norm(`${x.usuario} ${x.tipo} ${x.estado} ${x.origen} ${x.job}`).includes(txt));
-   arr.sort((a,b)=>new Date(b.fecha||0)-new Date(a.fecha||0)); arr=arr.slice(0,90);
-   if(!arr.length){box.innerHTML='<div class="nodo-v21-empty">Sin historial para esos filtros.</div>';return}
-   box.innerHTML=`<div class="nodo-v21-table"><table><thead><tr><th>Hora</th><th>Origen</th><th>Usuario</th><th>Tipo</th><th>Monto</th><th>Estado</th><th>Job</th></tr></thead><tbody>${arr.map(x=>`<tr><td>${fecha(x.fecha)}</td><td><span class="nodo-v21-origin ${norm(x.origen).includes('LANDING')?'landing':'manual'}">${esc(x.origen)}</span></td><td><b>${esc(x.usuario||'-')}</b></td><td>${esc((x.tipo||'-').replaceAll('_',' '))}</td><td><b>${money(x.monto||0)}</b></td><td>${estadoChip(x.estado)}</td><td>${x.job?'#'+esc(x.job):'-'}</td></tr>`).join('')}</tbody></table></div>`
- }
- window.nodoV21Render=render;
- window.nodoV21SetVista=function(v){V21.vista=v||'todo';document.querySelectorAll('.nodo-v21-tab').forEach(b=>b.classList.remove('active'));const a=$(`nodoV21Tab_${V21.vista}`);if(a)a.classList.add('active');const m=$('nodoV21ManualCard'),l=$('nodoV21LandingCard'),h=$('nodoV21HistorialCard');if(m)m.style.display=(V21.vista==='landing')?'none':'';if(l)l.style.display=(V21.vista==='manual')?'none':'';if(h)h.style.display=(V21.vista==='historial'||V21.vista==='todo')?'':'none'};
- function updateChunior(){const dot=$('nodoV21ChuniorDot'),label=$('nodoV21ChuniorLabel');const has=!!window.chunior;if(dot)dot.classList.toggle('ok',has);if(label)label.textContent=has?'Puente Electron disponible':'Modo navegador / puente pendiente'}
- window.nodoV21FocusChunior=async function(){try{if(window.chunior&&typeof window.chunior.focus==='function'){await window.chunior.focus();if(typeof toast==='function')toast('Chunior enfocado','green')}else alert('El puente Chunior se activa cuando esto corra dentro de Electron.')}catch(e){alert('No pude enfocar Chunior: '+(e.message||e))}};
- window.nodoV21SyncChunior=async function(){try{if(typeof sincronizarBilleterasChunior==='function'){await sincronizarBilleterasChunior();return}alert('Sync Chunior queda preparado para Fase 2.')}catch(e){alert('Error sync Chunior: '+(e.message||e))}};
- function montar(){
-   const view=$('viewInicio'); if(!view||$('nodoV21PanelUnico'))return; document.body.classList.add('nodo-v21-panel-unico');
-   const hero=document.createElement('div'); hero.className='nodo-v21-hero'; hero.id='nodoV21PanelUnico'; hero.innerHTML=`<div class="nodo-v21-cardx hero"><h2>Panel único operativo</h2><p>Fase 1: manuales, landing e historial separados. Chunior queda preparado como motor detrás del panel, no como pestaña separada.</p><div class="nodo-v21-tabs"><button id="nodoV21Tab_todo" class="nodo-v21-tab active" onclick="nodoV21SetVista('todo')">Todo</button><button id="nodoV21Tab_manual" class="nodo-v21-tab" onclick="nodoV21SetVista('manual')">Manuales</button><button id="nodoV21Tab_landing" class="nodo-v21-tab" onclick="nodoV21SetVista('landing')">Landing</button><button id="nodoV21Tab_historial" class="nodo-v21-tab" onclick="nodoV21SetVista('historial')">Historial</button></div></div><div class="nodo-v21-cardx"><div class="nodo-v21-head" style="margin-bottom:4px"><h3>⚡ Chunior integrado</h3><span id="nodoV21ChuniorDot" class="nodo-v21-dot"></span></div><div id="nodoV21ChuniorLabel" class="nodo-v21-sub">Chequeando puente...</div><div style="display:flex;gap:8px;margin-top:12px"><button class="mini-btn blue" onclick="nodoV21FocusChunior()">Abrir/enfocar</button><button class="mini-btn green" onclick="nodoV21SyncChunior()">Sync billeteras</button></div></div>`;
-   const grid=document.createElement('div'); grid.className='nodo-v21-grid'; grid.innerHTML=`<div id="nodoV21ManualCard" class="nodo-v21-cardx"><div class="nodo-v21-head"><div><h3>⚡ Manuales</h3><div class="nodo-v21-sub">Jobs creados por operador, chat o acción rápida.</div></div><span class="nodo-ok-chip" id="nodoV21ManualCount">0</span></div><div id="nodoV21ManualesTabla"></div></div><div id="nodoV21LandingCard" class="nodo-v21-cardx"><div class="nodo-v21-head"><div><h3>📋 Landing</h3><div class="nodo-v21-sub">Solicitudes que llegan desde landing/chat interno.</div></div><span class="nodo-warn-chip" id="nodoV21LandingCount">0</span></div><div id="nodoV21LandingTabla"></div></div><div id="nodoV21HistorialCard" class="nodo-v21-cardx nodo-v21-full"><div class="nodo-v21-head"><div><h3>📊 Historial unificado</h3><div class="nodo-v21-sub">Manual + Landing + Worker. En Fase 2 sumamos Chunior/historial_ops real.</div></div><button class="mini-btn gray" onclick="nodoV21Render()">Recargar</button></div><div class="nodo-v21-filter-row"><select id="nodoV21FiltroOrigen" onchange="nodoV21Render()"><option value="">Todos los orígenes</option><option value="MANUAL">Manual</option><option value="LANDING">Landing</option></select><select id="nodoV21FiltroTipo" onchange="nodoV21Render()"><option value="">Todos los tipos</option><option value="CREAR_USUARIO">Crear usuario</option><option value="VALIDAR">Validar usuario</option><option value="CARGA">Carga</option><option value="RETIRO">Retiro</option><option value="CLAVE">Clave</option></select><input id="nodoV21FiltroBuscar" placeholder="Buscar usuario/job..." oninput="nodoV21Render()"></div><div id="nodoV21HistorialTabla"></div></div>`;
-   const head=view.querySelector('.ops-head')||view.firstElementChild; if(head&&head.parentElement===view){head.insertAdjacentElement('afterend',hero);hero.insertAdjacentElement('afterend',grid)}else{view.prepend(grid);view.prepend(hero)}
-   const old=$('nodoOrgHistorialCard'); if(old)old.classList.add('nodo-v21-hidden-old');
-   render();
- }
- function boot(){montar();render()}
- const oldCentro=window.renderCentroOperativo;if(typeof oldCentro==='function'&&!oldCentro.__v21PanelUnico){window.renderCentroOperativo=function(){const r=oldCentro.apply(this,arguments);setTimeout(boot,130);return r};window.renderCentroOperativo.__v21PanelUnico=true;try{renderCentroOperativo=window.renderCentroOperativo}catch(e){}}
- document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,900)); window.addEventListener('load',()=>setTimeout(boot,1400)); setTimeout(boot,1600);
-})();
-</script>
+  if(window.__NODO_V21_QUICK_REPO_STYLE__) return;
+  window.__NODO_V21_QUICK_REPO_STYLE__ = true;
 
+  const QR = { selectedWallet:null };
 
-<style id="nodo-v21-preview-login-css">
-  #loginMsg .nodo-preview-login-ok{
-    background:#123322;
-    color:#b9f7cb;
-    padding:14px;
-    border-radius:14px;
-    margin-top:12px;
-    font-weight:800;
+  function $(id){ return document.getElementById(id); }
+  function esc(v){
+    if(typeof escapeHtml === 'function') return escapeHtml(v);
+    return String(v ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");
   }
-  #loginMsg .nodo-preview-login-warn{
-    background:#38280d;
-    color:#ffd98f;
-    padding:14px;
-    border-radius:14px;
-    margin-top:12px;
-    font-weight:800;
+  function attr(v){
+    if(typeof escapeAttr === 'function') return escapeAttr(v);
+    return esc(v).replaceAll('`','&#96;');
   }
-</style>
-
-<script id="nodo-v21-preview-login-js">
-(function(){
-  if(window.__NODO_V21_PREVIEW_LOGIN__) return;
-  window.__NODO_V21_PREVIEW_LOGIN__ = true;
-
-  function $(id){return document.getElementById(id);}
-  function hasElectronBridge(){
-    return !!(window.chunior || window.ctrlElectron || window.electronAPI);
+  function norm(v){
+    try{return String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase();}
+    catch(e){return String(v ?? '').trim().toUpperCase();}
+  }
+  function money(v){
+    if(typeof window.money === 'function') return window.money(v);
+    return '$ ' + Number(v || 0).toLocaleString('es-AR');
+  }
+  function wallets(){
+    const out=[];
+    try{
+      if(Array.isArray(window.billeteras)) out.push(...window.billeteras);
+      if(typeof billeteras !== 'undefined' && Array.isArray(billeteras)) out.push(...billeteras);
+      if(Array.isArray(window.saldosOperativos?.billeteras)) out.push(...window.saldosOperativos.billeteras);
+      if(Array.isArray(window.wallets)) out.push(...window.wallets);
+    }catch(e){}
+    const seen=new Set();
+    return out.filter(w=>{
+      const k=String(w.id||w.ID||w.id_billetera||w.billetera_id||w.nombre_visible||w.nombre||'');
+      if(!k || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
+  function walletId(w){ return w.id ?? w.ID ?? w.id_billetera ?? w.billetera_id ?? ''; }
+  function walletName(w){ return w.nombre_visible || w.nombre || w.NOMBRE || w.alias || w.titular || ('Billetera '+walletId(w)); }
+  function walletTipo(w){ return w.banco || w.tipo || w.TIPO || w.provider || ''; }
+  function walletSaldo(w){ return w.saldo_real ?? w.saldo ?? w.SALDO ?? w.monto ?? 0; }
+  function getPc(){
+    return String(window.pcOperativa || (typeof pcOperativa !== 'undefined' ? pcOperativa : '') || 'P4').trim().toUpperCase();
+  }
+  function getToken(){
+    return String(window.panelSessionToken || (typeof panelSessionToken !== 'undefined' ? panelSessionToken : '') || '');
   }
 
-  function entrarPreview(usuario){
+  function selectWallet(id){
+    if(!id) return;
+    QR.selectedWallet = String(id);
     try{
-      window.operadorActual = window.operadorActual || {
-        usuario: usuario || 'preview',
-        nombre: usuario || 'Preview',
-        rol: 'preview',
-        pc_codigo: window.pcOperativa || 'P4'
-      };
+      localStorage.setItem('nodoV21QuickWallet', QR.selectedWallet);
+      localStorage.setItem('nodoUltimaBilleteraImpactada', QR.selectedWallet);
+      localStorage.setItem('nodo_wallet_impactada', QR.selectedWallet);
     }catch(e){}
-
-    const login = $('loginView');
-    const app = $('appView');
-    if(login) login.classList.add('hidden');
-    if(app) app.classList.remove('hidden');
-
-    try{
-      localStorage.setItem('nodo_v21_preview_login', '1');
-      localStorage.setItem('nodo_v21_preview_usuario', usuario || 'preview');
-    }catch(e){}
-
-    try{
-      if(typeof inicializarPanel === 'function') inicializarPanel();
-    }catch(e){}
-    try{
-      if(typeof cargarConfig === 'function') cargarConfig();
-    }catch(e){}
-    try{
-      if(typeof refrescarTodo === 'function') refrescarTodo(true);
-    }catch(e){}
-    try{
-      if(typeof mostrarVista === 'function') mostrarVista('inicio');
-    }catch(e){}
-    try{
-      if(typeof renderCentroOperativo === 'function') renderCentroOperativo();
-    }catch(e){}
-    try{
-      if(typeof window.nodoV21Render === 'function') window.nodoV21Render();
-    }catch(e){}
-
-    setTimeout(() => {
-      try{ if(typeof renderCentroOperativo === 'function') renderCentroOperativo(); }catch(e){}
-      try{ if(typeof window.nodoV21Render === 'function') window.nodoV21Render(); }catch(e){}
-    }, 900);
+    const sel = $('v21QuickWallet');
+    if(sel) sel.value = QR.selectedWallet;
+    const oldSel = $('manualWorkerBilleteraInicio') || $('manualWorkerBilletera');
+    if(oldSel){
+      oldSel.value = QR.selectedWallet;
+      oldSel.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+    renderWallets();
+    updateDetected();
   }
 
-  const oldLogin = window.login;
-  window.login = async function(){
-    const usuario = String(($('loginUsuario') || {}).value || '').trim();
-    const clave = String(($('loginClave') || {}).value || '').trim();
-    const msg = $('loginMsg');
+  window.nodoV21QuickSelectWallet = selectWallet;
 
-    if(!usuario || !clave){
-      if(msg) msg.innerHTML = '<div class="err-box">Ingresá usuario y clave.</div>';
+  function ensureSelectedWallet(){
+    const saved = QR.selectedWallet || localStorage.getItem('nodoV21QuickWallet') || localStorage.getItem('nodoUltimaBilleteraImpactada') || '';
+    const lista = wallets();
+    const exists = saved && lista.some(w => String(walletId(w)) === String(saved));
+    if(exists){
+      QR.selectedWallet = String(saved);
+    }else if(lista.length){
+      QR.selectedWallet = String(walletId(lista[0]));
+    }
+  }
+
+  function renderWallets(){
+    const box=$('nodoV21QuickWallets');
+    const sel=$('v21QuickWallet');
+    if(!box) return;
+    const lista=wallets();
+
+    ensureSelectedWallet();
+
+    if(sel){
+      const current = sel.value || QR.selectedWallet || '';
+      sel.innerHTML = '<option value="">Seleccionar billetera</option>' + lista.map(w=>{
+        const id=walletId(w);
+        return `<option value="${esc(id)}">${esc(walletName(w))} · ${esc(walletTipo(w) || 'Billetera')}</option>`;
+      }).join('');
+      sel.value = current || QR.selectedWallet || '';
+    }
+
+    if(!lista.length){
+      box.innerHTML='<div class="nodo-v21-empty">Sin billeteras cargadas.</div>';
       return;
     }
 
-    // En Electron dejamos que intente el login original contra Chunior.
-    if(hasElectronBridge() && typeof oldLogin === 'function'){
-      try{
-        return await oldLogin.apply(this, arguments);
-      }catch(e){
-        if(msg) msg.innerHTML = '<div class="nodo-preview-login-warn">No respondió Chunior/Electron. Entrando en modo preview para revisar el panel.</div>';
-        setTimeout(() => entrarPreview(usuario), 500);
-        return;
-      }
+    box.innerHTML = lista.slice(0,10).map(w=>{
+      const id=String(walletId(w));
+      const active = id && String(QR.selectedWallet) === id;
+      return `<div class="nodo-v21-wallet-mini ${active?'active':''}" onclick="nodoV21QuickSelectWallet('${attr(id)}')">
+        ${active?'<span class="tag">ACTIVA</span>':''}
+        <div class="name">${esc(walletName(w))}</div>
+        <div class="saldo">${money(walletSaldo(w))}</div>
+        <div class="meta">${esc(walletTipo(w) || 'Billetera')} · ID ${esc(id || '-')}</div>
+        <div class="nodo-v21-wallet-actions">
+          <button class="mini-btn blue" onclick="event.stopPropagation();nodoV21QuickSelectWallet('${attr(id)}')">Usar</button>
+          <button class="mini-btn yellow" onclick="event.stopPropagation();abrirAjusteBilleteraV20 && abrirAjusteBilleteraV20('${attr(id)}')">Ajustar</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function detectarAccion(){
+    const raw = String($('v21QuickMonto')?.value || '').trim();
+    if(raw === '') return {tipo:'VALIDAR_USUARIO', monto:0, requiereWallet:false, label:'Validar usuario'};
+    const n = Number(raw.replace(',','.'));
+    if(!Number.isFinite(n)) return {tipo:'VALIDAR_USUARIO', monto:0, requiereWallet:false, label:'Validar usuario'};
+    if(n > 0) return {tipo:'CARGAR_FICHAS', monto:Math.abs(n), requiereWallet:true, label:'Carga'};
+    if(n < 0) return {tipo:'PROCESAR_RETIRO', monto:Math.abs(n), requiereWallet:true, label:'Retiro'};
+    return {tipo:'VALIDAR_USUARIO', monto:0, requiereWallet:false, label:'Validar usuario'};
+  }
+
+  function walletSeleccionadaData(){
+    const id=String($('v21QuickWallet')?.value || QR.selectedWallet || '').trim();
+    return wallets().find(w => String(walletId(w)) === id) || null;
+  }
+
+  function updateDetected(){
+    const box=$('nodoV21QuickDetected');
+    if(!box) return;
+    const a=detectarAccion();
+    const w=walletSeleccionadaData();
+    let txt = `<b>${esc(a.label)}</b>`;
+    if(a.requiereWallet){
+      txt += w ? ` · impacta en <b>${esc(walletName(w))}</b>` : ` · <b>seleccioná billetera</b>`;
     }
+    box.innerHTML = txt;
+  }
 
-    // En navegador/Vercel: modo preview directo.
-    if(msg){
-      msg.innerHTML = '<div class="nodo-preview-login-ok">Modo preview activo: Chunior no está disponible en navegador, pero podés revisar el panel.</div>';
+  function setOldFields(usuario, monto, tipo, walletIdValue, obs, clave){
+    const u=$('manualWorkerUsuarioInicio') || $('manualWorkerUsuario');
+    const m=$('manualWorkerMontoInicio') || $('manualWorkerMonto');
+    const t=$('manualWorkerTipoInicio') || $('manualWorkerTipo');
+    const b=$('manualWorkerBilleteraInicio') || $('manualWorkerBilletera');
+    const o=$('manualWorkerObsInicio') || $('manualWorkerObs');
+    const c=$('agentUserClaveFinal') || $('manualWorkerClaveInicio') || $('agentUserClave');
+
+    if(u){u.value=usuario; u.dispatchEvent(new Event('input',{bubbles:true}));}
+    if(m){m.value=monto; m.dispatchEvent(new Event('input',{bubbles:true}));}
+    if(b && walletIdValue){b.value=walletIdValue; b.dispatchEvent(new Event('change',{bubbles:true}));}
+    if(o){o.value=obs || ''; o.dispatchEvent(new Event('input',{bubbles:true}));}
+    if(c && clave){c.value=clave; c.dispatchEvent(new Event('input',{bubbles:true}));}
+
+    if(t){
+      const opts=Array.from(t.options || []);
+      const found=opts.find(op => norm(op.value) === norm(tipo) || norm(op.textContent).includes(norm(tipo)) || norm(tipo).includes(norm(op.value)));
+      if(found) t.value = found.value;
+      else t.value = tipo;
+      t.dispatchEvent(new Event('change',{bubbles:true}));
     }
-    setTimeout(() => entrarPreview(usuario), 350);
-  };
+  }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const app = $('appView');
-    if(app) app.classList.add('hidden');
-
-    // Para no dejarte trabada si ya lo habías abierto antes.
+  async function preControlRetiro(usuario,monto,callback){
     try{
-      if(localStorage.getItem('nodo_v21_preview_login') === '1' && !hasElectronBridge()){
-        const u = localStorage.getItem('nodo_v21_preview_usuario') || 'preview';
-        setTimeout(() => entrarPreview(u), 500);
+      if(typeof supabaseClient !== 'undefined'){
+        const {data,error}=await supabaseClient.rpc('panel_controlar_retiro_24h_v21',{
+          p_session_token:getToken(),
+          p_pc_codigo:getPc(),
+          p_usuario:usuario
+        });
+        if(error) throw error;
+        const r=Array.isArray(data)?data[0]:data;
+        if(r && r.bloqueado && typeof abrirModal === 'function'){
+          abrirModal('Control retiro 24 hs', `
+            <div class="alert-box">⚠️ Retiro reciente detectado.<br>Último: ${esc(r.ultimo_retiro_at_fmt || r.ultimo_retiro_at || '-')} · ${money(r.ultimo_monto || 0)}</div>
+            <label>Motivo para continuar</label>
+            <input id="v21MotivoRetiro" placeholder="Autorizado / revisión manual / excepción">
+          `, async()=>{
+            const motivo=String($('v21MotivoRetiro')?.value || '').trim();
+            if(!motivo){ alert('El motivo es obligatorio.'); return; }
+            try{
+              await supabaseClient.rpc('panel_registrar_override_retiro_24h_v21',{
+                p_session_token:getToken(),
+                p_pc_codigo:getPc(),
+                p_usuario:usuario,
+                p_monto:Number(monto||0),
+                p_motivo:motivo,
+                p_control:r || {}
+              });
+            }catch(e){}
+            cerrarModal();
+            await callback();
+          }, 'Continuar retiro');
+          return;
+        }
       }
-    }catch(e){}
-  });
+    }catch(e){
+      console.warn('Control retiro 24h no disponible:', e);
+    }
+    await callback();
+  }
+
+  async function ejecutarTipo(tipoManual){
+    const usuario=String($('v21QuickUsuario')?.value || '').trim();
+    const clave=String($('v21QuickClave')?.value || '12345a').trim() || '12345a';
+    const obs=String($('v21QuickObs')?.value || '').trim();
+    const detected=detectarAccion();
+    const tipo = tipoManual || detected.tipo;
+    const monto = tipoManual ? 0 : detected.monto;
+    const requiereWallet = ['CARGAR_FICHAS','PROCESAR_RETIRO'].includes(norm(tipo)) || (monto !== 0 && !['CREAR_USUARIO','CAMBIAR_CLAVE','VALIDAR_USUARIO'].includes(norm(tipo)));
+    const walletIdValue=String($('v21QuickWallet')?.value || QR.selectedWallet || '').trim();
+    const msg=$('nodoV21QuickMsg');
+
+    if(!usuario){
+      if(msg) msg.innerHTML='<div class="err-box">Ingresá usuario.</div>';
+      return;
+    }
+    if(requiereWallet && !walletIdValue){
+      if(msg) msg.innerHTML='<div class="err-box">Seleccioná la billetera impactada.</div>';
+      return;
+    }
+
+    const lanzar = async()=>{
+      setOldFields(usuario, monto, tipo, walletIdValue, obs, clave);
+
+      if(norm(tipo)==='CAMBIAR_CLAVE'){
+        const actionSel=$('agentUserTipoFinal') || $('agentUserActionFinal') || $('manualWorkerAgenteAccion');
+        if(actionSel){
+          const opts=Array.from(actionSel.options || []);
+          const found=opts.find(o => norm(o.value).includes('CAMBIAR') || norm(o.textContent).includes('CAMBIAR'));
+          if(found) actionSel.value=found.value;
+          actionSel.dispatchEvent(new Event('change',{bubbles:true}));
+        }
+        if(typeof crearAgentUserJobFinal === 'function'){
+          await crearAgentUserJobFinal();
+        }else if(typeof crearWorkerJobManualInicio === 'function'){
+          await crearWorkerJobManualInicio();
+        }else{
+          throw new Error('No encontré función para crear job.');
+        }
+      }else if(norm(tipo)==='CREAR_USUARIO'){
+        const actionSel=$('agentUserTipoFinal') || $('agentUserActionFinal') || $('manualWorkerAgenteAccion');
+        if(actionSel){
+          const opts=Array.from(actionSel.options || []);
+          const found=opts.find(o => norm(o.value).includes('CREAR') || norm(o.textContent).includes('CREAR'));
+          if(found) actionSel.value=found.value;
+          actionSel.dispatchEvent(new Event('change',{bubbles:true}));
+        }
+        if(typeof crearAgentUserJobFinal === 'function'){
+          await crearAgentUserJobFinal();
+        }else if(typeof crearWorkerJobManualInicio === 'function'){
+          await crearWorkerJobManualInicio();
+        }else{
+          throw new Error('No encontré función para crear job.');
+        }
+      }else{
+        if(typeof crearWorkerJobManualInicio === 'function'){
+          await crearWorkerJobManualInicio();
+        }else{
+          throw new Error('No encontré crearWorkerJobManualInicio.');
+        }
+      }
+
+      if(msg) msg.innerHTML='<div class="ok-box">Job enviado a worker.</div>';
+      try{ if(typeof renderCentroOperativo === 'function') renderCentroOperativo(); }catch(e){}
+      try{ if(typeof window.nodoV21Render === 'function') window.nodoV21Render(); }catch(e){}
+    };
+
+    try{
+      if(norm(tipo)==='PROCESAR_RETIRO') await preControlRetiro(usuario,monto,lanzar);
+      else await lanzar();
+    }catch(e){
+      if(msg) msg.innerHTML='<div class="err-box">'+esc(e.message || e)+'</div>';
+      else alert(e.message || e);
+    }
+  }
+
+  window.nodoV21QuickEjecutar = ()=>ejecutarTipo(null);
+  window.nodoV21QuickCrearUsuario = ()=>ejecutarTipo('CREAR_USUARIO');
+  window.nodoV21QuickCambiarClave = ()=>ejecutarTipo('CAMBIAR_CLAVE');
+  window.nodoV21QuickValidar = ()=>ejecutarTipo('VALIDAR_USUARIO');
+
+  function montarQuick(){
+    const view=$('viewInicio');
+    if(!view || $('nodoV21QuickShell')) return;
+
+    document.body.classList.add('nodo-v21-quick-repo');
+
+    const shell=document.createElement('div');
+    shell.id='nodoV21QuickShell';
+    shell.className='nodo-v21-quick-shell';
+    shell.innerHTML=`
+      <div class="nodo-v21-card">
+        <div class="nodo-v21-head">
+          <div>
+            <h3>💳 Billeteras rápidas</h3>
+            <div class="nodo-v21-sub">Primero elegí la billetera que impacta la operación.</div>
+          </div>
+          <button class="mini-btn gray" onclick="mostrarVista && mostrarVista('billeteras')">Administrar</button>
+        </div>
+        <div id="nodoV21QuickWallets" class="nodo-v21-wallet-row"></div>
+      </div>
+
+      <div class="nodo-v21-card">
+        <div class="nodo-v21-head">
+          <div>
+            <h3>⚡ Operación rápida</h3>
+            <div class="nodo-v21-sub">Atajos operativos por worker.</div>
+          </div>
+        </div>
+        <div class="nodo-v21-quick-grid">
+          <div>
+            <label>Usuario</label>
+            <input id="v21QuickUsuario" placeholder="ej: probando4">
+          </div>
+          <div>
+            <label>Monto</label>
+            <input id="v21QuickMonto" type="number" placeholder="0" oninput="nodoV21QuickUpdateDetected()">
+          </div>
+          <div>
+            <label>Billetera</label>
+            <select id="v21QuickWallet" onchange="nodoV21QuickSelectWallet(this.value)"></select>
+          </div>
+          <div>
+            <label>Clave</label>
+            <input id="v21QuickClave" value="12345a">
+          </div>
+          <div>
+            <label>Observación</label>
+            <input id="v21QuickObs" placeholder="opcional">
+          </div>
+        </div>
+        <div id="nodoV21QuickDetected" class="nodo-v21-detected"></div>
+        <div class="nodo-v21-quick-actions">
+          <button class="btn btn-green" onclick="nodoV21QuickEjecutar()">Ejecutar</button>
+          <button class="mini-btn blue" onclick="nodoV21QuickValidar()">🔍 Validar</button>
+          <button class="mini-btn yellow" onclick="nodoV21QuickCambiarClave()">🔑 Cambiar clave</button>
+          <button class="mini-btn purple" onclick="nodoV21QuickCrearUsuario()">➕ Crear usuario</button>
+        </div>
+        <div id="nodoV21QuickMsg" class="nodo-v21-job-msg"></div>
+      </div>
+    `;
+
+    const marker = $('nodoV21PanelUnico') || view.querySelector('.nodo-v21-hero') || view.querySelector('.ops-head') || view.firstElementChild;
+    if(marker && marker.parentElement === view){
+      marker.insertAdjacentElement('afterend', shell);
+    }else{
+      view.prepend(shell);
+    }
+
+    // Ocultar las acciones rápidas viejas, pero no borrar nada.
+    const oldPanels = Array.from(view.querySelectorAll('.ops-panel,.card')).filter(el => {
+      if(el.closest('#nodoV21QuickShell')) return false;
+      const t=norm(el.textContent || '');
+      return t.includes('ACCION RAPIDA') || t.includes('ACCIÓN RÁPIDA') || t.includes('USUARIO AGENTES');
+    });
+    oldPanels.forEach(el => el.classList.add('nodo-v21-hide-old-quick'));
+
+    renderWallets();
+    updateDetected();
+  }
+
+  window.nodoV21QuickUpdateDetected = updateDetected;
+
+  function copyFromOld(){
+    const oldU=$('manualWorkerUsuarioInicio') || $('manualWorkerUsuario');
+    const oldM=$('manualWorkerMontoInicio') || $('manualWorkerMonto');
+    const oldO=$('manualWorkerObsInicio') || $('manualWorkerObs');
+    const oldB=$('manualWorkerBilleteraInicio') || $('manualWorkerBilletera');
+    if($('v21QuickUsuario') && oldU && !$('v21QuickUsuario').value) $('v21QuickUsuario').value=oldU.value || '';
+    if($('v21QuickMonto') && oldM && !$('v21QuickMonto').value) $('v21QuickMonto').value=oldM.value || '';
+    if($('v21QuickObs') && oldO && !$('v21QuickObs').value) $('v21QuickObs').value=oldO.value || '';
+    if(oldB && oldB.value) selectWallet(oldB.value);
+  }
+
+  function boot(){
+    montarQuick();
+    renderWallets();
+    copyFromOld();
+    updateDetected();
+  }
+
+  const oldCentro=window.renderCentroOperativo;
+  if(typeof oldCentro === 'function' && !oldCentro.__quickRepo){
+    window.renderCentroOperativo=function(){
+      const r=oldCentro.apply(this,arguments);
+      setTimeout(boot,120);
+      return r;
+    };
+    window.renderCentroOperativo.__quickRepo=true;
+    try{ renderCentroOperativo=window.renderCentroOperativo; }catch(e){}
+  }
+
+  const oldInicio=window.renderInicio;
+  if(typeof oldInicio === 'function' && !oldInicio.__quickRepo){
+    window.renderInicio=function(){
+      const r=oldInicio.apply(this,arguments);
+      setTimeout(boot,120);
+      return r;
+    };
+    window.renderInicio.__quickRepo=true;
+    try{ renderInicio=window.renderInicio; }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,900));
+  window.addEventListener('load',()=>setTimeout(boot,1400));
+  setTimeout(boot,1600);
 })();
 </script>
 
