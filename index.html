@@ -15,18 +15,6 @@
 body{background:var(--bg);color:#fff;overflow:hidden}
 .hidden{display:none!important}
 .layout{display:grid;grid-template-columns:280px 1fr;height:100vh}
-/* Chunior section ocupa todo el main sin padding */
-.main.chunior-active{padding:0;overflow:hidden}
-#chuniorWrap{display:flex;flex-direction:column;height:100%}
-#chuniorBar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#161b22;border-bottom:1px solid #2e3444;flex-shrink:0}
-#chuniorWebview{flex:1;width:100%;border:none}
-.layout.bo-open{grid-template-columns:280px var(--bo-w,820px) 1fr}
-#boPanel{display:none;flex-direction:column;border-right:2px solid #3d5afe;background:#0e1118;height:100vh;overflow:hidden;position:relative}
-.layout.bo-open #boPanel{display:flex}
-#boPanelBar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#161b22;border-bottom:1px solid #2e3444;flex-shrink:0;gap:6px}
-#boWebview{flex:1;width:100%;height:100%}
-#boResizer{position:absolute;right:0;top:0;bottom:0;width:5px;cursor:col-resize;z-index:10;background:transparent;transition:background .15s}
-#boResizer:hover,#boResizer.dragging{background:rgba(61,90,254,.5)}
 .sidebar{background:var(--panel);border-right:1px solid #272b36;padding:18px;overflow-y:auto}
 .main{overflow-y:auto;padding:18px}
 .logo{width:170px;display:block;margin:0 auto 18px}
@@ -58,20 +46,28 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .table-wrap{max-height:520px;overflow:auto;border-radius:14px;border:1px solid #2d3342}
 .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
 .alert-box{background:#38280d;color:#ffd98f;padding:14px;border-radius:14px;margin-bottom:14px}.err-box{background:#3a1515;color:#ffd0d0;padding:14px;border-radius:14px;margin-bottom:14px}.ok-box{background:#123322;color:#b9f7cb;padding:14px;border-radius:14px;margin-bottom:14px}
-.login-wrap{display:flex;align-items:center;justify-content:center;height:100vh;padding:20px}.login-card{width:100%;max-width:420px;background:var(--card);border:1px solid #2d3342;border-radius:20px;padding:22px}
+.login-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg);z-index:9000}
+.login-wrap.hidden{display:none}
+.login-card{width:100%;max-width:420px;background:var(--card);border:1px solid #2d3342;border-radius:20px;padding:22px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:9999;padding:14px}
 .modal{width:100%;max-width:560px;max-height:92vh;overflow:auto;background:var(--card);border:1px solid #2e3444;border-radius:22px;padding:20px}
 .modal-title{font-size:22px;font-weight:900;margin-bottom:18px}.modal-actions{display:flex;gap:10px;margin-top:10px}.modal-actions button{flex:1}
-.chat-layout{display:grid;grid-template-columns:330px 1fr;gap:14px;min-height:calc(100vh - 120px)}
-.chat-list{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.chat-list-head{padding:14px;border-bottom:1px solid var(--line);background:#202635}
+/* ── Chat: toda la altura de .main, solo chatBody scrollea ── */
+.main.is-chat{overflow:hidden}
+#viewChat{height:100%;display:flex;flex-direction:column}
+#viewChat > div:first-child{flex-shrink:0;margin-bottom:10px}
+.chat-layout{flex:1;min-height:0;display:grid;grid-template-columns:300px 1fr;gap:14px}
+.chat-list{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.chat-list-head{padding:14px;border-bottom:1px solid var(--line);background:#202635;flex-shrink:0}
+#chatList{flex:1;overflow-y:auto;min-height:0}
 .chat-item{padding:12px;border-bottom:1px solid #2d3342;cursor:pointer}
 .chat-item:hover,.chat-item.active{background:#1c2230}
 .chat-item-title{display:flex;justify-content:space-between;gap:8px;font-weight:900}
 .chat-unread{background:#ff3b30;color:#fff;border-radius:999px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
-.chat-panel{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
-.chat-head{padding:14px;background:#202635;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.chat-body{flex:1;min-height:360px;max-height:calc(100vh - 260px);overflow-y:auto;padding:14px;background:#10131a}
+.chat-panel{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.chat-head{padding:14px;background:#202635;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.chat-body{flex:1;min-height:0;overflow-y:auto;padding:14px;background:#10131a}
+.chat-compose{flex-shrink:0}
 .chat-msg{max-width:78%;margin-bottom:10px;display:flex;flex-direction:column}
 .chat-msg.user{align-items:flex-start;margin-right:auto}.chat-msg.op{align-items:flex-end;margin-left:auto}
 .chat-bubble{padding:10px 12px;border-radius:16px;line-height:1.35;font-size:14px;word-break:break-word}
@@ -79,20 +75,50 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .chat-msg.op .chat-bubble{background:linear-gradient(135deg,#3d5afe,#6d7dff);color:#fff;border-bottom-right-radius:4px}
 .chat-bubble img{width:100%;max-width:260px;border-radius:12px;margin-top:6px;display:block}
 .chat-meta{color:#98a2b3;font-size:11px;margin-top:4px;padding:0 4px}
-.chat-compose{padding:12px;border-top:1px solid var(--line);background:#151821}
+.chat-compose{padding:12px;border-top:1px solid var(--line);background:#151821;position:relative}
 .chat-preview{display:none;align-items:center;justify-content:space-between;gap:10px;padding:8px;border-radius:14px;background:rgba(255,255,255,.08);margin-bottom:10px}
 .chat-preview.show{display:flex}.chat-preview img{width:58px;height:58px;object-fit:cover;border-radius:12px}
-.chat-row{display:grid;grid-template-columns:42px 1fr 46px;gap:8px;align-items:end}
+.chat-row{display:grid;grid-template-columns:42px 42px 1fr 46px;gap:8px;align-items:end}
+#macrosPanel{position:absolute;bottom:calc(100% + 4px);left:12px;right:12px;background:#1b202c;border:1px solid #2e3444;border-radius:14px;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:7px;z-index:200;box-shadow:0 -8px 28px rgba(0,0,0,.45)}
+#macrosPanel.hidden{display:none}
+.macro-btn{background:#252b3a;border:1px solid #2e3444;color:#e2e8f0;border-radius:10px;padding:9px 8px;font-size:12px;font-weight:700;cursor:pointer;text-align:left;line-height:1.3;transition:background .15s}
+.macro-btn:hover{background:#2e3a50;border-color:#3d5afe}
+.macro-btn.bil{background:#1a2a1a;border-color:#2d6a2d;color:#7ee07e}
+.macro-btn.bil:hover{background:#1e321e}
+.macro-edit-row{grid-column:1/-1;display:flex;justify-content:flex-end;padding-top:4px;border-top:1px solid #2e3444}
 #chatInput{min-height:42px;max-height:110px;margin:0;padding:11px 12px;resize:none;border-radius:14px;font-size:15px;background:#fff;color:#111}
 .toast{position:fixed;top:20px;right:20px;background:var(--blue);color:#fff;padding:14px 18px;border-radius:14px;z-index:99999;font-weight:bold;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#watchdogBanner{position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#7a1818,#f04438,#7a1818);color:#fff;padding:12px 18px;font-weight:700;z-index:99998;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 6px 18px rgba(0,0,0,.5);animation:wdPulse 1.4s ease-in-out infinite}
+@keyframes wdPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+#watchdogBanner button{background:#fff;color:#7a1818;border:none;border-radius:10px;padding:7px 14px;font-weight:800;cursor:pointer;font-size:12px}
+#watchdogBanner button:hover{background:#ffd8d8}
+#watchdogIndicator{font-size:11px;color:#aaa;text-align:center;margin-top:6px;line-height:1.4}
+#watchdogIndicator.ok{color:#7ee07e}
+#watchdogIndicator.alerta{color:#f04438;font-weight:700}
 .mobile-top{display:none;background:#151821;border-bottom:1px solid #272b36;padding:12px;align-items:center;justify-content:space-between}.mobile-menu{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1200}.mobile-menu .sidebar{display:block;width:280px;height:100%;position:absolute;left:0;top:0}
-@media(max-width:900px){body{overflow:auto}.layout{display:block;height:auto;min-height:100vh}.sidebar{display:none}.main{padding:12px}.mobile-top{display:flex}.top-grid{grid-template-columns:repeat(2,1fr);gap:10px}.stat-value{font-size:21px}th,td{font-size:11px;padding:8px}.mobile-menu.open{display:block}.chat-layout{grid-template-columns:1fr}.chat-body{max-height:420px}}
+@media(max-width:900px){
+  body{overflow:auto}
+  .layout{display:block;height:auto;min-height:100vh}
+  .sidebar{display:none}
+  .main{padding:12px;overflow:auto!important}
+  .main.is-chat{overflow:auto!important}
+  #viewChat{height:auto}
+  .mobile-top{display:flex}
+  .top-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-value{font-size:21px}
+  th,td{font-size:11px;padding:8px}
+  .mobile-menu.open{display:block}
+  .chat-layout{grid-template-columns:1fr;height:auto}
+  .chat-body{min-height:320px;max-height:60vh}
+  #chatList{max-height:200px}
+}
 
 /* ── Inicio redesign ─────────────────────────────────────────────────────── */
 .inicio-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 @media(max-width:1100px){.inicio-grid{grid-template-columns:1fr}}
 .inicio-col{display:flex;flex-direction:column;gap:14px}
-.bil-mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:4px}
+.bil-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:4px}
+#billerasInicioGrid{max-height:168px;overflow-y:auto;padding-right:2px}
 .bil-mini-card{background:var(--card2);border:1px solid #30384a;border-radius:14px;padding:12px;position:relative;cursor:default}
 .bil-mini-card.en-landing{border-color:rgba(61,90,254,.7);box-shadow:0 0 0 1px rgba(61,90,254,.25)}
 .bil-mini-saldo{font-size:21px;font-weight:900;color:#12b76a;margin-top:6px;letter-spacing:-.5px}
@@ -103,9 +129,6 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .manual-label{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;display:block}
 .manual-input-wrap{display:flex;flex-direction:column}
 .manual-input-wrap input,.manual-input-wrap select{margin:0}
-.clave-row{display:flex;align-items:center;gap:8px;margin:6px 0 10px;flex-wrap:wrap}
-.clave-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;font-size:13px;color:var(--muted);flex:1}
-.clave-toggle input[type=checkbox]{width:16px;height:16px;cursor:pointer;margin:0}
 .hist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .hist-filters{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .hist-filters select,.hist-filters input{margin:0;padding:7px 10px;font-size:12px;flex:1;min-width:120px}
@@ -129,17 +152,18 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 <div id="loginView" class="login-wrap">
   <div class="login-card">
     <img src="NODO%20%C2%B7%20OPERATIVO%20LITE_files/logo-nodo.png" class="logo" alt="NODO">
-    <h2 style="margin-bottom:18px">PANEL OPERATIVO LITE</h2>
+    <h2 style="margin-bottom:6px">PANEL OPERATIVO LITE</h2>
+    <div class="small" style="margin-bottom:18px;color:var(--muted)">Usá tus credenciales del backoffice. NODO valida con Chunior.</div>
     <label>Usuario</label>
-    <input id="loginUsuario" autocomplete="username">
+    <input id="loginUsuario" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('loginClave').focus()">
     <label>Clave</label>
-    <input id="loginClave" type="password" autocomplete="current-password">
+    <input id="loginClave" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()">
     <button class="btn btn-primary" onclick="login()">Ingresar</button>
     <div id="loginMsg" style="margin-top:12px"></div>
   </div>
 </div>
 
-<div id="appView" class="hidden">
+<div id="appView">
   <div class="mobile-top">
     <button class="mini-btn blue" onclick="abrirMenuMobile()">☰ Menú</button>
     <b>NODO Operativo</b>
@@ -157,6 +181,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
           <button class="mini-btn gray" style="padding:4px 8px;font-size:11px" onclick="refrescarSaldoAgente()" title="Actualizar">🔄</button>
         </div>
         <div id="agentBalanceVal" style="font-size:18px;font-weight:900;color:#3fb950">—</div>
+        <div id="watchdogIndicator" title="Watchdog que compara saldos de Drex y Chunior cada minuto">🔄 Watchdog inactivo</div>
       </div>
 
       <button id="navInicio" class="nav-btn active" onclick="mostrarVista('inicio')">🏠 Inicio</button>
@@ -166,26 +191,9 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <button id="navJugadores" class="nav-btn" onclick="mostrarVista('jugadores')">🏅 Jugadores</button>
       <button id="navAuto" class="nav-btn hidden" onclick="mostrarVista('auto')" style="border:1px solid rgba(124,58,237,.5)">⚡ Automatización</button>
       <button id="navVerificaciones" class="nav-btn hidden" onclick="mostrarVista('verificaciones')" style="border:1px solid rgba(61,90,254,.4)">🔍 Verificaciones <span id="badgeVerif" class="badge-alert hidden">0</span></button>
-      <button id="navBoPanel" class="nav-btn hidden" onclick="toggleBoPanel()" style="border:1px solid rgba(18,183,106,.4)">🖥 Panel cargas</button>
-      <button id="navChunior" class="nav-btn hidden" onclick="mostrarVista('chunior')" style="border:1px solid rgba(240,160,23,.4)">📋 Chunior <span id="chuniorStatus" style="font-size:10px">⚪</span></button>
 
       <button class="nav-btn" onclick="cerrarSesion()">🚪 Cerrar sesión</button>
     </aside>
-
-    <!-- Panel lateral de backoffice (webview embebido, a la izquierda del main) -->
-    <div id="boPanel">
-      <div id="boResizer"></div>
-      <div id="boPanelBar">
-        <span style="font-size:12px;font-weight:700;color:#7c8dff;white-space:nowrap">🖥 Backoffice</span>
-        <div style="display:flex;gap:4px;flex-wrap:nowrap">
-          <button class="mini-btn gray" style="font-size:11px;padding:3px 7px" onclick="boPanelNav('search')" title="Búsqueda">🔍</button>
-          <button class="mini-btn gray" style="font-size:11px;padding:3px 7px" onclick="boPanelNav('new')" title="Nuevo usuario">➕</button>
-          <button class="mini-btn gray" style="font-size:11px;padding:3px 7px" onclick="document.getElementById('boWebview').reload()" title="Recargar">🔄</button>
-        </div>
-        <button class="mini-btn red" style="font-size:11px;padding:3px 7px" onclick="toggleBoPanel()">✕</button>
-      </div>
-      <webview id="boWebview" src="about:blank" style="flex:1;width:100%;border:none"></webview>
-    </div>
 
     <main class="main">
       <section id="viewInicio">
@@ -214,7 +222,11 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
             <div class="card" style="margin-bottom:0">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                 <h2 class="card-title" style="margin-bottom:0">💳 Billeteras</h2>
-                <button class="mini-btn gray" onclick="mostrarVista('billeteras')" style="font-size:11px">Administrar</button>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <button class="mini-btn gray" onclick="sincronizarBilleterasChunior()" style="font-size:11px" title="Leer saldos y nombres desde Chunior">🔄 Sincronizar</button>
+                  <button class="mini-btn purple" onclick="abrirModalTransferirBilleteras()" style="font-size:11px" title="Transferir entre billeteras en Chunior">🔀 Transferir</button>
+                  <button class="mini-btn gray" onclick="mostrarVista('billeteras')" style="font-size:11px">Administrar</button>
+                </div>
               </div>
               <div id="billerasInicioGrid" class="bil-mini-grid"></div>
             </div>
@@ -233,18 +245,10 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
                   <input id="manualMonto" type="number" placeholder="Ej: 5000  ·  -3000  ·  vacío" style="margin:0">
                 </div>
               </div>
-              <div class="clave-row">
-                <label class="clave-toggle">
-                  <input type="checkbox" id="manualResetClave" onchange="toggleClaveCustom(this)">
-                  Resetear clave también
-                </label>
-                <div id="claveCustomWrap" class="hidden" style="flex:2;min-width:160px">
-                  <input id="manualClaveCustom" placeholder="Nueva clave (vacío = 12345a)" style="margin:0;font-size:13px">
-                </div>
-              </div>
               <div style="display:flex;gap:8px">
                 <button class="btn btn-primary" onclick="ejecutarOperacionManual()" style="flex:2">Ejecutar</button>
-                <button class="mini-btn gray" onclick="soloConsultarUsuario()" title="Solo consultar saldo" style="padding:10px 14px">👁 Consultar</button>
+                <button class="mini-btn yellow" onclick="blanquearClaveManual()" title="Resetear clave del usuario a 12345a" style="padding:10px 14px">🔑 Blanquear clave</button>
+                <button class="mini-btn blue" onclick="abrirModalCrearUsuario()" title="Crear nuevo usuario en el casino" style="padding:10px 14px">➕ Crear</button>
               </div>
               <div id="manualResultado" style="margin-top:10px"></div>
             </div>
@@ -377,8 +381,11 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
                 <button class="mini-btn red" onclick="quitarImagenChat()">×</button>
               </div>
 
+              <div id="macrosPanel" class="hidden"></div>
+
               <div class="chat-row">
-                <button class="mini-btn gray" onclick="document.getElementById('chatFile').click()">📎</button>
+                <button class="mini-btn gray" onclick="document.getElementById('chatFile').click()" title="Adjuntar imagen">📎</button>
+                <button class="mini-btn gray" onclick="toggleMacrosPanel(event)" title="Macros rápidos">📋</button>
                 <textarea id="chatInput" rows="1" placeholder="Responder..."></textarea>
                 <button class="mini-btn blue" onclick="enviarChat()">➤</button>
               </div>
@@ -505,7 +512,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
               <option value="Regular">Regular</option>
               <option value="Nuevo">Nuevo</option>
             </select>
-            <select id="jugFiltroPc" onchange="filtrarJugadores()">
+            <select id="jugFiltroPc" onchange="filtrarJugadores()" class="hidden">
               <option value="">Todas las PCs</option>
             </select>
             <select id="jugFiltroTurno" onchange="filtrarJugadores()">
@@ -619,47 +626,6 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
         </div>
       </section>
 
-      <!-- ── Chunior ── -->
-      <section id="viewChunior" class="hidden" style="height:100%;margin:-18px;overflow:hidden">
-        <div id="chuniorWrap">
-          <div id="chuniorBar">
-            <span style="font-size:12px;font-weight:700;color:#f0a017">📋 Chunior</span>
-            <span id="chuniorStatusBar" style="font-size:11px;color:var(--muted)">—</span>
-            <div style="display:flex;gap:4px;margin-left:auto">
-              <button class="mini-btn gray" style="font-size:11px;padding:3px 7px" onclick="chuniorNav('/transacciones/')" title="Transacciones">📋</button>
-              <button class="mini-btn gray" style="font-size:11px;padding:3px 7px" onclick="document.getElementById('chuniorWebview').reload()" title="Recargar">🔄</button>
-              <button class="mini-btn red"  style="font-size:11px;padding:3px 7px" onclick="chuniorCerrarSesion()" title="Cerrar sesión">🚪 Salir</button>
-            </div>
-          </div>
-
-          <!-- Panel de login de NODO para Chunior (se muestra cuando la sesión no está activa) -->
-          <div id="chuniorLoginPanel" style="display:none;flex:1;align-items:center;justify-content:center;background:var(--bg)">
-            <div style="background:var(--card);border:1px solid #2e3444;border-radius:20px;padding:28px;width:100%;max-width:380px">
-              <div style="text-align:center;margin-bottom:18px">
-                <div style="font-size:24px;margin-bottom:6px">📋</div>
-                <h2 style="font-size:20px;font-weight:900">Iniciar sesión en Chunior</h2>
-                <div class="small" style="margin-top:4px">Los datos se envían directo a la sesión en segundo plano</div>
-              </div>
-              <label style="font-size:12px;color:var(--muted);font-weight:700">NOMBRE DE USUARIO</label>
-              <input id="chkUser" placeholder="Usuario de Chunior" autocomplete="username"
-                oninput="chuniorInjectField('id_username', this.value)"
-                onkeydown="if(event.key==='Enter')document.getElementById('chkPass').focus()"
-                style="margin-top:4px;margin-bottom:12px">
-              <label style="font-size:12px;color:var(--muted);font-weight:700">CONTRASEÑA</label>
-              <input id="chkPass" type="password" placeholder="Contraseña de Chunior" autocomplete="current-password"
-                oninput="chuniorInjectField('id_password', this.value)"
-                onkeydown="if(event.key==='Enter')chuniorSubmitLogin()"
-                style="margin-top:4px;margin-bottom:18px">
-              <button class="btn btn-primary" onclick="chuniorSubmitLogin()">Identificarse</button>
-              <div id="chkMsg" style="margin-top:10px"></div>
-            </div>
-          </div>
-
-          <!-- Webview de Chunior (se muestra cuando hay sesión activa) -->
-          <webview id="chuniorWebview" src="about:blank" style="flex:1;width:100%;border:none;display:none"></webview>
-        </div>
-      </section>
-
     </main>
   </div>
 </div>
@@ -677,14 +643,6 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   </div>
 </div>
 
-<div id="selectorPcOverlay" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-title">Seleccionar PC operativa</div>
-    <p class="small">Elegí la PC que cubrís hoy.</p>
-    <div id="pcSelectorGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px"></div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
@@ -696,6 +654,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let operador=null, pcOperativa=null;
 let solicitudes=[], billeteras=[], chats=[], chatMensajes=[];
+let retiros24hCSV = []; // {alias, fecha, monto} — retiros detectados en últimas 24h desde CSV
 let timersIniciados=false;
 let lastPendientesIds=new Set(), lastChatUnread=0;
 let chatActualId="", chatImagenBase64="", chatImagenNombre="";
@@ -704,17 +663,22 @@ window.addEventListener("load",()=>{
   // Siempre mostramos el login para capturar la clave (= clave Chunior).
   // Solo pre-rellenamos el usuario si hay sesión guardada.
   const saved=localStorage.getItem("nodo_operador_lite");
+  // No pre-rellenar usuario: cada operador entra con sus credenciales en blanco
   if(saved){
-    try{
-      const op=JSON.parse(saved);
-      const userInput=document.getElementById("loginUsuario");
-      if(userInput && op?.usuario) userInput.value=op.usuario;
-      setBox("loginMsg",'<div class="alert-box" style="font-size:12px">Sesión guardada · ingresá tu clave para continuar.</div>');
-    }catch(e){
+    try{ JSON.parse(saved); }catch(e){
       localStorage.removeItem("nodo_operador_lite");
       localStorage.removeItem("nodo_pc_operativa_lite");
     }
   }
+
+  // Pre-cargar el webview de Chunior en background para que el login sea inmediato
+  // y adjuntar listeners (puesto de trabajo, status) desde el inicio
+  setTimeout(function(){
+    activarChunior();
+  }, 300);
+
+  // Consulta en tiempo real de retiros del usuario (form manual sin monto)
+  _configurarConsultaRetirosLive();
 });
 
 function money(v){return Number(v||0).toLocaleString("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0})}
@@ -766,6 +730,18 @@ function formatearHoraChat(fechaRaw){
   }catch(e){
     return "";
   }
+}
+
+// Inicio del día actual en zona Argentina (independiente del TZ del SO del operador)
+function inicioDiaArgentina(){
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = function(t){ return parts.find(p => p.type === t).value; };
+  // Argentina es UTC-3 fijo (no usa DST)
+  return new Date(get('year') + '-' + get('month') + '-' + get('day') + 'T00:00:00-03:00');
 }
 
 
@@ -903,7 +879,7 @@ async function importarOperacionesCSV(){
   const hace24h = new Date(Date.now() - 24*60*60*1000);
 
   const aliasSet = new Set();
-  const retiros24h = []; // {alias, fecha}
+  retiros24hCSV = []; // {alias, fecha, monto} — reinicializamos y llenamos con los retiros del CSV
   let totalRows = 0, errorRows = 0;
 
   for(let i=1; i<lines.length; i++){
@@ -933,7 +909,7 @@ async function importarOperacionesCSV(){
       try {
         const fechaDate = new Date(fecha);
         if(!isNaN(fechaDate) && fechaDate >= hace24h){
-          retiros24h.push({ alias, fecha: fechaDate.toISOString(), monto: Math.abs(cant) });
+          retiros24hCSV.push({ alias, fecha: fechaDate.toISOString(), monto: Math.abs(cant) });
         }
       } catch(e){}
     }
@@ -968,11 +944,11 @@ async function importarOperacionesCSV(){
   // by verificarRetiro24h via the solicitudes table for NODO-originated ops.
   // For CSV-imported retiros that are recent, we log them to historial_ops for reference.
   let retiroMsg = '';
-  if(retiros24h.length){
-    for(const r of retiros24h){
+  if(retiros24hCSV.length){
+    for(const r of retiros24hCSV){
       await registrarEnHistorial({usuario:r.alias, tipo:'RETIRO', monto:r.monto, origen:'LANDING', estado:'OK', notas:'Importado de CSV · '+r.fecha, pc_codigo:pc});
     }
-    retiroMsg = '<br>⚠️ <b>'+retiros24h.length+'</b> retiro/s en las últimas 24hs importados al historial (blacklist activa).';
+    retiroMsg = '<br>⚠️ <b>'+retiros24hCSV.length+'</b> retiro/s en las últimas 24hs importados al historial (blacklist activa).';
   }
 
   setBox("opsCsvMsg",'<div class="ok-box">✅ Importación completada: <b>'+ok+' usuarios</b> marcados como verificados'+(err?(' | <b>'+err+' errores</b>'):'')+'.<br>Total operaciones procesadas: '+totalRows+'.'+retiroMsg+'</div>');
@@ -1150,11 +1126,31 @@ async function resetearClaveUsuario(id, nombreUsuario){
 }
 
 async function cargarJugadores(){
-  setBox("tablaJugadores",`<div class="alert-box">Cargando...</div>`);
+  setBox("tablaJugadores",`<div class="alert-box">Cargando jugadores de ${escapeHtml(pcOperativa||'?')}...</div>`);
 
-  // Carga todos los usuarios (sin filtrar por PC para que el franquero vea todo)
-  const {data,error}=await supabaseClient.from("usuarios").select("*").order("created_at",{ascending:false});
-  if(error){setBox("tablaJugadores",`<div class="err-box">Error cargando jugadores.</div>`);return}
+  // Filtramos por la oficina actual (pc_codigo) para que cada operador vea SOLO los suyos.
+  // La landing del jugador sigue verificando contra TODAS las oficinas (queda separado).
+  const PAGE = 1000;
+  let from = 0;
+  let dataAll = [];
+  while(true){
+    const {data, error} = await supabaseClient
+      .from("usuarios")
+      .select("*")
+      .eq("pc_codigo", pcOperativa)
+      .order("created_at", { ascending: false })
+      .range(from, from + PAGE - 1);
+    if(error){
+      setBox("tablaJugadores",`<div class="err-box">Error cargando jugadores.</div>`);
+      return;
+    }
+    if(!data || !data.length) break;
+    dataAll = dataAll.concat(data);
+    setBox("tablaJugadores",`<div class="alert-box">Cargando jugadores de ${escapeHtml(pcOperativa)}... (${dataAll.length})</div>`);
+    if(data.length < PAGE) break;
+    from += PAGE;
+  }
+  const data = dataAll;
 
   const lista=(data||[]).map(u=>({
     ...u,
@@ -1293,33 +1289,104 @@ function renderTablaJugadores(lista){
 
 // ── Control de retiros: 1 cada 24hs por usuario ──────────────────────────────
 async function verificarRetiro24h(usuario) {
-  const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).getTime();
+  const ahora   = Date.now();
+  const usuarioNorm = normalizar(usuario);
+  const candidatos  = [];
 
-  const { data, error } = await supabaseClient
-    .from("solicitudes")
-    .select("id, created_at, monto, estado")
-    .eq("usuario", usuario)
-    .eq("tipo", "RETIRO")
-    .in("estado", ["PAGADA", "APROBADA", "ACREDITADA"])
-    .gte("created_at", hace24h)
-    .order("created_at", { ascending: false })
-    .limit(1);
+  // 1. Buscar en solicitudes (retiros cerrados desde el panel de solicitudes o chat)
+  try {
+    const { data: dataSol } = await supabaseClient
+      .from("solicitudes")
+      .select("id, created_at, monto")
+      .eq("usuario", usuario)
+      .eq("tipo", "RETIRO")
+      .in("estado", ["PAGADA", "APROBADA", "ACREDITADA"])
+      .gte("created_at", new Date(hace24h).toISOString())
+      .order("created_at", { ascending: false })
+      .limit(1);
+    if(dataSol && dataSol.length)
+      candidatos.push({ created_at: dataSol[0].created_at, monto: dataSol[0].monto, billetera_nombre: null, origen: "SOLICITUD" });
+  } catch(_){}
 
-  if (error) return { bloqueado: false }; // si falla la consulta, no bloqueamos
+  // 2. Buscar en historial_ops (retiros del form manual, chat rápido)
+  try {
+    const { data: dataH } = await supabaseClient
+      .from("historial_ops")
+      .select("id, created_at, monto, billetera_nombre")
+      .eq("usuario", usuario)
+      .eq("tipo", "RETIRO")
+      .eq("estado", "OK")
+      .gte("created_at", new Date(hace24h).toISOString())
+      .order("created_at", { ascending: false })
+      .limit(1);
+    if(dataH && dataH.length)
+      candidatos.push({ created_at: dataH[0].created_at, monto: dataH[0].monto, billetera_nombre: dataH[0].billetera_nombre || null, origen: "HISTORIAL" });
+  } catch(_){}
 
-  if (!data || !data.length) return { bloqueado: false };
+  // 3. Buscar en CSV importado (últimas 24h)
+  if(retiros24hCSV && retiros24hCSV.length){
+    const retiroCSV = retiros24hCSV.find(r => normalizar(r.alias) === usuarioNorm);
+    if(retiroCSV){
+      const t = ahora - new Date(retiroCSV.fecha).getTime();
+      if(t < 24 * 60 * 60 * 1000)
+        candidatos.push({ created_at: retiroCSV.fecha, monto: retiroCSV.monto, billetera_nombre: null, origen: "CSV" });
+    }
+  }
 
-  const retiro = data[0];
-  const hace = Date.now() - new Date(retiro.created_at).getTime();
-  const horasRestantes = Math.ceil((24 * 60 * 60 * 1000 - hace) / (60 * 60 * 1000));
+  if(!candidatos.length) return { bloqueado: false };
+
+  // Tomar el retiro más reciente de cualquier fuente
+  candidatos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  const retiro = candidatos[0];
+
+  const elapsed       = ahora - new Date(retiro.created_at).getTime();
+  const horasElapsed  = Math.floor(elapsed / (60 * 60 * 1000));
+  const minsElapsed   = Math.floor((elapsed % (60 * 60 * 1000)) / 60000);
+  const horasRestantes= Math.ceil((24 * 60 * 60 * 1000 - elapsed) / (60 * 60 * 1000));
+  const proximoRetiro = new Date(new Date(retiro.created_at).getTime() + 24 * 60 * 60 * 1000);
 
   return {
-    bloqueado: true,
+    bloqueado:        true,
+    advertencia:      true,
+    usuario,
     horasRestantes,
-    monto: retiro.monto,
-    fecha: retiro.created_at,
-    mensaje: `El usuario ya realizó un retiro hace ${Math.floor(hace / (60 * 60 * 1000))}hs. Puede volver a retirar en ${horasRestantes}hs.`
+    monto:            retiro.monto,
+    fecha:            retiro.created_at,
+    proximoRetiro:    proximoRetiro.toISOString(),
+    billetera_nombre: retiro.billetera_nombre || null,
+    origen:           retiro.origen,
+    mensaje:          `${usuario} ya retiró hace ${horasElapsed}h${minsElapsed > 0 ? ' ' + minsElapsed + 'min' : ''} · puede volver a las ${formatFecha(proximoRetiro.toISOString())}`
   };
+}
+
+// Modal de confirmación de retiro duplicado.
+// Muestra los detalles del retiro anterior y pregunta si proceder.
+// Devuelve Promise<true> si el operador elige proceder, Promise<false> si cancela.
+function confirmarRetiroDuplicado(check) {
+  return new Promise(function(resolve) {
+    const fechaRet  = escapeHtml(formatFecha(check.fecha));
+    const horaOk    = escapeHtml(formatFecha(check.proximoRetiro));
+    const bilInfo   = check.billetera_nombre
+      ? '<br><span class="small" style="color:#e0c070">Billetera: <b>' + escapeHtml(check.billetera_nombre) + '</b></span>'
+      : '';
+
+    const body =
+      '<div class="alert-box" style="line-height:1.7;margin-bottom:14px">' +
+        '<b>⚠️ Retiro en las últimas 24hs</b><br><br>' +
+        '<b>' + escapeHtml(check.usuario || '') + '</b> ya realizó un retiro:<br>' +
+        '📅 Retiro anterior: <b>' + fechaRet + '</b><br>' +
+        '🕐 Habilitado nuevamente: <b>' + horaOk + '</b><br>' +
+        '💰 Monto anterior: <b>' + money(check.monto) + '</b>' + bilInfo +
+      '</div>' +
+      '<p style="color:#c0cad8;font-size:13px">Podés proceder si verificaste el caso del usuario.</p>';
+
+    abrirModal('⚠️ Retiro en 24hs', body, function(){ cerrarModal(); resolve(true); }, 'Proceder igualmente');
+
+    // Cancelar → resolver false
+    var cancelBtn = document.querySelector('#modalOverlay .btn-gray');
+    if(cancelBtn) cancelBtn.onclick = function(){ cerrarModal(); resolve(false); };
+  });
 }
 
 function esPendiente(s){const e=normalizar(s.ESTADO);return e.includes("PENDIENTE")||e==="NUEVA"||e==="NUEVO"||e==="EN_REVISION"}
@@ -1487,54 +1554,183 @@ function comprimirImagenChat(file, cb){
   reader.readAsDataURL(file);
 }
 
+// ── Multi-oficina: helpers ────────────────────────────────────────────────────
+// "Puesto SANCHEZPLATA" → "SANCHEZPLATA"
+// "Puesto Sánchez-Plata 1" → "SANCHEZPLATA1"
+function normalizarPcCodigo(textPuesto){
+  return String(textPuesto||'')
+    .normalize('NFD')
+    .replace(new RegExp('[\\u0300-\\u036f]','g'), '')   // diacríticos
+    .replace(/^\s*puesto\s+/i, '')                      // saca "Puesto " del prefijo
+    .replace(/[^A-Za-z0-9]/g, '')                       // solo alfanumérico
+    .toUpperCase();
+}
+
+// Busca / crea la oficina en Supabase. Devuelve {pc_codigo, nombre, chunior_pt_id, esNueva}.
+async function _asegurarOficina(pcCodigo, nombre, chuniorPtId){
+  if(!pcCodigo) return { pc_codigo:'', nombre:'', esNueva:false };
+  try {
+    const { data: existing } = await supabaseClient
+      .from('oficinas')
+      .select('*')
+      .eq('pc_codigo', pcCodigo)
+      .limit(1);
+    if(existing && existing.length){
+      // Actualizar el pt_id (puede cambiar entre sesiones) y nombre legible
+      try {
+        await supabaseClient.from('oficinas')
+          .update({ chunior_pt_id: String(chuniorPtId||''), nombre, updated_at: new Date().toISOString(), activa: true })
+          .eq('pc_codigo', pcCodigo);
+      } catch(_){}
+      return { pc_codigo:pcCodigo, nombre, chunior_pt_id:String(chuniorPtId||''), esNueva:false };
+    }
+    // No existe → crear
+    await supabaseClient.from('oficinas').insert({
+      pc_codigo: pcCodigo,
+      nombre,
+      chunior_pt_id: String(chuniorPtId||''),
+      activa: true
+    });
+    return { pc_codigo:pcCodigo, nombre, chunior_pt_id:String(chuniorPtId||''), esNueva:true };
+  } catch(e){
+    console.warn('_asegurarOficina:', e);
+    return { pc_codigo:pcCodigo, nombre, chunior_pt_id:String(chuniorPtId||''), esNueva:false };
+  }
+}
+
 async function login(){
   const usuario=val("loginUsuario").trim();
   const clave=val("loginClave").trim();
   if(!usuario||!clave){setBox("loginMsg",`<div class="alert-box">Completá usuario y clave.</div>`);return}
-  setBox("loginMsg",`<div class="alert-box">Ingresando...</div>`);
+  setBox("loginMsg",`<div class="alert-box">Validando en Chunior...</div>`);
 
-  const {data,error}=await supabaseClient
-    .from("operadores")
-    .select("*")
-    .eq("usuario",usuario)
-    .eq("clave",clave)
-    .eq("activo",true)
-    .single();
-
-  if(error||!data){
-    setBox("loginMsg",`<div class="err-box">Usuario o clave incorrectos.</div>`);
+  // Validar contra Chunior. No guardamos la clave en ningún lado.
+  let okBackoffice = false;
+  try {
+    okBackoffice = await validarLoginChunior(usuario, clave);
+  } catch(e){
+    setBox("loginMsg",`<div class="err-box">No se pudo conectar con Chunior. ${escapeHtml(e.message||"")}</div>`);
+    return;
+  }
+  if(!okBackoffice){
+    setBox("loginMsg",`<div class="err-box">Usuario o clave incorrectos (rechazado por Chunior).</div>`);
     return;
   }
 
-  operador={
-    usuario:data.usuario,
-    nombre:data.nombre,
-    rol:data.rol,
-    tipoOperador:data.tipo_operador,
-    pc:data.pc_codigo||"",
-    pcsDisponibles:data.pcs_disponibles||[],
-    requiereSeleccionPc:data.tipo_operador==="FRANQUERO"||!data.pc_codigo
+  // Operador "ligero": solo lo que vino del input. La oficina (pc_codigo) se setea
+  // recién cuando el operador elija el puesto en el modal de Chunior.
+  operador = {
+    usuario,
+    nombre:        usuario,
+    rol:           "OPERADOR",
+    tipoOperador:  "OPERADOR",
+    pc:            "",
+    pcsDisponibles:[],
+    requiereSeleccionPc:false
   };
 
-  const esFranq=normalizar(operador.tipoOperador)==="FRANQUERO";
-  if(operador.requiereSeleccionPc||esFranq){
-    abrirSelectorPc(operador.pcsDisponibles.length?operador.pcsDisponibles:["P1","P2","P3","P4","P5"]);
-    return;
+  setBox("loginMsg",`<div class="alert-box">Chunior OK. Esperando selección de puesto...</div>`);
+  // Disparar el flujo de Chunior post-login. _chuniorConfirmarPuesto
+  // se encarga de setear pcOperativa, asegurar la oficina y finalizar el login.
+  _checkPuestoPostLogin();
+}
+
+// Inyecta usuario/clave en la VENTANA de Chunior (separada, visible) y verifica si fue aceptado
+async function validarLoginChunior(usuario, clave){
+  if(!window.chunior || !window.chunior.exec) throw new Error('Ventana de Chunior no disponible (correr en Electron).');
+
+  // 1) ¿Hay sesión activa? Buscar el botón "Cerrar sesión" (presente en TODAS las páginas internas de Chunior).
+  //    Si existe → click → esperar a que aparezca el form de login.
+  const huboLogout = await window.chunior.exec(
+    '(function(){' +
+    'var n=document.querySelectorAll("button,a,input[type=\'submit\']");' +
+    'for(var i=0;i<n.length;i++){' +
+    '  var t=((n[i].textContent||n[i].value||"")+"").trim().toLowerCase();' +
+    '  if(t.indexOf("cerrar sesi")>=0||t.indexOf("logout")>=0){' +
+    '    n[i].click();' +
+    '    return true;' +
+    '  }' +
+    '}' +
+    'return false;' +
+    '})()'
+  );
+
+  if(huboLogout){
+    // Tras logout, Chunior muestra una página intermedia con un link "Identificarse de nuevo".
+    // Lo clickeamos para llegar al form de login. Después esperamos a #id_username.
+    const t0 = Date.now();
+    let yaClickeoIdentificar = false;
+    while(Date.now() - t0 < 10000){
+      await new Promise(function(r){ setTimeout(r, 300); });
+      try {
+        const estado = await window.chunior.exec(
+          '(function(){' +
+          'if(document.getElementById("id_username")) return "login";' +
+          // Buscar "Identificarse de nuevo" (link o botón) y clickearlo
+          'var n=document.querySelectorAll("a,button,input[type=\'submit\']");' +
+          'for(var i=0;i<n.length;i++){' +
+          '  var t=((n[i].textContent||n[i].value||"")+"").trim().toLowerCase();' +
+          '  if(t.indexOf("identificarse")>=0 || t.indexOf("iniciar sesi")>=0){' +
+          '    n[i].click(); return "click";' +
+          '  }' +
+          '}' +
+          'return "wait";' +
+          '})()'
+        );
+        if(estado === 'login') break;
+        if(estado === 'click') yaClickeoIdentificar = true;
+      } catch(e){}
+    }
+  } else {
+    // No hay sesión activa y tampoco tenemos form de login a la vista → forzar carga del home
+    const cur = await window.chunior.getUrl();
+    const enLogin = await window.chunior.exec('(function(){return !!document.getElementById("id_username");})()').catch(function(){return false;});
+    if(!enLogin && !cur.includes('/login/')) await window.chunior.navigate(CHUNIOR_HOME);
   }
-  pcOperativa=operador.pc||"";
-  finalizarLogin(true);
+
+  // 2) Inyectar usuario + clave en la misma pasada y submit
+  const inyectado = await window.chunior.exec(
+    '(function(){'
+    + 'var u=document.getElementById("id_username");'
+    + 'var p=document.getElementById("id_password");'
+    + 'var b=document.querySelector("input[type=\'submit\'],button[type=\'submit\']");'
+    + 'if(!u||!p||!b) return false;'
+    + 'u.value='+JSON.stringify(usuario)+';'
+    + 'p.value='+JSON.stringify(clave)+';'
+    + 'u.dispatchEvent(new Event("input",{bubbles:true}));'
+    + 'p.dispatchEvent(new Event("input",{bubbles:true}));'
+    + 'b.click();'
+    + 'return true;'
+    + '})()'
+  );
+  if(!inyectado) throw new Error('No se encontró el formulario de login en Chunior.');
+
+  // 3) Polling del DOM: el pt selector también está en /login/, por eso miramos el DOM, no la URL
+  //    - aparece #id_pt → login OK, hay que elegir puesto
+  //    - desaparece #id_username → login OK, sesión completa
+  //    - aparece .errornote → clave mala, no esperar más
+  //    - sigue #id_username sin error → todavía procesando
+  const inicio = Date.now();
+  while(Date.now() - inicio < 20000){
+    await new Promise(function(r){ setTimeout(r, 400); });
+    try {
+      const state = await window.chunior.exec(
+        '(function(){'
+        + 'if(document.getElementById("id_pt")) return "pt";'
+        + 'if(document.querySelector("p.errornote, .errornote")) return "error";'
+        + 'if(!document.getElementById("id_username")) return "logged";'
+        + 'return "login";'
+        + '})()'
+      );
+      if(state === 'pt' || state === 'logged') return true;
+      if(state === 'error') return false;
+    } catch(e){}
+  }
+  return false;
 }
 
-function abrirSelectorPc(lista){
-  const grid=document.getElementById("pcSelectorGrid");
-  grid.innerHTML="";
-  [...new Set(lista.map(x=>String(x).trim().toUpperCase()).filter(Boolean))].forEach(pc=>{
-    grid.innerHTML+=`<button class="btn btn-primary" onclick="seleccionarPcOperativa('${pc}')">${pc}</button>`;
-  });
-  document.getElementById("selectorPcOverlay").classList.remove("hidden");
-}
-function seleccionarPcOperativa(pc){pcOperativa=pc;document.getElementById("selectorPcOverlay").classList.add("hidden");finalizarLogin(true)}
-
+// finalizarLogin se llama desde _chuniorConfirmarPuesto (ya con pcOperativa seteado).
+// Ya no dispara _checkPuestoPostLogin (eso ya pasó antes en el flujo).
 function finalizarLogin(guardar=true){
   if(guardar){
     localStorage.setItem("nodo_operador_lite",JSON.stringify(operador));
@@ -1544,10 +1740,10 @@ function finalizarLogin(guardar=true){
   document.getElementById("appView").classList.remove("hidden");
   setBox("operadorInfo",`
     <b>${operador.nombre||operador.NOMBRE}</b><br>
-    <span class="badge badge-blue">Rol: ${operador.rol||operador.ROL}</span>
-    <span class="badge badge-muted">Tipo: ${operador.tipoOperador||"-"}</span>
-    <span class="badge badge-ok">PC: ${pcOperativa}</span>
+    <span class="badge badge-blue">Rol: ${operador.rol||"OPERADOR"}</span>
+    <span class="badge badge-ok">Oficina: ${pcOperativa}</span>
   `);
+  _nodoListo = true;
   refrescarTodo(false);
   iniciarRealtimeSolicitudes();
   if(!timersIniciados){
@@ -1597,15 +1793,15 @@ function mostrarVista(vista){
   const cap=vista.charAt(0).toUpperCase()+vista.slice(1);
   document.getElementById("view"+cap)?.classList.remove("hidden");
   document.getElementById("nav"+cap)?.classList.add("active");
+  // El chat ocupa toda la altura de .main sin scroll externo
+  const mainEl = document.querySelector('.main');
+  if(mainEl) mainEl.classList.toggle('is-chat', vista === 'chat');
   if(vista==="solicitudes")renderSolicitudes();
   if(vista==="billeteras")cargarBilleteras();
   if(vista==="chat")cargarChats();
   if(vista==="jugadores")cargarJugadores();
   if(vista==="auto")verificarEstadoBackoffice();
   if(vista==="verificaciones")cargarVerificaciones();
-  if(vista==="chunior")activarChunior();
-  // Quitar clase chunior-active del main cuando no es chunior
-  document.querySelector(".main")?.classList.toggle("chunior-active", vista==="chunior");
   cerrarMenuMobile();
 }
 
@@ -1648,7 +1844,8 @@ async function cargarBilleteras(render=true){
     SELECCIONADA_MANUAL:b.seleccionada_manual?"SI":"NO",
     SALDO:Number(b.saldo||0),
     CBU_ALIAS:b.cbu_alias||"",
-    TITULAR:b.titular||""
+    TITULAR:b.titular||"",
+    CHUNIOR_UID:b.chunior_uid||""
   }));
 
   if(render)renderBilleteras();
@@ -1731,11 +1928,6 @@ function poblarManualBilletera(){
   }).join('') || '<option value="">Sin billeteras</option>';
 }
 
-function toggleClaveCustom(cb){
-  const wrap = document.getElementById("claveCustomWrap");
-  if(wrap) wrap.classList.toggle("hidden", !cb.checked);
-}
-
 // ── Solo consultar saldo ──────────────────────────────────────────────────────
 async function soloConsultarUsuario(){
   if(!window.ctrlElectron){ alert("La automatización solo funciona en la app de escritorio."); return; }
@@ -1766,15 +1958,12 @@ async function ejecutarOperacionManual(){
   const usuario    = (document.getElementById("manualUsuario")?.value||"").trim();
   const montoRaw   = (document.getElementById("manualMonto")?.value||"").trim();
   const bilId      = document.getElementById("manualBilletera")?.value||"";
-  const resetClave = document.getElementById("manualResetClave")?.checked||false;
-  const claveCustom= (document.getElementById("manualClaveCustom")?.value||"").trim();
   const res        = document.getElementById("manualResultado");
 
   if(!usuario){ toast("Ingresá un usuario.","red"); return; }
 
   if(!montoRaw){
     await soloConsultarUsuario();
-    if(resetClave) await _resetClaveManual(usuario, claveCustom||"12345a");
     return;
   }
 
@@ -1790,16 +1979,15 @@ async function ejecutarOperacionManual(){
   if(tipo==="RETIRO"){
     const check = await verificarRetiro24h(usuario);
     if(check.bloqueado){
-      if(res) res.innerHTML = '<div class="err-box">⛔ <b>'+escapeHtml(usuario)+'</b> ya realizó un retiro.<br>'+escapeHtml(check.mensaje)+'</div>';
-      toast("Retiro bloqueado (24h)","red"); return;
+      if(res) res.innerHTML = '<div class="alert-box">⚠️ <b>'+escapeHtml(usuario)+'</b> tiene un retiro reciente.<br><span class="small">'+escapeHtml(check.mensaje)+'</span></div>';
+      const proceder = await confirmarRetiroDuplicado(check);
+      if(!proceder){ if(res) res.innerHTML = ''; return; }
     }
   }
 
   try {
     toast("Abriendo backoffice...","blue");
-    await window.ctrlElectron.openAgentWindow();
-    const estadoPag = await callDrex("estadoPagina");
-    if(estadoPag.needsLogin){ toast("Iniciá sesión en el backoffice primero.","red"); return; }
+    if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
     toast("Buscando "+usuario+"...","blue");
     const busqueda = await callDrex("buscarUsuario", usuario);
@@ -1828,18 +2016,52 @@ async function ejecutarOperacionManual(){
     const est2   = ok ? "OK" : "ERROR";
     const notas  = ok ? (busqueda.balance?.raw||null) : (resultado?.message||"error");
 
-    await registrarEnHistorial({usuario, tipo, monto:montoAbs, billetera_id:bil?bil.ID_BILLETERA:null, billetera_nombre:bil?bil.NOMBRE_VISIBLE:null, origen:'MANUAL', estado:est2, notas});
+    // Calcular saldo del usuario después de la operación
+    const saldoPre = (typeof busqueda.balance?.value === 'number') ? busqueda.balance.value : null;
+    const saldoPost = (ok && saldoPre !== null)
+      ? saldoPre + (tipo === "CARGA" ? montoAbs : -montoAbs)
+      : null;
+
+    // Registrar en Chunior (carga positiva, retiro negativo) si la billetera tiene chunior_uid
+    let movimientoChunior = null;
+    if(ok && bil && bil.CHUNIOR_UID){
+      try {
+        toast("Registrando en Chunior...", "blue");
+        const rChu = tipo === "CARGA"
+          ? await registrarCargaEnChunior(bil.CHUNIOR_UID, montoAbs, usuario)
+          : await registrarRetiroEnChunior(bil.CHUNIOR_UID, montoAbs, usuario);
+        if(rChu.ok && rChu.movimientoId){
+          movimientoChunior = rChu.movimientoId;
+          toast("📋 "+tipo+" Chunior N° "+rChu.movimientoId, 'blue');
+        } else if(rChu.error){
+          toast('⚠️ '+tipo+' OK en casino pero falló en Chunior: '+rChu.error, 'red');
+        }
+      } catch(e){ toast('⚠️ Error registrando en Chunior: '+(e.message||''), 'red'); }
+    }
+
+    await registrarEnHistorial({usuario, tipo, monto:montoAbs, billetera_id:bil?bil.ID_BILLETERA:null, billetera_nombre:bil?bil.NOMBRE_VISIBLE:null, origen:'MANUAL', estado:est2, notas, chunior_movimiento_id:movimientoChunior, saldo_post:saldoPost});
 
     if(ok){
       if(bil && bil.ID_BILLETERA) await ajustarSaldoBilletera(bil.ID_BILLETERA, tipo==="CARGA" ? montoAbs : -montoAbs);
-      if(res) res.innerHTML = '<div class="ok-box">✅ '+tipo+' de '+money(montoAbs)+' → <b>'+escapeHtml(usuario)+'</b> completada</div>';
+      if(res){
+        const tagChu = movimientoChunior ? ' · Chunior N° '+escapeHtml(movimientoChunior) : '';
+        res.innerHTML = '<div class="ok-box">✅ '+tipo+' de '+money(montoAbs)+' → <b>'+escapeHtml(usuario)+'</b> completada'+tagChu+'</div>';
+      }
       toast(tipo+" completada: "+usuario+" · "+money(montoAbs), "green");
+      // Auto-registrar al usuario en NODO si vino de una CARGA y no existe en la base (segundo plano)
+      if(tipo === "CARGA" && busqueda?.user){
+        _autoregistrarUsuarioSiFalta(busqueda.user);
+      }
+      // Limpiar campos de entrada después de la operación exitosa
+      const manualUsuarioEl = document.getElementById("manualUsuario");
+      const manualMontoEl   = document.getElementById("manualMonto");
+      if(manualUsuarioEl) manualUsuarioEl.value = "";
+      if(manualMontoEl)   manualMontoEl.value   = "";
     } else {
       if(res) res.innerHTML = '<div class="err-box">❌ '+tipo+' falló: '+escapeHtml(resultado?.message||'sin detalle')+'</div>';
       toast("Error: "+(resultado?.message||"falló"),"red");
     }
 
-    if(resetClave) await _resetClaveManual(usuario, claveCustom||"12345a");
     await window.ctrlElectron.navigateAgent();
     await cargarHistorial();
     renderBillerasInicio();
@@ -1851,7 +2073,199 @@ async function ejecutarOperacionManual(){
   }
 }
 
+// ── Blanquear clave: motor compartido ─────────────────────────────────────────
+// Devuelve {ok, message}. Si onResultHtml viene, también lo escribe en ese div.
+async function _ejecutarBlanqueoClave(usuario, opciones){
+  opciones = opciones || {};
+  const clave = opciones.clave || "12345a";
+  const resEl = opciones.resultEl || null;
+  if(!window.ctrlElectron){ alert("Solo disponible en la app de escritorio."); return { ok:false }; }
+  if(!usuario){ toast("Usuario inválido.", "red"); return { ok:false }; }
+
+  if(resEl) resEl.innerHTML = '<div class="alert-box">Buscando '+escapeHtml(usuario)+'...</div>';
+  try {
+    if(!await ensureDrexSession()){ if(resEl) resEl.innerHTML = ''; return { ok:false }; }
+    toast("Buscando "+usuario+"...", "blue");
+    const b = await callDrex("buscarUsuario", usuario);
+    if(!b.exists){
+      if(resEl) resEl.innerHTML = '<div class="err-box">❌ <b>'+escapeHtml(usuario)+'</b> no existe en el casino.</div>';
+      toast(usuario+" no encontrado", "red");
+      return { ok:false };
+    }
+    toast("Cambiando clave de "+usuario+"...", "blue");
+    const r = await callDrex("cambiarClave", clave);
+    const ok = r && r.ok !== false;
+    await registrarEnHistorial({usuario, tipo:'RESET_CLAVE', monto:0, origen:'MANUAL', estado: ok ? 'OK' : 'ERROR', notas:'clave → '+clave});
+    if(ok){
+      if(resEl) resEl.innerHTML = '<div class="ok-box">🔑 Clave de <b>'+escapeHtml(usuario)+'</b> blanqueada → <b>'+escapeHtml(clave)+'</b></div>';
+      toast("Clave de "+usuario+" blanqueada → "+clave, "green");
+    } else {
+      if(resEl) resEl.innerHTML = '<div class="err-box">❌ Error al cambiar clave: '+escapeHtml(r?.message||'falló')+'</div>';
+      toast("Error: "+(r?.message||"falló"), "red");
+    }
+    await cargarHistorial();
+    return { ok };
+  } catch(e){
+    if(resEl) resEl.innerHTML = '<div class="err-box">Error: '+escapeHtml(e.message||'sin detalle')+'</div>';
+    toast("Error: "+(e.message||"sin detalle"), "red");
+    return { ok:false };
+  }
+}
+
+// Botón del form manual (toma el usuario del input)
+async function blanquearClaveManual(){
+  const usuario = (document.getElementById("manualUsuario")?.value || "").trim();
+  const res     = document.getElementById("manualResultado");
+  if(!usuario){ toast("Ingresá un usuario para blanquear la clave.", "red"); return; }
+  if(!confirm('¿Blanquear la clave de "'+usuario+'" → 12345a?')) return;
+  const r = await _ejecutarBlanqueoClave(usuario, { resultEl: res });
+  if(r.ok){
+    // Limpiar inputs después del éxito
+    const mu = document.getElementById("manualUsuario"); if(mu) mu.value = "";
+    const mm = document.getElementById("manualMonto");   if(mm) mm.value = "";
+  }
+}
+
+// Botón de cada fila del historial (toma el usuario directamente)
+async function blanquearClaveUsuario(usuario){
+  if(!usuario){ toast("Usuario inválido.", "red"); return; }
+  if(!confirm('¿Blanquear la clave de "'+usuario+'" → 12345a?')) return;
+  await _ejecutarBlanqueoClave(usuario, {});
+}
+
+// ── Consulta en tiempo real de retiros del usuario (cuando no hay monto) ─────
+let _consultaRetirosDebounce = null;
+let _consultaRetirosTokenActual = 0;
+
+async function consultarRetirosUsuarioRealtime(){
+  const usuario  = (document.getElementById("manualUsuario")?.value || "").trim();
+  const montoRaw = (document.getElementById("manualMonto")?.value || "").trim();
+  const res = document.getElementById("manualResultado");
+  if(!res) return;
+
+  // Si hay monto o no hay usuario → limpiar solo si lo que estaba era nuestra consulta
+  if(!usuario || montoRaw){
+    if(res.dataset.modo === 'consultaRetiros'){
+      res.innerHTML = '';
+      delete res.dataset.modo;
+    }
+    return;
+  }
+
+  // Token para descartar respuestas viejas si el operador sigue tecleando
+  const miToken = ++_consultaRetirosTokenActual;
+  res.dataset.modo = 'consultaRetiros';
+  res.innerHTML = '<div class="alert-box" style="padding:10px"><span class="small">Buscando retiros de <b>'+escapeHtml(usuario)+'</b>...</span></div>';
+
+  try {
+    // Ventana de 24hs exactas — la política de retiro es 1 cada 24hs
+    const desde = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { data } = await supabaseClient
+      .from("historial_ops")
+      .select("created_at, monto, billetera_nombre, estado, origen, chunior_movimiento_id")
+      .eq("usuario", usuario)
+      .eq("tipo", "RETIRO")
+      .gte("created_at", desde)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if(miToken !== _consultaRetirosTokenActual) return; // se quedó obsoleto
+    if(res.dataset.modo !== 'consultaRetiros') return;  // el operador ya escribió monto u operó
+
+    if(!data || !data.length){
+      res.innerHTML = '<div class="alert-box" style="padding:10px"><span class="small">📭 <b>'+escapeHtml(usuario)+'</b> no tiene retiros en las últimas 24hs.</span></div>';
+      return;
+    }
+
+    let filas = '';
+    data.forEach(function(r){
+      const fecha    = formatFecha(r.created_at);
+      const billetera = r.billetera_nombre || '—';
+      const tagErr   = r.estado === 'ERROR' ? ' <span style="color:var(--red)">❌</span>' : '';
+      filas += '<div style="display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px solid rgba(255,255,255,.08);font-size:12px">'
+        +   '<span style="color:#c0cad8;white-space:nowrap">'+escapeHtml(fecha)+tagErr+'</span>'
+        +   '<span style="text-align:right"><b>'+money(r.monto)+'</b> <span class="small">· '+escapeHtml(billetera)+'</span></span>'
+        + '</div>';
+    });
+    res.innerHTML = '<div class="alert-box" style="padding:10px;line-height:1.4">'
+      + '<b>⚠️ Retiros de '+escapeHtml(usuario)+' en las últimas 24hs</b>'
+      + '<div style="margin-top:4px">'+filas+'</div>'
+      + '</div>';
+  } catch(e){
+    if(miToken !== _consultaRetirosTokenActual) return;
+    res.innerHTML = '<div class="alert-box" style="padding:10px"><span class="small">Error consultando retiros: '+escapeHtml(e.message||'')+'</span></div>';
+  }
+}
+
+function _configurarConsultaRetirosLive(){
+  const inputUsuario = document.getElementById("manualUsuario");
+  const inputMonto   = document.getElementById("manualMonto");
+  if(!inputUsuario || !inputMonto) return;
+  const onChange = function(){
+    clearTimeout(_consultaRetirosDebounce);
+    _consultaRetirosDebounce = setTimeout(consultarRetirosUsuarioRealtime, 450);
+  };
+  inputUsuario.addEventListener("input", onChange);
+  inputMonto.addEventListener("input", onChange);
+}
+
+// ── Crear nuevo usuario en el casino ─────────────────────────────────────────
+function abrirModalCrearUsuario(){
+  if(!window.ctrlElectron){ alert("Solo disponible en la app de escritorio."); return; }
+  abrirModal(
+    '➕ Crear nuevo usuario',
+    '<div style="color:#c0cad8;font-size:13px;margin-bottom:12px">Ingresá el nombre de usuario y la clave inicial.<br>Se genera en el casino y las credenciales se copian al portapapeles.</div>' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">USUARIO (alias)</label>' +
+    '<input id="nuevoJugUsuario" type="text" placeholder="ej: martin2024" autocomplete="off" style="margin-bottom:8px">' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">CLAVE INICIAL <span style="font-weight:400;text-transform:none;color:#777">(mín 6 caracteres)</span></label>' +
+    '<input id="nuevoJugClave" type="text" placeholder="12345a" value="12345a" autocomplete="off" style="margin-bottom:4px">' +
+    '<div id="nuevoJugRes" style="min-height:16px;margin-top:4px"></div>',
+    _ejecutarCrearUsuario,
+    'Crear y copiar'
+  );
+  setTimeout(function(){ document.getElementById("nuevoJugUsuario")?.focus(); }, 80);
+}
+
+async function _ejecutarCrearUsuario(){
+  const usuario = (document.getElementById("nuevoJugUsuario")?.value || "").trim().toLowerCase().replace(/\s+/g, "");
+  const clave   = (document.getElementById("nuevoJugClave")?.value   || "").trim() || "12345a";
+  const resEl   = document.getElementById("nuevoJugRes");
+  const btn     = document.getElementById("modalSaveBtn");
+  if(!usuario){ if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">Ingresá un usuario.</span>'; return; }
+  if(clave.length < 6){ if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">La clave debe tener al menos 6 caracteres.</span>'; return; }
+  if(btn){ btn.disabled = true; btn.textContent = "Creando..."; }
+  if(resEl) resEl.innerHTML = '<span style="color:#c0cad8;font-size:12px">Procesando...</span>';
+  try {
+    if(!await ensureDrexSession()){ if(btn){btn.disabled=false;btn.textContent='Crear y copiar';} return; }
+    const r = await callDrex("crearUsuario", usuario, clave);
+    if(r && r.ok !== false){
+      const aliasFinal = r.alias || usuario;
+      const claveFinal = r.password || clave;
+      const texto = "Usuario: " + aliasFinal + "\nClave: " + claveFinal;
+      try { await navigator.clipboard.writeText(texto); } catch(_){}
+      if(resEl) resEl.innerHTML =
+        '<div class="ok-box" style="margin-top:8px">' +
+          '✅ Usuario creado y copiado al portapapeles.<br>' +
+          '<b>User:</b> ' + escapeHtml(aliasFinal) + ' &nbsp;·&nbsp; <b>Clave:</b> ' + escapeHtml(claveFinal) +
+        '</div>';
+      if(btn){ btn.disabled = false; btn.textContent = 'Crear otro'; }
+      if(document.getElementById("nuevoJugUsuario")) document.getElementById("nuevoJugUsuario").value = "";
+      // Auto-registrar el usuario recién creado en NODO en segundo plano
+      _autoregistrarUsuarioSiFalta(aliasFinal);
+      toast("Usuario " + aliasFinal + " creado · credenciales copiadas", "green");
+    } else {
+      const msg = r?.message || "No se pudo crear el usuario.";
+      if(resEl) resEl.innerHTML = '<div class="err-box" style="margin-top:8px">❌ ' + escapeHtml(msg) + '</div>';
+      if(btn){ btn.disabled = false; btn.textContent = 'Crear y copiar'; }
+    }
+  } catch(e){
+    if(resEl) resEl.innerHTML = '<div class="err-box" style="margin-top:8px">Error: ' + escapeHtml(e.message||'sin detalle') + '</div>';
+    if(btn){ btn.disabled = false; btn.textContent = 'Crear y copiar'; }
+  }
+}
+
 async function _resetClaveManual(usuario, clave){
+  // Compatibilidad: ahora se usa blanquearClaveManual() desde el botón
   try {
     toast("Cambiando clave de "+usuario+"...","blue");
     const r = await callDrex("cambiarClave", clave);
@@ -1865,12 +2279,13 @@ let _historialData = [];
 let _historialCargado = false;
 
 async function registrarEnHistorial(op){
-  const {usuario, tipo, monto=0, billetera_id=null, billetera_nombre=null, origen='MANUAL', estado='OK', notas=null, solicitud_id=null, reversion_de=null} = op;
+  const {usuario, tipo, monto=0, billetera_id=null, billetera_nombre=null, origen='MANUAL', estado='OK', notas=null, solicitud_id=null, reversion_de=null, chunior_movimiento_id=null, saldo_post=null} = op;
   try {
     await supabaseClient.from("historial_ops").insert({
       usuario, tipo, monto, billetera_id, billetera_nombre,
       operador: operador?.usuario || operador?.nombre || "",
       origen, estado, notas, solicitud_id, reversion_de,
+      chunior_movimiento_id, saldo_post,
       pc_codigo: pcOperativa
     });
   } catch(e){ console.warn("historial_ops write failed:", e); }
@@ -1946,7 +2361,7 @@ function renderHistorial(lista){
   }
 
   let html = '<div class="table-wrap"><table><thead><tr>'+
-    '<th>Fecha</th><th>Tipo</th><th>Usuario</th><th>Monto</th>'+
+    '<th>Fecha</th><th>Tipo</th><th>Usuario</th><th>Monto</th><th>Saldo post</th>'+
     '<th>Billetera</th><th>Origen</th><th>Estado</th><th>Op</th><th></th>'+
     '</tr></thead><tbody>';
 
@@ -1958,17 +2373,28 @@ function renderHistorial(lista){
       ? '<br><span class="small">'+escapeHtml(h.notas)+'</span>' : '';
     const undoBtn = canUndo
       ? '<button class="mini-btn yellow" onclick="deshacerOperacion(\x27'+h.id+'\x27,\x27'+escapeHtml(h.usuario||'')+'\x27,\x27'+h.tipo+'\x27,\x27'+h.monto+'\x27,\x27'+(h.billetera_id||'')+'\x27)" style="font-size:11px">&#8629; Deshacer</button>'
-      : '-';
+      : '';
+    const chuniorBtn = h.chunior_movimiento_id
+      ? '<button class="mini-btn purple" onclick="cambiarBilleteraMovimiento(\x27'+escapeHtml(String(h.chunior_movimiento_id))+'\x27,\x27'+escapeHtml(String(h.id||''))+'\x27,\x27'+escapeHtml(String(h.billetera_id||''))+'\x27)" style="font-size:11px" title="Cambiar billetera del Mov. N° '+escapeHtml(String(h.chunior_movimiento_id))+'">💳 Cambiar billetera</button>'
+      : '';
+    const claveBtn = (h.usuario && h.tipo !== 'RESET_CLAVE')
+      ? '<button class="mini-btn yellow" onclick="blanquearClaveUsuario(\x27'+escapeHtml(String(h.usuario))+'\x27)" style="font-size:11px" title="Blanquear clave de '+escapeHtml(String(h.usuario))+' a 12345a">🔑 Clave</button>'
+      : '';
+    const acciones = [chuniorBtn, claveBtn, undoBtn].filter(Boolean).join(' ') || '-';
+    const saldoPostTd = (h.saldo_post !== null && h.saldo_post !== undefined && h.saldo_post !== '')
+      ? '<span style="font-weight:700;color:#7ee07e">'+money(h.saldo_post)+'</span>'
+      : '<span class="small">—</span>';
     html += '<tr class="'+rowClass+'">'+
       '<td style="font-size:12px;white-space:nowrap">'+formatFecha(h.created_at)+'</td>'+
       '<td style="white-space:nowrap">'+tipoIcon(h.tipo)+' '+escapeHtml(h.tipo||'—')+'</td>'+
       '<td><b>'+escapeHtml(h.usuario||'—')+'</b>'+notasTd+'</td>'+
       '<td style="font-weight:700">'+(h.monto?money(h.monto):'—')+'</td>'+
+      '<td style="font-size:12px;white-space:nowrap">'+saldoPostTd+'</td>'+
       '<td style="font-size:12px">'+escapeHtml(h.billetera_nombre||'—')+'</td>'+
       '<td>'+origenPill(h.origen)+'</td>'+
       '<td>'+estadoIcon(h.estado)+'</td>'+
       '<td style="font-size:11px;color:var(--muted)">'+escapeHtml(h.operador||'—')+'</td>'+
-      '<td>'+undoBtn+'</td>'+
+      '<td style="white-space:nowrap">'+acciones+'</td>'+
       '</tr>';
   });
   html += '</tbody></table></div>';
@@ -1985,9 +2411,7 @@ async function deshacerOperacion(id, usuario, tipoOriginal, monto, bilId){
 
   toast("Procesando reversión...","blue");
   try {
-    await window.ctrlElectron.openAgentWindow();
-    const estadoPag = await callDrex("estadoPagina");
-    if(estadoPag.needsLogin){ toast("Iniciá sesión en el backoffice primero.","red"); return; }
+    if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
     await callDrex("buscarUsuario", usuario);
     let r;
@@ -2204,14 +2628,8 @@ async function abrirCerrarRetiro(id){
   if(usuario){
     const check = await verificarRetiro24h(usuario);
     if(check.bloqueado){
-      abrirModal("Retiro bloqueado",`
-        <div class="err-box">
-          <b>⛔ ${usuario}</b> ya tiene un retiro registrado.<br><br>
-          ${check.mensaje}<br>
-          <span class="small">Monto anterior: ${money(check.monto)} · ${formatFecha(check.fecha)}</span>
-        </div>
-      `,()=>cerrarModal(),"Entendido");
-      return;
+      const proceder = await confirmarRetiroDuplicado(check);
+      if(!proceder) return;
     }
   }
 
@@ -2258,7 +2676,16 @@ async function abrirCerrarRetiro(id){
 
     cerrarModal();
     toast("Retiro cerrado","green");
-    await registrarEnHistorial({usuario, tipo:'RETIRO', monto:montoFinal, billetera_id:bilId||null, billetera_nombre:(billeteras.find(function(b){return b.ID_BILLETERA===bilId;})||{}).NOMBRE_VISIBLE||null, origen:'PANEL', estado:'OK', notas:obs||null, solicitud_id:id});
+    const bilObjR = billeteras.find(function(b){ return b.ID_BILLETERA===bilId; }) || {};
+    let movChuniorP = null;
+    if(bilObjR.CHUNIOR_UID && usuario){
+      try {
+        const rChu = await registrarRetiroEnChunior(bilObjR.CHUNIOR_UID, montoFinal, usuario);
+        if(rChu.ok && rChu.movimientoId) movChuniorP = rChu.movimientoId;
+        else if(rChu.error) toast('⚠️ Retiro OK pero falló en Chunior: '+rChu.error, 'red');
+      } catch(e){ toast('⚠️ Error en Chunior: '+(e.message||''), 'red'); }
+    }
+    await registrarEnHistorial({usuario, tipo:'RETIRO', monto:montoFinal, billetera_id:bilId||null, billetera_nombre:bilObjR.NOMBRE_VISIBLE||null, origen:'PANEL', estado:'OK', notas:obs||null, solicitud_id:id, chunior_movimiento_id:movChuniorP});
     await refrescarTodo(false);
   },"Pagar retiro");
 
@@ -2554,73 +2981,7 @@ if(enElectron){
   document.getElementById("navAuto")?.classList.remove("hidden");
   document.getElementById("agentBalanceCard")?.classList.remove("hidden");
   document.getElementById("navVerificaciones")?.classList.remove("hidden");
-  document.getElementById("navBoPanel")?.classList.remove("hidden");
-  document.getElementById("navChunior")?.classList.remove("hidden");
 }
-
-// ── Panel lateral de backoffice ───────────────────────────────────────────────
-const BO_SEARCH_URL = 'https://bo.casinodrex.com/agents/user_search';
-const BO_NEW_URL    = 'https://bo.casinodrex.com/agents/new_user';
-let _boPanelOpen = false;
-let _boPanelW = parseInt(localStorage.getItem('bo_panel_w') || '820', 10);
-
-function _applyBoPanelWidth(w){
-  _boPanelW = Math.max(180, Math.min(1400, w));
-  document.getElementById('appLayout').style.setProperty('--bo-w', _boPanelW + 'px');
-  localStorage.setItem('bo_panel_w', _boPanelW);
-}
-
-function toggleBoPanel(){
-  _boPanelOpen = !_boPanelOpen;
-  const layout = document.getElementById("appLayout");
-  const wv     = document.getElementById("boWebview");
-  const btn    = document.getElementById("navBoPanel");
-  const autoBtn = document.getElementById("abrirBackofficeBtn");
-  if(_boPanelOpen){
-    _applyBoPanelWidth(_boPanelW);
-    layout.classList.add("bo-open");
-    if(!wv.src || wv.src === 'about:blank') wv.src = BO_SEARCH_URL;
-    if(btn) btn.style.background = "rgba(18,183,106,.2)";
-    if(autoBtn) autoBtn.style.display = "none";
-  } else {
-    layout.classList.remove("bo-open");
-    if(btn) btn.style.background = "";
-    if(autoBtn) autoBtn.style.display = "";
-  }
-}
-
-function boPanelNav(dest){
-  const wv = document.getElementById("boWebview");
-  if(!wv) return;
-  if(dest === 'new') wv.src = BO_NEW_URL;
-  else               wv.src = BO_SEARCH_URL;
-}
-
-// Resize handle drag
-(function(){
-  const resizer = document.getElementById('boResizer');
-  if(!resizer) return;
-  resizer.addEventListener('mousedown', e=>{
-    e.preventDefault();
-    resizer.classList.add('dragging');
-    const startX = e.clientX;
-    const startW = _boPanelW;
-    function onMove(e){
-      const delta = e.clientX - startX;
-      const newW  = startW + delta;
-      if(newW < 80){ return; }
-      _applyBoPanelWidth(newW);
-    }
-    function onUp(){
-      resizer.classList.remove('dragging');
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-      if(_boPanelW < 180) toggleBoPanel();
-    }
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-  });
-})();
 
 // ── Saldo del agente (widget del sidebar) ─────────────────────────────────────
 async function refrescarSaldoAgente(){
@@ -2641,6 +3002,183 @@ if(enElectron){
   // Refresca el saldo del agente cada 60 segundos
   setInterval(refrescarSaldoAgente, 60000);
   setTimeout(refrescarSaldoAgente, 4000); // 4s después del load inicial
+}
+
+// ── Watchdog de fichas: detecta discrepancias entre Drex y Chunior ────────────
+// Cada 60s lee ambos saldos y los compara. En operaciones normales se mueven en
+// direcciones OPUESTAS con el mismo monto (carga: Drex -X, Chunior +X). Si no
+// se cumple, hay alguien moviendo plata fuera de NODO o una carga repetida.
+const _watchdog = {
+  drex: null,          // último saldo del agente leído
+  chunior: null,       // último total de Chunior leído (sum de billeteras)
+  lastCheck: null,
+  intervalId: null,
+  alertaActiva: false,
+  // Recovery
+  drexLoginInProgress: false,   // evita abrir el modal de login Drex más de una vez
+  chuniorFails: 0,              // contador de polls consecutivos sin Chunior
+  chuniorRecoveryScheduled: false
+};
+
+function _wdParseMontoAR(s){
+  const m = String(s||'').match(/\$\s*([\d.,]+)/);
+  if(!m) return null;
+  const n = parseFloat(m[1].replace(/\./g,'').replace(',','.'));
+  return isNaN(n) ? null : n;
+}
+
+async function _watchdogLeer(){
+  let drex = null, chunior = null;
+  let drexNeedsLogin = false;
+  let chuniorReachable = false;
+  try {
+    if(window.ctrlElectron?.drexAutomation){
+      const r = await window.ctrlElectron.drexAutomation('obtenerSaldoAgente');
+      if(r){
+        if(r.needsLogin) drexNeedsLogin = true;
+        if(r.balance && typeof r.balance.value === 'number') drex = r.balance.value;
+      }
+    }
+  } catch(_){}
+  try {
+    if(window.chunior){
+      const data = await window.chunior.exec(
+        '(function(){' +
+          'var total = 0; var bils = [];' +
+          'var nodos = document.querySelectorAll(".breadcrumbs .billetera, .billetera");' +
+          'var vistos = {};' +
+          'for(var i=0;i<nodos.length;i++){' +
+            'var el = nodos[i];' +
+            'var k = el.id || el.textContent;' +
+            'if(vistos[k]) continue; vistos[k] = true;' +
+            'var txt = (el.textContent||"");' +
+            'var m = txt.match(/\\$\\s*([\\d.,]+)/);' +
+            'if(m){' +
+              'var n = parseFloat(m[1].replace(/\\./g,"").replace(",","."));' +
+              'if(!isNaN(n)){ total += n; bils.push({id: el.id||null, monto: n}); }' +
+            '}' +
+          '}' +
+          // Reachable = la página de Chunior respondió con algo identificable
+          'var ok = !!(document.querySelector(".breadcrumbs") || document.getElementById("id_username") || document.getElementById("id_pt"));' +
+          'return { total: total, count: bils.length, billeteras: bils, reachable: ok };' +
+        '})()'
+      );
+      if(data){
+        chuniorReachable = !!data.reachable;
+        if(typeof data.total === 'number' && data.count > 0) chunior = data;
+      }
+    }
+  } catch(_){}
+  return { drex, chunior, drexNeedsLogin, chuniorReachable };
+}
+
+function _wdActualizarUI(estado, texto){
+  const ind = document.getElementById("watchdogIndicator");
+  if(!ind) return;
+  ind.className = estado || '';
+  ind.textContent = texto;
+}
+
+function _wdMostrarBanner(info){
+  _watchdog.alertaActiva = true;
+  let banner = document.getElementById("watchdogBanner");
+  if(!banner){
+    banner = document.createElement('div');
+    banner.id = "watchdogBanner";
+    document.body.appendChild(banner);
+  }
+  const dDrex = info.deltaDrex >= 0 ? '+' + money(info.deltaDrex) : '−' + money(Math.abs(info.deltaDrex));
+  const dChu  = info.deltaChunior >= 0 ? '+' + money(info.deltaChunior) : '−' + money(Math.abs(info.deltaChunior));
+  banner.innerHTML =
+    '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+      '<span style="font-size:18px">⚠️</span>' +
+      '<span><b>Discrepancia de fichas detectada</b><br>' +
+        '<span style="font-weight:400;font-size:12px">Drex: ' + dDrex + ' · Chunior: ' + dChu + ' · ' + formatFecha(new Date().toISOString()) + '</span>' +
+      '</span>' +
+    '</div>' +
+    '<button onclick="_wdDismissBanner()">Entendido</button>';
+  toast('⚠️ Discrepancia: Drex ' + dDrex + ' · Chunior ' + dChu, 'red');
+}
+
+function _wdDismissBanner(){
+  const b = document.getElementById("watchdogBanner");
+  if(b) b.remove();
+  _watchdog.alertaActiva = false;
+}
+
+async function _watchdogPoll(){
+  const ahora = await _watchdogLeer();
+
+  // ── Recovery Drex: sesión cerrada → modal de login ──────────────────────
+  if(ahora.drexNeedsLogin){
+    if(!_watchdog.drexLoginInProgress){
+      _watchdog.drexLoginInProgress = true;
+      toast("⚠️ Sesión de backoffice (agentes) cerrada · Reingresá credenciales", "red");
+      Promise.resolve(ensureDrexSession()).finally(function(){
+        _watchdog.drexLoginInProgress = false;
+      });
+    }
+    _wdActualizarUI('alerta', '🔐 Login de agentes requerido');
+    return;
+  }
+
+  // ── Recovery Chunior: 3 fallos consecutivos (~3 min) → reload total ─────
+  if(!ahora.chuniorReachable){
+    _watchdog.chuniorFails++;
+    _wdActualizarUI('alerta', '⚠ Chunior inalcanzable ('+_watchdog.chuniorFails+'/3)');
+    if(_watchdog.chuniorFails >= 3 && !_watchdog.chuniorRecoveryScheduled){
+      _watchdog.chuniorRecoveryScheduled = true;
+      toast("⚠️ Chunior cerrado · Reiniciando NODO en 4s...", "red");
+      setTimeout(function(){ location.reload(); }, 4000);
+    }
+    return;
+  }
+  // Si llegó acá, Chunior responde — reset
+  _watchdog.chuniorFails = 0;
+  _watchdog.chuniorRecoveryScheduled = false;
+
+  // Si falta saldo de uno u otro pero la app está OK (ej: aún cargando), no comparamos
+  if(ahora.drex === null || !ahora.chunior){
+    _wdActualizarUI('', '⏸ Watchdog · ' + (ahora.drex === null ? 'sin Drex' : 'sin Chunior'));
+    return;
+  }
+
+  if(_watchdog.drex !== null && _watchdog.chunior !== null){
+    const dDrex     = ahora.drex - _watchdog.drex;
+    const dChunior  = ahora.chunior.total - _watchdog.chunior.total;
+    const TOL       = 1; // tolerancia $1 para errores de redondeo
+    const cambioDrex    = Math.abs(dDrex) > TOL;
+    const cambioChunior = Math.abs(dChunior) > TOL;
+
+    if(cambioDrex || cambioChunior){
+      // Operación legítima: Drex y Chunior se mueven en SENTIDOS OPUESTOS con el mismo monto
+      const opuestos = (dDrex * dChunior < 0) && (Math.abs(Math.abs(dDrex) - Math.abs(dChunior)) < TOL);
+      if(!opuestos){
+        console.warn('[watchdog] DISCREPANCIA · ΔDrex='+dDrex+' ΔChunior='+dChunior);
+        _wdMostrarBanner({ deltaDrex: dDrex, deltaChunior: dChunior });
+      } else {
+        console.log('[watchdog] operación normal · ΔDrex='+dDrex+' ΔChunior='+dChunior);
+      }
+    }
+  }
+
+  _watchdog.drex = ahora.drex;
+  _watchdog.chunior = ahora.chunior;
+  _watchdog.lastCheck = Date.now();
+  const horaCheck = new Date().toLocaleTimeString('es-AR', { timeZone:'America/Argentina/Buenos_Aires', hour:'2-digit', minute:'2-digit' });
+  _wdActualizarUI(_watchdog.alertaActiva ? 'alerta' : 'ok',
+    (_watchdog.alertaActiva ? '⚠ ' : '✓ ') + 'Watchdog OK · ' + horaCheck);
+}
+
+function _watchdogIniciar(){
+  if(_watchdog.intervalId) return;
+  setTimeout(_watchdogPoll, 8000);              // primera lectura para baseline
+  _watchdog.intervalId = setInterval(_watchdogPoll, 60000); // poll cada 60s
+}
+
+if(enElectron){
+  // Arranca el watchdog 12s después del load (da tiempo a que la ventana de Chunior esté lista)
+  setTimeout(_watchdogIniciar, 12000);
 }
 
 // ── Acciones rápidas desde el chat ────────────────────────────────────────────
@@ -2665,7 +3203,11 @@ async function chatAccionRetirar(){
   if(!monto || monto <= 0){ toast("Ingresá un monto válido","red"); return; }
 
   const check = await verificarRetiro24h(usuario);
-  if(check.bloqueado){ toast(check.mensaje,"red"); return; }
+  if(check.bloqueado){
+    toast("⚠️ " + check.mensaje, "yellow");
+    const proceder = await confirmarRetiroDuplicado(check);
+    if(!proceder) return;
+  }
 
   document.getElementById("chatCargarMonto").value = "";
   await retirarSaldoRapido(usuario, monto);
@@ -2678,8 +3220,163 @@ async function chatAccionResetClave(){
   await resetClaveRapido(usuario, "12345a");
 }
 
+// Normaliza un alias para mandarlo al casino (sin acentos, sin puntos, espacios, signos).
+// El casino registra a los usuarios sin acentos ni separadores, así que normalizamos
+// del lado de NODO para que coincidan incluso si el operador o el jugador los tipea con tildes/punto.
+const _RE_DIACRITICOS = new RegExp('[\\u0300-\\u036f]', 'g');
+const _RE_SEPARADORES = new RegExp('[\\s.,;:¿?¡!\\-_/\\\\]', 'g');
+function normalizarUsuarioCasino(u){
+  if(u === null || u === undefined) return u;
+  return String(u)
+    .normalize('NFD')              // descompone caracteres acentuados (á → a + ́)
+    .replace(_RE_DIACRITICOS, '')  // quita marcas diacríticas (tildes, diéresis)
+    .replace(_RE_SEPARADORES, '')  // quita espacios, puntos, comas, guiones, slashes
+    .toLowerCase();
+}
+
+// Decide qué alias mandar al casino:
+//   - Si el alias NO tiene caracteres "raros" (acentos/puntos/etc) → lo manda tal cual (cero overhead).
+//   - Si tiene caracteres raros → chequea en NUESTRA base de "usuarios":
+//       · Si existe exactamente con esos caracteres → el casino también lo tiene así → mandar EXACTO.
+//       · Si NO existe exactamente → asumimos que se subió normalizado al casino → mandar NORMALIZADO.
+//
+// El happy-path normal (alias sin chars especiales) NO hace ninguna query extra → no afecta la carga.
+async function _resolverAliasParaCasino(usuario){
+  if(!usuario) return usuario;
+  const norm = normalizarUsuarioCasino(usuario);
+  if(norm === usuario) return usuario; // sin caracteres raros, nada que decidir
+  try {
+    const { data } = await supabaseClient
+      .from('usuarios')
+      .select('usuario')
+      .eq('usuario', usuario)
+      .limit(1);
+    if(data && data.length){
+      // Match exacto en NODO con esos caracteres → el casino también lo tiene así
+      return usuario;
+    }
+    // No hay match exacto → probablemente el casino lo tiene normalizado
+    console.log('[alias normalizado] "'+usuario+'" no está exacto en NODO · casino recibe "'+norm+'"');
+    return norm;
+  } catch(e){
+    return usuario; // ante cualquier error, original
+  }
+}
+
 async function callDrex(method, ...args){
+  // Solo buscarUsuario resuelve el alias inteligentemente.
+  // crearUsuario / cambiarClave NO se tocan.
+  if(method === 'buscarUsuario' && args.length > 0 && typeof args[0] === 'string'){
+    const aliasFinal = await _resolverAliasParaCasino(args[0]);
+    return window.ctrlElectron.drexAutomation('buscarUsuario', aliasFinal);
+  }
   return window.ctrlElectron.drexAutomation(method, ...args);
+}
+
+// Si el alias confirmado por el casino no está en nuestra base de "usuarios", lo agrega.
+// Diseñado para correr en SEGUNDO PLANO: NO lanzar con await desde el flujo de carga.
+async function _autoregistrarUsuarioSiFalta(aliasCasino){
+  if(!aliasCasino) return;
+  try {
+    const { data, error } = await supabaseClient
+      .from('usuarios')
+      .select('id')
+      .eq('usuario', aliasCasino)
+      .limit(1);
+    if(error) return;
+    if(data && data.length) return; // ya está
+    const ins = await supabaseClient.from('usuarios').insert({
+      usuario:   aliasCasino,
+      nombre:    aliasCasino,
+      pc_codigo: pcOperativa,
+      origen:    'AUTO_CARGA'
+    });
+    if(!ins.error) console.log('[auto-registro] usuario "'+aliasCasino+'" agregado a la base');
+  } catch(_){}
+}
+
+// ── Login modal de Casinodrex ─────────────────────────────────────────────────
+// Abre el modal si hay que loguearse. Devuelve true si la sesión quedó lista,
+// false si el operador canceló o las credenciales fallaron.
+// NO guarda credenciales en disco ni en memoria persistente.
+let _drexLoginResolve = null;
+
+function _mostrarModalLoginDrex() {
+  return new Promise(function(resolve) {
+    _drexLoginResolve = resolve;
+    abrirModal(
+      '🔐 Login — Casinodrex Agentes',
+      '<div style="margin-bottom:10px;color:#c0cad8;font-size:13px">La sesión del backoffice expiró o no está abierta.<br>Ingresá tus credenciales de agente para continuar.</div>' +
+      '<label style="color:#c0cad8;font-size:12px;font-weight:700">USUARIO</label>' +
+      '<input id="drexLUser" type="text" autocomplete="off" placeholder="(tu usuario de agente)" style="margin-bottom:12px" value="">' +
+      '<label style="color:#c0cad8;font-size:12px;font-weight:700">CONTRASEÑA</label>' +
+      '<input id="drexLPass" type="password" autocomplete="off" placeholder="(tu clave)" value="">' +
+      '<div id="drexLErr" style="color:var(--red);font-size:12px;margin-top:8px;min-height:16px"></div>',
+      null,
+      'Conectar'
+    );
+    // Sobrescribir el botón Guardar con lógica propia
+    var btn = document.getElementById("modalSaveBtn");
+    if(btn) btn.onclick = _ejecutarLoginDrex;
+    // Cancelar → resolver false
+    var cancelBtn = document.querySelector('#modalOverlay .btn-gray');
+    if(cancelBtn) cancelBtn.onclick = function(){ cerrarModal(); if(_drexLoginResolve){ _drexLoginResolve(false); _drexLoginResolve=null; } };
+    // Auto-focus + Enter handlers
+    setTimeout(function(){
+      var u = document.getElementById("drexLUser");
+      var p = document.getElementById("drexLPass");
+      if(u){
+        u.value = ''; u.focus(); u.select();
+        u.addEventListener("keydown", function(e){
+          if(e.key==="Enter"){ e.preventDefault(); document.getElementById("drexLPass")?.focus(); }
+        });
+      }
+      if(p){
+        p.value = '';
+        p.addEventListener("keydown", function(e){
+          if(e.key==="Enter"){ e.preventDefault(); _ejecutarLoginDrex(); }
+        });
+      }
+    }, 120);
+  });
+}
+
+async function _ejecutarLoginDrex() {
+  var user = (document.getElementById("drexLUser")?.value || "").trim();
+  var pass = (document.getElementById("drexLPass")?.value || "").trim();
+  var errEl = document.getElementById("drexLErr");
+  if(!user || !pass){
+    if(errEl) errEl.textContent = "Completá usuario y contraseña.";
+    return;
+  }
+  var btn = document.getElementById("modalSaveBtn");
+  if(btn){ btn.disabled = true; btn.textContent = "Conectando..."; }
+  if(errEl) errEl.textContent = "";
+  try {
+    var r = await callDrex("iniciarSesion", user, pass);
+    if(r && r.ok){
+      cerrarModal();
+      if(_drexLoginResolve){ _drexLoginResolve(true); _drexLoginResolve=null; }
+    } else {
+      if(errEl) errEl.textContent = r?.message || "Credenciales incorrectas. Verificá y volvé a intentar.";
+      if(btn){ btn.disabled = false; btn.textContent = "Conectar"; }
+      // No resolver — el modal queda abierto para reintentar
+    }
+  } catch(e){
+    if(errEl) errEl.textContent = "Error: " + (e.message || "sin detalle");
+    if(btn){ btn.disabled = false; btn.textContent = "Conectar"; }
+  }
+}
+
+// Helper usado en TODAS las operaciones automáticas.
+// Abre la ventana, verifica sesión, y si falta → modal de login.
+// Devuelve true si la sesión está lista para operar.
+async function ensureDrexSession() {
+  await window.ctrlElectron.openAgentWindow();
+  var estado = await callDrex("estadoPagina");
+  if(!estado.needsLogin) return true;
+  toast("Se requiere iniciar sesión en el backoffice.", "yellow");
+  return await _mostrarModalLoginDrex();
 }
 
 function autoResBox(id, ok, texto){
@@ -2690,7 +3387,8 @@ function autoResBox(id, ok, texto){
 
 async function abrirBackoffice(){
   if(!enElectron) return;
-  await window.ctrlElectron.openAgentWindow();
+  // Esta es la ÚNICA función que muestra la ventana de agentes (botón manual del operador)
+  await window.ctrlElectron.showAgentWindow();
   await verificarEstadoBackoffice();
 }
 
@@ -2752,8 +3450,9 @@ async function testRetirar(){
   autoResBox("autoRetirarRes", true, "Verificando política 24hs...");
   const check = await verificarRetiro24h(usuario);
   if(check.bloqueado){
-    autoResBox("autoRetirarRes", false, `⛔ ${check.mensaje}`);
-    return;
+    autoResBox("autoRetirarRes", false, `⚠️ ${check.mensaje}`);
+    const proceder = await confirmarRetiroDuplicado(check);
+    if(!proceder) return;
   }
 
   autoResBox("autoRetirarRes", true, "Buscando usuario...");
@@ -2771,6 +3470,18 @@ async function testRetirar(){
     const r = await callDrex("retirarSaldo", monto);
     document.getElementById("autoResultVal").textContent = `RETIRO · ${usuario} · $${monto.toLocaleString("es-AR")}`;
     autoResBox("autoRetirarRes", true, `✅ ${r.message || "Retiro realizado."}`);
+    
+    // Registrar el retiro en Supabase para que quede en el historial y se valide en 24hs
+    await supabaseClient.from("solicitudes").insert({
+      tipo: "RETIRO",
+      usuario: usuario,
+      monto: monto,
+      estado: "PAGADA",
+      pc_codigo: pcOperativa,
+      origen: "MANUAL",
+      operador_usuario: operador?.usuario || operador?.nombre || "Sistema"
+    }).catch(err => console.error("Error registrando retiro en Supabase:", err));
+    
     await window.ctrlElectron.navigateAgent();
   }catch(err){ autoResBox("autoRetirarRes", false, "Error: " + err.message); }
 }
@@ -2842,10 +3553,7 @@ async function ejecutarAutoClave(id){
   if(!usuario){ alert("La solicitud no tiene usuario."); return; }
 
   toast("Abriendo backoffice...","blue");
-  await window.ctrlElectron.openAgentWindow();
-
-  const estado = await callDrex("estadoPagina");
-  if(estado.needsLogin){ toast("Iniciá sesión en el backoffice primero.","red"); return; }
+  if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
   toast(`Buscando ${usuario}...`,"blue");
   const b = await callDrex("buscarUsuario", usuario);
@@ -2896,10 +3604,7 @@ async function resetClaveRapido(usuario, claveNueva="12345a"){
   if(!usuario){ alert("Sin usuario."); return; }
 
   toast(`Reseteando clave de ${usuario}...`,"blue");
-  await window.ctrlElectron.openAgentWindow();
-
-  const estado = await callDrex("estadoPagina");
-  if(estado.needsLogin){ toast("Iniciá sesión en el backoffice.","red"); return; }
+  if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
   const b = await callDrex("buscarUsuario", usuario);
   if(!b.exists){ toast(`Usuario "${usuario}" no encontrado.`,"red"); return; }
@@ -2917,10 +3622,7 @@ async function retirarSaldoRapido(usuario, monto){
   if(!usuario || !monto || monto <= 0){ alert("Usuario y monto requeridos."); return; }
 
   toast(`Retirando $${monto.toLocaleString("es-AR")} de ${usuario}...`, "blue");
-  await window.ctrlElectron.openAgentWindow();
-
-  const estado = await callDrex("estadoPagina");
-  if(estado.needsLogin){ toast("Iniciá sesión en el backoffice.","red"); return; }
+  if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
   const b = await callDrex("buscarUsuario", usuario);
   if(!b.exists){ toast(`Usuario "${usuario}" no encontrado.`,"red"); return; }
@@ -2935,6 +3637,43 @@ async function retirarSaldoRapido(usuario, monto){
   const r = await callDrex("retirarSaldo", monto);
   if(r && r.ok === false){ toast("Error: " + (r.message||"falló"), "red"); return; }
 
+  // Registrar en solicitudes para validar política de 24hs
+  await supabaseClient.from("solicitudes").insert({
+    tipo: "RETIRO",
+    usuario: usuario,
+    monto: monto,
+    estado: "PAGADA",
+    pc_codigo: pcOperativa,
+    origen: "CHAT",
+    operador_usuario: operador?.usuario || operador?.nombre || "Sistema"
+  }).catch(err => console.error("Error registrando retiro en solicitudes:", err));
+
+  // Saldo después del retiro
+  const saldoPreR  = (typeof b.balance?.value === 'number') ? b.balance.value : null;
+  const saldoPostR = (saldoPreR !== null) ? saldoPreR - monto : null;
+
+  // Registrar en historial de operaciones para que aparezca en el panel
+  const bilR = getBilleraLanding();
+  let movChuniorR = null;
+  if(bilR && bilR.CHUNIOR_UID){
+    try {
+      const rChu = await registrarRetiroEnChunior(bilR.CHUNIOR_UID, monto, usuario);
+      if(rChu.ok && rChu.movimientoId) movChuniorR = rChu.movimientoId;
+      else if(rChu.error) toast('⚠️ Retiro OK en casino pero falló en Chunior: '+rChu.error, 'red');
+    } catch(e){ toast('⚠️ Error en Chunior: '+(e.message||''), 'red'); }
+  }
+  await registrarEnHistorial({
+    usuario,
+    tipo: 'RETIRO',
+    monto,
+    billetera_id:        bilR ? bilR.ID_BILLETERA   : null,
+    billetera_nombre:    bilR ? bilR.NOMBRE_VISIBLE : null,
+    origen: 'CHAT',
+    estado: 'OK',
+    chunior_movimiento_id: movChuniorR,
+    saldo_post: saldoPostR
+  });
+
   toast(`Retiro completado · ${usuario} · $${monto.toLocaleString("es-AR")}`, "green");
   await window.ctrlElectron.navigateAgent();
 }
@@ -2945,16 +3684,33 @@ async function cargarSaldoRapido(usuario, monto){
   if(!usuario || !monto || monto<=0){ alert("Usuario y monto requeridos."); return; }
 
   toast(`Cargando $${monto} a ${usuario}...`,"blue");
-  await window.ctrlElectron.openAgentWindow();
-
-  const estado = await callDrex("estadoPagina");
-  if(estado.needsLogin){ toast("Iniciá sesión en el backoffice.","red"); return; }
+  if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
   const b = await callDrex("buscarUsuario", usuario);
   if(!b.exists){ toast(`Usuario "${usuario}" no encontrado.`,"red"); return; }
 
   const r = await callDrex("cargarSaldo", monto);
   if(r && r.ok === false){ toast("Error: "+(r.message||"falló"),"red"); return; }
+
+  // Saldo post-carga
+  const saldoPreC  = (typeof b.balance?.value === 'number') ? b.balance.value : null;
+  const saldoPostC = (saldoPreC !== null) ? saldoPreC + monto : null;
+
+  // Auto-registrar al usuario en NODO si no existe (segundo plano)
+  if(b?.user) _autoregistrarUsuarioSiFalta(b.user);
+
+  // Registrar en historial de operaciones
+  const bilC = getBilleraLanding();
+  await registrarEnHistorial({
+    usuario,
+    tipo: 'CARGA',
+    monto,
+    billetera_id:     bilC ? bilC.ID_BILLETERA   : null,
+    billetera_nombre: bilC ? bilC.NOMBRE_VISIBLE : null,
+    origen: 'CHAT',
+    estado: 'OK',
+    saldo_post: saldoPostC
+  });
 
   toast(`Carga completada · ${usuario} · $${monto.toLocaleString("es-AR")}`,"green");
   await window.ctrlElectron.navigateAgent();
@@ -2972,24 +3728,25 @@ async function ejecutarAutoRetiro(id){
   if(!usuario){ alert("La solicitud no tiene usuario asociado."); return; }
   if(!monto)  { alert("La solicitud no tiene monto válido."); return; }
 
-  // Política de 24hs
+  // Política de 24hs — advertencia, el operador decide
   const check = await verificarRetiro24h(usuario);
   if(check.bloqueado){
-    await notificarUsuarioEnChat(usuario, `⛔ Tu solicitud de retiro fue rechazada: ${check.mensaje}`);
-    await actualizarSolicitudSupabase(id, {
-      estado: "RECHAZADA",
-      operador_usuario: operador.usuario || operador.nombre || ""
-    });
-    toast(check.mensaje,"red");
-    await refrescarTodo(false);
-    return;
+    const proceder = await confirmarRetiroDuplicado(check);
+    if(!proceder){
+      await notificarUsuarioEnChat(usuario, `⛔ Tu solicitud de retiro fue rechazada: ${check.mensaje}`);
+      await actualizarSolicitudSupabase(id, {
+        estado: "RECHAZADA",
+        operador_usuario: operador.usuario || operador.nombre || ""
+      });
+      toast(check.mensaje, "red");
+      await refrescarTodo(false);
+      return;
+    }
+    // El operador decidió proceder igualmente
   }
 
   toast("Abriendo backoffice...","blue");
-  await window.ctrlElectron.openAgentWindow();
-
-  const estado = await callDrex("estadoPagina");
-  if(estado.needsLogin){ toast("Iniciá sesión en el backoffice primero.","red"); return; }
+  if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
   toast(`Buscando ${usuario}...`,"blue");
   const b = await callDrex("buscarUsuario", usuario);
@@ -3055,7 +3812,20 @@ async function ejecutarAutoRetiro(id){
     `✅ Tu retiro de $${monto.toLocaleString("es-AR")} fue procesado. Lo transferimos a tu CBU/CVU.`);
 
   toast(`Retiro automático completado · ${usuario} · ${monto.toLocaleString("es-AR")}`, "green");
-  { const bilR=getBilleraLanding(); await registrarEnHistorial({usuario, tipo:'RETIRO', monto, billetera_id:bilR?bilR.ID_BILLETERA:null, billetera_nombre:bilR?bilR.NOMBRE_VISIBLE:null, origen:'AUTO', estado:'OK', solicitud_id:id}); }
+  {
+    const bilR = getBilleraLanding();
+    let movChuniorAR = null;
+    if(bilR && bilR.CHUNIOR_UID){
+      try {
+        const rChu = await registrarRetiroEnChunior(bilR.CHUNIOR_UID, monto, usuario);
+        if(rChu.ok && rChu.movimientoId) movChuniorAR = rChu.movimientoId;
+        else if(rChu.error) toast('⚠️ Retiro OK pero falló en Chunior: '+rChu.error, 'red');
+      } catch(e){ toast('⚠️ Error en Chunior: '+(e.message||''), 'red'); }
+    }
+    const saldoPreAR  = (typeof b.balance?.value === 'number') ? b.balance.value : null;
+    const saldoPostAR = (saldoPreAR !== null) ? saldoPreAR - monto : null;
+    await registrarEnHistorial({usuario, tipo:'RETIRO', monto, billetera_id:bilR?bilR.ID_BILLETERA:null, billetera_nombre:bilR?bilR.NOMBRE_VISIBLE:null, origen:'AUTO', estado:'OK', solicitud_id:id, chunior_movimiento_id:movChuniorAR, saldo_post:saldoPostAR});
+  }
   await window.ctrlElectron.navigateAgent();
   await refrescarTodo(false);
 }
@@ -3073,13 +3843,7 @@ async function ejecutarAutoCarga(id){
   if(!monto)  { alert("La solicitud no tiene monto válido."); return; }
 
   toast("Abriendo backoffice...","blue");
-  await window.ctrlElectron.openAgentWindow();
-
-  const estado = await callDrex("estadoPagina");
-  if(estado.needsLogin){
-    toast("Iniciá sesión en la ventana del backoffice primero.","red");
-    return;
-  }
+  if(!await ensureDrexSession()){ toast("Sesión de backoffice requerida.","red"); return; }
 
   toast(`Buscando usuario ${usuario}...`,"blue");
   const busqueda = await callDrex("buscarUsuario", usuario);
@@ -3122,18 +3886,46 @@ async function ejecutarAutoCarga(id){
     `✅ Tu carga fue acreditada: $${monto.toLocaleString("es-AR")}. ¡Ya podés jugar!`);
 
   toast(`Carga automática completada · ${usuario} · ${monto.toLocaleString("es-AR")}`, "green");
-  { const bilL=getBilleraLanding(); await registrarEnHistorial({usuario, tipo:'CARGA', monto, billetera_id:bilL?bilL.ID_BILLETERA:null, billetera_nombre:bilL?bilL.NOMBRE_VISIBLE:null, origen:'AUTO', estado:'OK', solicitud_id:id}); }
+
+  // Registrar el movimiento en Chunior (solo si la billetera tiene chunior_uid configurado)
+  let movimientoChunior = null;
+  const bilL = getBilleraLanding();
+  if(bilL && bilL.CHUNIOR_UID){
+    try {
+      const rChu = await registrarCargaEnChunior(bilL.CHUNIOR_UID, monto, usuario);
+      if(rChu.ok && rChu.movimientoId){
+        movimientoChunior = rChu.movimientoId;
+        toast(`📋 Movimiento Chunior N° ${rChu.movimientoId}`, 'blue');
+      } else if(rChu.error){
+        toast('⚠️ Carga OK en casino pero falló en Chunior: '+rChu.error, 'red');
+      }
+    } catch(e){ toast('⚠️ Error registrando en Chunior: '+(e.message||''), 'red'); }
+  }
+
+  const saldoPreAC  = (typeof busqueda.balance?.value === 'number') ? busqueda.balance.value : null;
+  const saldoPostAC = (saldoPreAC !== null) ? saldoPreAC + monto : null;
+  // Auto-registrar al usuario en NODO si no existe (segundo plano)
+  if(busqueda?.user) _autoregistrarUsuarioSiFalta(busqueda.user);
+  await registrarEnHistorial({usuario, tipo:'CARGA', monto, billetera_id:bilL?bilL.ID_BILLETERA:null, billetera_nombre:bilL?bilL.NOMBRE_VISIBLE:null, origen:'AUTO', estado:'OK', solicitud_id:id, chunior_movimiento_id:movimientoChunior, saldo_post:saldoPostAC});
   await window.ctrlElectron.navigateAgent();
   await refrescarTodo(false);
 }
 
 function abrirMenuMobile(){const menu=document.getElementById("mobileMenu");menu.classList.add("open");menu.innerHTML="";const clone=document.getElementById("sidebar").cloneNode(true);clone.style.display="block";menu.appendChild(clone)}
 function cerrarMenuMobile(e){if(!e||e.target.id==="mobileMenu"){const menu=document.getElementById("mobileMenu");menu.classList.remove("open");menu.innerHTML=""}}
-function cerrarSesion(){localStorage.removeItem("nodo_operador_lite");localStorage.removeItem("nodo_pc_operativa_lite");location.reload()}
+function cerrarSesion(){
+  localStorage.removeItem("nodo_operador_lite");
+  localStorage.removeItem("nodo_pc_operativa_lite");
+  // Cerrar también sesión de Chunior antes de recargar
+  try {
+    if(window.chunior) window.chunior.navigate(CHUNIOR_BASE + '/accounts/logout/');
+  } catch(e){}
+  setTimeout(function(){ location.reload(); }, 400);
+}
 
 // ── Panel de verificaciones ───────────────────────────────────────────────────
 async function cargarVerificaciones(){
-  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const hoy = inicioDiaArgentina(); // medianoche AR, no del SO local
   const { data } = await supabaseClient
     .from("verificaciones")
     .select("*")
@@ -3209,151 +4001,841 @@ async function reintentarVerificacion(id, usuario){
   await cargarVerificaciones();
 }
 
+// JSON seguro para usar dentro de un atributo HTML (onclick="..."), reemplaza " por &quot;
+function _jsonAttr(v){ return JSON.stringify(v).replace(/"/g, '&quot;'); }
+
 // ── Chunior ───────────────────────────────────────────────────────────────────
-// El operador inicia sesión manualmente. No hay auto-fill de credenciales.
+// La autenticación ocurre en el login principal de NODO (validarLoginChunior).
+// La sección Chunior es sólo un visor de la sesión ya iniciada.
 const CHUNIOR_BASE = 'https://bo.chunior.com';
 const CHUNIOR_HOME = CHUNIOR_BASE + '/transacciones/';
 let _chuniorInited = false;
+let _nodoListo    = false;  // true después de finalizarLogin, gatea el modal de puesto
 
 function activarChunior(){
-  const wv = document.getElementById('chuniorWebview');
-  if(!wv) return;
+  if(!window.chunior) return;
   if(!_chuniorInited){
     _chuniorInited = true;
-
-    wv.addEventListener('did-finish-load', async ()=>{
-      const url = wv.getURL ? wv.getURL() : wv.src;
-      if(!url || url.includes('about:blank')) return;
-
-      // ── Página de selección de Puesto de trabajo ───────────────────────────
+    // Polling de status cada 3s: la lógica de Chunior corre en una ventana separada (visible).
+    setInterval(async function(){
       try {
-        const ptData = await wv.executeJavaScript(
-          '(function(){var s=document.getElementById("id_pt");if(!s)return null;var o=Array.from(s.options).filter(function(x){return x.value!=="";}).map(function(x){return{value:x.value,text:x.text.trim()};});return{isPt:true,opts:o};})()'
-        );
-        if(ptData && ptData.isPt && ptData.opts.length > 0){
-          _chuniorElegirPuesto(wv, ptData.opts);
-          return;
+        const url = await window.chunior.getUrl();
+        if(!url || url.includes('about:blank')) return;
+        _setChuniorStatus(!url.includes('/login/'), url);
+        // Si está esperando selección de puesto y NODO ya está logueado, abrir modal
+        if(_nodoListo){
+          const ptData = await window.chunior.exec(
+            '(function(){var s=document.getElementById("id_pt");if(!s)return null;var o=Array.from(s.options).filter(function(x){return x.value!=="";}).map(function(x){return{value:x.value,text:x.text.trim()};});return{isPt:true,opts:o};})()'
+          );
+          if(ptData && ptData.isPt && ptData.opts.length > 0 && !window._chuniorPtModalOpen){
+            window._chuniorPtModalOpen = true;
+            _chuniorElegirPuesto(ptData.opts);
+          }
         }
       } catch(e){}
-
-      // ── Página de login → mostrar panel de NODO ────────────────────────────
-      if(url.includes('/login/')){
-        _chuniorMostrarLogin(true);
-        return;
-      }
-
-      // ── Sesión activa ──────────────────────────────────────────────────────
-      _chuniorMostrarLogin(false);
-      _setChuniorStatus(true, url);
-    });
-
-    wv.addEventListener('did-navigate', function(e){
-      if(!e.url || e.url.includes('about:blank')) return;
-      if(e.url.includes('/login/')){
-        _chuniorMostrarLogin(true);
-        _setChuniorStatus(false, e.url);
-      } else {
-        _chuniorMostrarLogin(false);
-        _setChuniorStatus(true, e.url);
-      }
-    });
-  }
-  if(wv.src === 'about:blank' || !wv.src) wv.src = CHUNIOR_HOME;
-}
-
-function _chuniorMostrarLogin(mostrar){
-  const panel = document.getElementById('chuniorLoginPanel');
-  const wv    = document.getElementById('chuniorWebview');
-  if(panel) panel.style.display = mostrar ? 'flex' : 'none';
-  if(wv)    wv.style.display    = mostrar ? 'none' : 'flex';
-  if(mostrar){
-    // Limpia campos pero mantiene el usuario si ya lo ingresaron
-    const p = document.getElementById('chkPass');
-    if(p) p.value = '';
-    setBox('chkMsg','');
-    setTimeout(()=>{ document.getElementById('chkUser')?.focus(); }, 80);
+    }, 3000);
   }
 }
 
-async function chuniorInjectField(fieldId, value){
-  const wv = document.getElementById('chuniorWebview');
-  if(!wv) return;
+// Después del login, chequear si Chunior está esperando selección de puesto y arrancar el flujo
+async function _checkPuestoPostLogin(){
+  if(!window.chunior) return;
+  await new Promise(function(r){setTimeout(r,500);});
   try {
-    await wv.executeJavaScript(
-      '(function(){var f=document.getElementById('+JSON.stringify(fieldId)+');if(f){f.value='+JSON.stringify(value)+';f.dispatchEvent(new Event("input",{bubbles:true}));}})()'
+    const ptData = await window.chunior.exec(
+      '(function(){var s=document.getElementById("id_pt");if(!s)return null;var o=Array.from(s.options).filter(function(x){return x.value!=="";}).map(function(x){return{value:x.value,text:x.text.trim()};});return{isPt:true,opts:o};})()'
     );
+    if(ptData && ptData.isPt && ptData.opts.length > 0){
+      _chuniorElegirPuesto(ptData.opts);
+    } else {
+      // Ya está en una página normal: sincronizar billeteras directamente
+      setTimeout(function(){ sincronizarBilleterasChunior(true).catch(function(){}); }, 800);
+    }
   } catch(e){}
 }
 
-async function chuniorSubmitLogin(){
-  const wv = document.getElementById('chuniorWebview');
-  if(!wv) return;
-  setBox('chkMsg','<div class="alert-box" style="font-size:12px">Conectando...</div>');
-  try {
-    // Asegurar que los valores actuales están en el webview
-    const u = document.getElementById('chkUser')?.value || '';
-    const p = document.getElementById('chkPass')?.value || '';
-    await chuniorInjectField('id_username', u);
-    await chuniorInjectField('id_password', p);
-    await new Promise(function(r){setTimeout(r,120);});
-    await wv.executeJavaScript(
-      '(function(){var b=document.querySelector("input[type=\'submit\'],button[type=\'submit\']");if(b)b.click();})()'
-    );
-  } catch(e){
-    setBox('chkMsg','<div class="err-box" style="font-size:12px">Error: '+(e.message||'')+'</div>');
-  }
-}
-
 function chuniorCerrarSesion(){
-  const wv = document.getElementById('chuniorWebview');
-  if(wv){ wv.src = CHUNIOR_BASE + '/accounts/logout/'; }
+  if(!confirm('¿Cerrar sesión de Chunior?\n\nEsto también te va a deslogear de NODO.')) return;
+  if(window.chunior) window.chunior.navigate(CHUNIOR_BASE + '/accounts/logout/');
+  // Cerrar NODO también
+  localStorage.removeItem('nodo_operador_lite');
+  localStorage.removeItem('nodo_pc_operativa_lite');
+  setTimeout(function(){ location.reload(); }, 600);
 }
 
 function _setChuniorStatus(loggedIn, url){
   const dot = document.getElementById('chuniorStatus');
   const bar = document.getElementById('chuniorStatusBar');
   if(dot) dot.textContent = loggedIn ? '🟢' : '🔴';
-  if(bar) bar.textContent = loggedIn ? 'Sesión activa' : 'Iniciá sesión en Chunior';
+  if(bar) bar.textContent = loggedIn ? 'Sesión activa' : 'Sin sesión';
 }
 
-function _chuniorElegirPuesto(wv, opts){
+function _chuniorElegirPuesto(opts){
   const optsHtml = opts.map(function(o){
-    return '<button class="btn btn-primary" style="margin-bottom:8px" onclick="_chuniorConfirmarPuesto('+JSON.stringify(o.value)+','+JSON.stringify(o.text)+')">'+escapeHtml(o.text)+'</button>';
+    return '<button class="btn btn-primary" style="margin-bottom:8px" onclick="_chuniorConfirmarPuesto('+_jsonAttr(o.value)+','+_jsonAttr(o.text)+')">'+escapeHtml(o.text)+'</button>';
   }).join('');
   abrirModal('📋 Chunior — Seleccioná tu puesto',
-    '<div class="small" style="margin-bottom:14px;color:var(--muted)">Elegí el puesto de trabajo para esta sesión:</div>'+
+    '<div class="small" style="margin-bottom:14px;color:var(--muted)">Elegí el puesto de trabajo para esta sesión. Si cancelás, NODO se reinicia.</div>'+
     '<div style="display:flex;flex-direction:column;gap:4px">'+optsHtml+'</div>',
     null, null
   );
-  // guardamos la webview en variable global temporaria para usarla en la confirmación
-  window._chuniorWvPendiente = wv;
+  // Sobrescribir el botón Cancelar para que recargue la app
+  const cancelBtn = document.querySelector('#modalOverlay .btn-gray');
+  if(cancelBtn){
+    cancelBtn._origOnclick = cancelBtn.onclick;
+    cancelBtn.onclick = function(){
+      cerrarModal();
+      toast('Reiniciando NODO...', 'blue');
+      setTimeout(function(){ location.reload(); }, 600);
+    };
+  }
+  // Ocultar el botón Guardar
+  const saveBtn = document.getElementById('modalSaveBtn');
+  if(saveBtn) saveBtn.style.display = 'none';
+}
+
+function _restaurarBotonesModal(){
+  const cancelBtn = document.querySelector('#modalOverlay .btn-gray');
+  if(cancelBtn && cancelBtn._origOnclick){
+    cancelBtn.onclick = cancelBtn._origOnclick;
+    delete cancelBtn._origOnclick;
+  }
+  const saveBtn = document.getElementById('modalSaveBtn');
+  if(saveBtn) saveBtn.style.display = '';
 }
 
 async function _chuniorConfirmarPuesto(value, text){
+  _restaurarBotonesModal();
   cerrarModal();
-  const wv = window._chuniorWvPendiente;
-  window._chuniorWvPendiente = null;
-  if(!wv) return;
+  window._chuniorPtModalOpen = false;
+  if(!window.chunior) return;
   try {
-    await wv.executeJavaScript(
+    // 1. Submit del puesto en Chunior
+    await window.chunior.exec(
       '(function(){var s=document.getElementById("id_pt");var b=document.querySelector("input[type=\'submit\'],button[type=\'submit\'],.btn");if(s&&b){s.value='+JSON.stringify(value)+';b.click();}})()'
     );
-    _setChuniorStatus(true, '');
     toast('Chunior: puesto '+text+' seleccionado', 'green');
+
+    // 2. Normalizar el nombre del puesto → pc_codigo de la oficina
+    const pcCodigoNuevo = normalizarPcCodigo(text);
+    if(!pcCodigoNuevo){
+      toast('No pude derivar pc_codigo del puesto "'+text+'"', 'red');
+      return;
+    }
+
+    // 3. Si NODO ya estaba logueado en OTRA oficina, mejor recargar
+    if(_nodoListo && pcOperativa && pcOperativa !== pcCodigoNuevo){
+      toast('Cambio de oficina detectado · Reiniciando NODO...', 'blue');
+      localStorage.setItem('nodo_pc_operativa_lite', pcCodigoNuevo);
+      setTimeout(function(){ location.reload(); }, 800);
+      return;
+    }
+
+    // 4. Asegurar la oficina en Supabase (crear si es nueva)
+    const oficina = await _asegurarOficina(pcCodigoNuevo, text, value);
+    pcOperativa = pcCodigoNuevo;
+
+    // 5. Si NODO todavía no se finalizó (primer login), hacerlo ahora
+    if(!_nodoListo){
+      finalizarLogin(true);
+    }
+
+    // 6. Sincronizar billeteras
+    //    - Oficina nueva → sync silencioso pero completo (sube todas las que falten)
+    //    - Oficina existente → sync silencioso normal (avisa si hay nuevas en Chunior)
+    if(oficina.esNueva){
+      toast('🏢 Oficina nueva detectada: '+text+' · Sincronizando billeteras...', 'blue');
+      setTimeout(function(){
+        sincronizarBilleterasChunior(false).catch(function(e){
+          console.warn('sync inicial oficina nueva:', e);
+        });
+      }, 2500);
+    } else {
+      setTimeout(function(){
+        sincronizarBilleterasChunior(true).catch(function(){});
+      }, 2500);
+    }
   } catch(e){
     toast('Error al seleccionar puesto: '+(e.message||''), 'red');
   }
 }
 
-function chuniorNav(path){
-  const wv = document.getElementById('chuniorWebview');
-  if(wv) wv.src = CHUNIOR_BASE + path;
+// ── Sincronización de billeteras con Chunior ──────────────────────────────────
+// Lee /transacciones/movimientoficha/add/ y extrae:
+//   • opciones del select id_cuenta_destino (uid + nombre)
+//   • saldos reales del breadcrumb (.billetera spans)
+// Resultado: actualiza saldos en NODO y agrega billeteras nuevas si las encuentra.
+async function sincronizarBilleterasChunior(silencioso){
+  if(!window.chunior){ if(!silencioso) toast('Ventana de Chunior no disponible.','red'); return; }
+  if(!pcOperativa){
+    if(!silencioso) toast('Sincronización pospuesta: NODO todavía no terminó de loguear.','red');
+    return;
+  }
+
+  if(!silencioso) toast('Sincronizando con Chunior...','blue');
+
+  const addUrl = CHUNIOR_BASE + '/transacciones/movimientoficha/add/';
+  const cur = await window.chunior.getUrl();
+  if(!cur.includes('/movimientoficha/add')){
+    await window.chunior.navigate(addUrl);
+    await new Promise(function(r){setTimeout(r,500);});
+  }
+
+  let data = null;
+  try {
+    data = await window.chunior.exec(
+      '(function(){' +
+      'var sel=document.getElementById("id_cuenta_destino");' +
+      'if(!sel)return null;' +
+      'var opts=Array.from(sel.options).filter(function(o){return o.value;}).map(function(o){' +
+      '  var t=(o.textContent||o.text||"").trim();' +
+      '  var m=t.match(/^(\\d+)\\s*-\\s*(.+)$/);' +
+      '  return {uid:o.value, nombre:(m?m[2].trim():t)};' +
+      '});' +
+      'var balances={};' +
+      'document.querySelectorAll(".breadcrumbs .billetera").forEach(function(sp){' +
+      '  var uid=sp.id;' +
+      '  var txt=(sp.textContent||"").trim();' +
+      '  var mm=txt.match(/^(.+?):\\s*\\$?([\\d.,]+)/);' +
+      '  if(mm){balances[uid]={nombre:mm[1].trim(), saldo:parseFloat(mm[2].replace(/\\./g,"").replace(",","."))};}' +
+      '});' +
+      'return {opts:opts, balances:balances};' +
+      '})()'
+    );
+  } catch(e){
+    if(!silencioso) toast('Error leyendo Chunior: '+(e.message||''), 'red');
+    return;
+  }
+
+  if(!data || !data.opts || !data.opts.length){
+    if(!silencioso) toast('No se pudieron leer billeteras de Chunior. ¿Estás en la página correcta?', 'red');
+    return;
+  }
+
+  // Combinar uid + nombre + saldo
+  const walletsChunior = data.opts.map(function(o){
+    const b = data.balances[o.uid];
+    return { uid: o.uid, nombre: (b && b.nombre) || o.nombre, saldo: b ? b.saldo : 0 };
+  });
+
+  // Recargar billeteras locales por si cambiaron
+  await cargarBilleteras(false);
+
+  const matchByUid = {};
+  const noEnBase  = [];
+  walletsChunior.forEach(function(w){
+    // Buscar en billeteras locales por chunior_uid o por nombre (fallback)
+    const local = billeteras.find(function(b){
+      if(b.CHUNIOR_UID && String(b.CHUNIOR_UID) === String(w.uid)) return true;
+      return false;
+    });
+    if(local){ matchByUid[w.uid] = local; }
+    else { noEnBase.push(w); }
+  });
+
+  // Billeteras nuevas detectadas en Chunior que no están en NODO
+  if(noEnBase.length > 0){
+    if(silencioso){
+      // Modo silencioso (sync inicial / poll automático): subir todas sin preguntar
+      await _crearBilleterasNuevasChunior(noEnBase);
+    } else if(noEnBase.length >= 3){
+      // Muchas billeteras nuevas en sync manual → pedir confirmación
+      const lista = noEnBase.map(function(w){ return '• '+w.uid+' — '+w.nombre+' ('+money(w.saldo)+')'; }).join('\n');
+      const msg = '🆕 '+noEnBase.length+' billeteras de Chunior no están en NODO:\n\n'+lista+'\n\n¿Crearlas ahora?\n(Después vas a tener que cargar CBU, titular y alias en cada una)';
+      if(!confirm(msg)){
+        toast('Sincronización cancelada — las billeteras nuevas no se crearon.', 'blue');
+        return;
+      }
+      await _crearBilleterasNuevasChunior(noEnBase);
+    } else {
+      // Pocas billeteras nuevas en sync manual: las creamos sin preguntar
+      await _crearBilleterasNuevasChunior(noEnBase);
+    }
+  }
+
+  // Actualizar saldos de las que ya existen
+  let actualizadas = 0;
+  for(const w of walletsChunior){
+    const local = matchByUid[w.uid];
+    if(local && Math.abs(Number(local.SALDO||0) - w.saldo) > 0.01){
+      await supabaseClient.from('billeteras').update({ saldo: w.saldo }).eq('id', local.ID_BILLETERA);
+      actualizadas++;
+    }
+  }
+
+  await cargarBilleteras(false);
+  if(!silencioso) toast('Sincronización OK · '+actualizadas+' saldo(s) actualizado(s)', 'green');
 }
 
-function chuniorLoginManual(){
-  const wv = document.getElementById('chuniorWebview');
-  if(wv) wv.src = CHUNIOR_HOME;
+// Registra una carga en Chunior (movimiento de fichas) y devuelve el número de movimiento.
+// chunior_uid: ID de la billetera en Chunior (string, ej "918")
+// monto: positivo (acreditación al jugador)
+// usuario: nombre del usuario para escribir en notas
+// Retorna: { ok:boolean, movimientoId:string|null, error:string|null }
+async function registrarCargaEnChunior(chunior_uid, monto, usuario){
+  if(!window.chunior) return { ok:false, movimientoId:null, error:'Ventana de Chunior no disponible' };
+  if(!chunior_uid) return { ok:false, movimientoId:null, error:'La billetera no tiene chunior_uid configurado' };
+
+  const addUrl = CHUNIOR_BASE + '/transacciones/movimientoficha/add/';
+  await window.chunior.navigate(addUrl);
+
+  // Esperar a que aparezcan los 3 campos del formulario (DOM ready ≠ form ready en Chunior)
+  const t0 = Date.now();
+  let ready = false;
+  while(Date.now() - t0 < 10000){
+    ready = await window.chunior.exec(
+      '(function(){return !!(document.getElementById("id_cuenta_destino")&&document.getElementById("id_monto")&&document.getElementById("id_notas")&&document.querySelector("input[name=\'_addanother\']"));})()'
+    ).catch(function(){return false;});
+    if(ready) break;
+    await new Promise(function(r){ setTimeout(r,300); });
+  }
+  if(!ready) return { ok:false, movimientoId:null, error:'Formulario de Chunior no apareció en 10s' };
+
+  let injectRes;
+  try {
+    injectRes = await window.chunior.exec(
+      '(function(){' +
+      'var s=document.getElementById("id_cuenta_destino");' +
+      'var m=document.getElementById("id_monto");' +
+      'var n=document.getElementById("id_notas");' +
+      'var b=document.querySelector("input[name=\'_addanother\']");' +
+      'if(!s||!m||!n||!b) return {ok:false,err:"campos faltantes",hasS:!!s,hasM:!!m,hasN:!!n,hasB:!!b};' +
+      's.value='+JSON.stringify(String(chunior_uid))+'; s.dispatchEvent(new Event("change",{bubbles:true}));' +
+      'm.value='+JSON.stringify(String(monto))+'; m.dispatchEvent(new Event("input",{bubbles:true})); m.dispatchEvent(new Event("change",{bubbles:true}));' +
+      'n.value='+JSON.stringify(String(usuario||""))+'; n.dispatchEvent(new Event("input",{bubbles:true})); n.dispatchEvent(new Event("change",{bubbles:true}));' +
+      // Devolvemos los valores PRE-click para verificar que entraron antes del submit
+      'var snap={ok:true, valS:s.value, valM:m.value, valN:n.value};' +
+      'b.click();' +
+      'return snap;' +
+      '})()'
+    );
+  } catch(e){
+    return { ok:false, movimientoId:null, error:e.message||'Error inyectando datos' };
+  }
+  if(!injectRes || !injectRes.ok){
+    return { ok:false, movimientoId:null, error:'Inyección falló: '+JSON.stringify(injectRes) };
+  }
+
+  // Esperar la respuesta de Chunior (recarga la página con mensaje de éxito)
+  await new Promise(function(r){setTimeout(r,2500);});
+
+  let movimientoId = null;
+  let errorMsg = null;
+  try {
+    const res = await window.chunior.exec(
+      '(function(){' +
+      'var ok=document.querySelector("li.success");' +
+      'if(ok){' +
+      '  var a=ok.querySelector("a[href*=\'/movimientoficha/\']");' +
+      '  if(a){var m=a.href.match(/movimientoficha\\/(\\d+)/); if(m) return {ok:true, id:m[1]};}' +
+      '  var t=ok.textContent||"";' +
+      '  var m2=t.match(/N°\\s*(\\d+)/);' +
+      '  if(m2) return {ok:true, id:m2[1]};' +
+      '  return {ok:true, id:null};' +
+      '}' +
+      'var err=document.querySelector("ul.errorlist") || document.querySelector(".errornote");' +
+      'if(err) return {ok:false, error:(err.textContent||"Error en formulario").trim().substring(0,200)};' +
+      'return {ok:false, error:"Respuesta inesperada de Chunior"};' +
+      '})()'
+    );
+    if(res && res.ok){ movimientoId = res.id; }
+    else { errorMsg = (res && res.error) || 'Sin respuesta'; }
+  } catch(e){
+    errorMsg = e.message||'Error leyendo respuesta';
+  }
+
+  return { ok: !!movimientoId || !errorMsg, movimientoId: movimientoId, error: errorMsg };
 }
+
+// Retiro en Chunior: igual que carga pero monto negativo
+async function registrarRetiroEnChunior(chunior_uid, monto, usuario){
+  return registrarCargaEnChunior(chunior_uid, -Math.abs(Number(monto)), usuario);
+}
+
+// Cambia la billetera destino del movimiento N° {movId} en Chunior, sin que el operador lo vea.
+// Devuelve {ok, error?, movimientoId?}.
+async function _cambiarBilleteraChunior(movId, nuevoChuniorUid){
+  if(!window.chunior) return { ok:false, error:'Ventana de Chunior no disponible' };
+  const changeUrl = CHUNIOR_BASE + '/transacciones/movimientoficha/' + encodeURIComponent(movId) + '/change/';
+  try {
+    await window.chunior.navigate(changeUrl);
+  } catch(e){
+    return { ok:false, error:'No se pudo navegar a Chunior: ' + (e.message||'') };
+  }
+
+  // Esperar a que aparezcan el select y el botón "Guardar y agregar otro"
+  const t0 = Date.now();
+  let ready = false;
+  while(Date.now() - t0 < 10000){
+    ready = await window.chunior.exec(
+      '(function(){return !!(document.getElementById("id_cuenta_destino") && document.querySelector("input[name=\'_addanother\']"));})()'
+    ).catch(function(){ return false; });
+    if(ready) break;
+    await new Promise(function(r){ setTimeout(r, 300); });
+  }
+  if(!ready) return { ok:false, error:'Formulario de Chunior no apareció en 10s' };
+
+  // Verificar que el chunior_uid pedido exista como option válida
+  const opcionExiste = await window.chunior.exec(
+    '(function(){var s=document.getElementById("id_cuenta_destino"); if(!s) return false;' +
+    'for(var i=0;i<s.options.length;i++){ if(String(s.options[i].value)===' + JSON.stringify(String(nuevoChuniorUid)) + ') return true; } return false; })()'
+  ).catch(function(){ return false; });
+  if(!opcionExiste) return { ok:false, error:'La billetera elegida no figura en el select de Chunior' };
+
+  // Inyectar el cambio y disparar el submit (igual que en la carga: _addanother → vuelve a /add/)
+  let injectRes;
+  try {
+    injectRes = await window.chunior.exec(
+      '(function(){' +
+        'var s=document.getElementById("id_cuenta_destino");' +
+        'var b=document.querySelector("input[name=\'_addanother\']");' +
+        'if(!s||!b) return {ok:false,err:"campos faltantes"};' +
+        's.value=' + JSON.stringify(String(nuevoChuniorUid)) + ';' +
+        's.dispatchEvent(new Event("change",{bubbles:true}));' +
+        'var snap={ok:true, valS:s.value};' +
+        'b.click();' +
+        'return snap;' +
+      '})()'
+    );
+  } catch(e){
+    return { ok:false, error:'Inyección falló: ' + (e.message||'') };
+  }
+  if(!injectRes || !injectRes.ok) return { ok:false, error:'Inyección falló: ' + JSON.stringify(injectRes) };
+
+  // Esperar la confirmación (Chunior redirige a /add/ con li.success "Se modificó con éxito ...")
+  await new Promise(function(r){ setTimeout(r, 2500); });
+
+  try {
+    const conf = await window.chunior.exec(
+      '(function(){' +
+        'var li = document.querySelector("li.success");' +
+        'if(li){' +
+          'var t = (li.textContent||"").trim();' +
+          'if(/se\\s+modific[oó]\\s+con\\s+[eé]xito/i.test(t)){' +
+            'var a = li.querySelector("a[href*=\\"/movimientoficha/\\"]");' +
+            'var idM = null;' +
+            'if(a){ var mm = a.href.match(/movimientoficha\\/(\\d+)/); if(mm) idM = mm[1]; }' +
+            'if(!idM){ var m2 = t.match(/N°\\s*(\\d+)/); if(m2) idM = m2[1]; }' +
+            'return { ok:true, mensaje:t, movId:idM };' +
+          '}' +
+        '}' +
+        'var err = document.querySelector(".errorlist,.errornote");' +
+        'if(err) return { ok:false, error:(err.textContent||"").trim() };' +
+        'var u = window.location.href || "";' +
+        'if(u.indexOf("/change/") < 0) return { ok:true, mensaje:"Redirección a /add/" };' +
+        'return { ok:false, error:"Sin mensaje de confirmación visible" };' +
+      '})()'
+    );
+    if(!conf || !conf.ok){
+      return { ok:false, error: conf?.error || 'Chunior no confirmó el cambio' };
+    }
+    return { ok:true, movId: conf.movId || null, mensaje: conf.mensaje || '' };
+  } catch(e){
+    return { ok:false, error:'No se pudo leer la confirmación: ' + (e.message||'') };
+  }
+}
+
+// Transferir fichas de una billetera a otra en Chunior (form /movimientointerno/add/).
+// Devuelve {ok, error?}.
+async function _transferirEntreBilleterasChunior(origenUid, destinoUid, monto, notas){
+  if(!window.chunior) return { ok:false, error:'Ventana de Chunior no disponible' };
+  const url = CHUNIOR_BASE + '/transacciones/movimientointerno/add/';
+  try {
+    await window.chunior.navigate(url);
+  } catch(e){
+    return { ok:false, error:'No se pudo navegar a Chunior: ' + (e.message||'') };
+  }
+
+  // Esperar el formulario
+  const t0 = Date.now();
+  let ready = false;
+  while(Date.now() - t0 < 10000){
+    ready = await window.chunior.exec(
+      '(function(){return !!(document.getElementById("id_cuenta_origen")&&document.getElementById("id_cuenta_destino")&&document.getElementById("id_monto")&&document.querySelector("input[name=\'_addanother\']"));})()'
+    ).catch(function(){ return false; });
+    if(ready) break;
+    await new Promise(function(r){ setTimeout(r, 300); });
+  }
+  if(!ready) return { ok:false, error:'Formulario de transferencia no apareció en 10s' };
+
+  // Verificar que ambas billeteras existan como options
+  const verif = await window.chunior.exec(
+    '(function(){' +
+      'function tiene(id,v){var s=document.getElementById(id); if(!s) return false;' +
+      'for(var i=0;i<s.options.length;i++){ if(String(s.options[i].value)===String(v)) return true; } return false; }' +
+      'return { origen: tiene("id_cuenta_origen", ' + JSON.stringify(String(origenUid)) + '),' +
+              ' destino: tiene("id_cuenta_destino", ' + JSON.stringify(String(destinoUid)) + ') };' +
+    '})()'
+  ).catch(function(){ return { origen:false, destino:false }; });
+  if(!verif.origen)  return { ok:false, error:'La billetera origen no figura en Chunior (UID '+origenUid+')' };
+  if(!verif.destino) return { ok:false, error:'La billetera destino no figura en Chunior (UID '+destinoUid+')' };
+
+  // Inyectar y submit
+  let injectRes;
+  try {
+    injectRes = await window.chunior.exec(
+      '(function(){' +
+        'var o=document.getElementById("id_cuenta_origen");' +
+        'var d=document.getElementById("id_cuenta_destino");' +
+        'var m=document.getElementById("id_monto");' +
+        'var n=document.getElementById("id_notas");' +
+        'var b=document.querySelector("input[name=\'_addanother\']");' +
+        'if(!o||!d||!m||!b) return {ok:false,err:"campos faltantes"};' +
+        'o.value=' + JSON.stringify(String(origenUid))  + '; o.dispatchEvent(new Event("change",{bubbles:true}));' +
+        'd.value=' + JSON.stringify(String(destinoUid)) + '; d.dispatchEvent(new Event("change",{bubbles:true}));' +
+        'm.value=' + JSON.stringify(String(monto))      + '; m.dispatchEvent(new Event("input",{bubbles:true})); m.dispatchEvent(new Event("change",{bubbles:true}));' +
+        'if(n){ n.value=' + JSON.stringify(String(notas||"")) + '; n.dispatchEvent(new Event("input",{bubbles:true})); }' +
+        'b.click();' +
+        'return {ok:true};' +
+      '})()'
+    );
+  } catch(e){
+    return { ok:false, error:'Inyección falló: ' + (e.message||'') };
+  }
+  if(!injectRes || !injectRes.ok) return { ok:false, error:'Inyección falló: ' + JSON.stringify(injectRes) };
+
+  // Esperar confirmación
+  await new Promise(function(r){ setTimeout(r, 2500); });
+  try {
+    const ok = await window.chunior.exec(
+      '(function(){' +
+        'if(document.querySelector("li.success")) return true;' +
+        'var u=window.location.href||""; if(u.indexOf("/movimientointerno/add/") >= 0 && !document.querySelector(".errorlist,.errornote")) return true;' +
+        'return false;' +
+      '})()'
+    );
+    if(!ok){
+      const errMsg = await window.chunior.exec(
+        '(function(){var e=document.querySelector(".errorlist,.errornote"); return e ? (e.textContent||"").trim() : null;})()'
+      ).catch(function(){ return null; });
+      return { ok:false, error: errMsg || 'Chunior no confirmó la transferencia' };
+    }
+  } catch(_){}
+
+  return { ok:true };
+}
+
+// Modal NODO para transferir entre billeteras.
+function abrirModalTransferirBilleteras(){
+  if(!window.chunior){ toast("Chunior no disponible", "red"); return; }
+  const bilsConUid = billeteras.filter(function(b){ return b.CHUNIOR_UID; });
+  if(!bilsConUid.length){
+    abrirModal('🔀 Transferir entre billeteras',
+      '<div class="err-box">No hay billeteras con UID de Chunior. Sincronizá primero.</div>',
+      function(){ cerrarModal(); }, 'Entendido');
+    return;
+  }
+
+  function buildOpts(){
+    return bilsConUid.map(function(b){
+      return '<option value="' + escapeHtml(String(b.ID_BILLETERA)) + '">' +
+             escapeHtml(b.NOMBRE_VISIBLE || '—') + ' · ' + money(b.SALDO || 0) +
+             '</option>';
+    }).join('');
+  }
+
+  abrirModal(
+    '🔀 Transferir entre billeteras',
+    '<div style="color:#c0cad8;font-size:13px;margin-bottom:10px">Mover fichas de una billetera a otra (útil para corregir cargas que quedaron en la billetera ERROR).</div>' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">BILLETERA ORIGEN (sale plata)</label>' +
+    '<select id="transferOrigen"><option value="">— Elegí origen —</option>' + buildOpts() + '</select>' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">BILLETERA DESTINO (entra plata)</label>' +
+    '<select id="transferDestino"><option value="">— Elegí destino —</option>' + buildOpts() + '</select>' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">MONTO</label>' +
+    '<input id="transferMonto" type="number" placeholder="ej: 5000" style="margin-bottom:6px">' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">NOTAS (opcional)</label>' +
+    '<textarea id="transferNotas" rows="2" placeholder="Ej: corrección de carga al usuario juan777"></textarea>' +
+    '<div id="transferRes" style="min-height:16px;margin-top:6px"></div>',
+    async function(){
+      const origenId  = document.getElementById("transferOrigen")?.value;
+      const destinoId = document.getElementById("transferDestino")?.value;
+      const monto     = Number(document.getElementById("transferMonto")?.value || 0);
+      const notas     = (document.getElementById("transferNotas")?.value || "").trim();
+      const resEl     = document.getElementById("transferRes");
+      const btn       = document.getElementById("modalSaveBtn");
+
+      if(!origenId || !destinoId){
+        if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">Elegí origen y destino.</span>'; return;
+      }
+      if(origenId === destinoId){
+        if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">Origen y destino no pueden ser la misma billetera.</span>'; return;
+      }
+      if(!monto || monto <= 0){
+        if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">Monto inválido.</span>'; return;
+      }
+
+      const bilOrigen  = billeteras.find(function(b){ return String(b.ID_BILLETERA) === String(origenId); });
+      const bilDestino = billeteras.find(function(b){ return String(b.ID_BILLETERA) === String(destinoId); });
+      if(!bilOrigen?.CHUNIOR_UID || !bilDestino?.CHUNIOR_UID){
+        if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">Alguna billetera no tiene UID de Chunior.</span>'; return;
+      }
+
+      if(btn){ btn.disabled = true; btn.textContent = "Transfiriendo..."; }
+      if(resEl) resEl.innerHTML = '<span class="small">Aplicando en Chunior...</span>';
+
+      try {
+        const r = await _transferirEntreBilleterasChunior(bilOrigen.CHUNIOR_UID, bilDestino.CHUNIOR_UID, monto, notas);
+        if(r.ok){
+          // Ajustar saldos locales: -monto del origen, +monto al destino
+          if(bilOrigen.ID_BILLETERA)  await ajustarSaldoBilletera(bilOrigen.ID_BILLETERA, -monto);
+          if(bilDestino.ID_BILLETERA) await ajustarSaldoBilletera(bilDestino.ID_BILLETERA,  monto);
+          toast("✅ Transferencia OK · " + money(monto) + " · " + bilOrigen.NOMBRE_VISIBLE + " → " + bilDestino.NOMBRE_VISIBLE, "green");
+          cerrarModal();
+          renderBillerasInicio();
+        } else {
+          if(resEl) resEl.innerHTML = '<div class="err-box" style="padding:10px;font-size:12px;margin-top:6px">❌ ' + escapeHtml(r.error || 'Error') + '</div>';
+          if(btn){ btn.disabled = false; btn.textContent = "Transferir"; }
+        }
+      } catch(e){
+        if(resEl) resEl.innerHTML = '<div class="err-box" style="padding:10px;font-size:12px;margin-top:6px">❌ ' + escapeHtml(e.message || 'sin detalle') + '</div>';
+        if(btn){ btn.disabled = false; btn.textContent = "Transferir"; }
+      }
+    },
+    'Transferir'
+  );
+}
+
+// Modal NODO para cambiar la billetera de un movimiento ya registrado.
+// El operador NUNCA ve Chunior — toda la maniobra se hace en background.
+function cambiarBilleteraMovimiento(movId, historialId, currentBilId){
+  if(!window.chunior){ toast("Chunior no disponible", "red"); return; }
+  if(!movId){ toast("Esta operación no tiene movimiento de Chunior", "red"); return; }
+
+  // Construir opciones del select: solo billeteras con CHUNIOR_UID configurado
+  const bilsConUid = billeteras.filter(function(b){ return b.CHUNIOR_UID; });
+  const opciones = bilsConUid.map(function(b){
+    const sel = String(b.ID_BILLETERA) === String(currentBilId) ? ' selected' : '';
+    return '<option value="' + escapeHtml(String(b.ID_BILLETERA)) + '"' + sel + '>' +
+           escapeHtml(b.NOMBRE_VISIBLE || '—') + ' · ' + money(b.SALDO || 0) +
+           '</option>';
+  }).join('');
+
+  if(!bilsConUid.length){
+    abrirModal('💳 Cambiar billetera',
+      '<div class="err-box">No hay billeteras configuradas con UID de Chunior. Sincronizá billeteras primero.</div>',
+      function(){ cerrarModal(); }, 'Entendido');
+    return;
+  }
+
+  abrirModal(
+    '💳 Cambiar billetera · Mov. N° ' + escapeHtml(String(movId)),
+    '<div style="color:#c0cad8;font-size:13px;margin-bottom:10px">Elegí la nueva billetera destino. Se actualiza en Chunior y en el historial automáticamente.</div>' +
+    '<label style="color:#c0cad8;font-size:12px;font-weight:700">NUEVA BILLETERA</label>' +
+    '<select id="cambioBilSel">' + opciones + '</select>' +
+    '<div id="cambioBilRes" style="min-height:16px;margin-top:6px"></div>',
+    async function(){
+      const sel   = document.getElementById("cambioBilSel");
+      const resEl = document.getElementById("cambioBilRes");
+      const btn   = document.getElementById("modalSaveBtn");
+      const nuevoBilId = sel?.value;
+      if(!nuevoBilId){
+        if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">Seleccioná una billetera.</span>';
+        return;
+      }
+      const bilNueva = billeteras.find(function(b){ return String(b.ID_BILLETERA) === String(nuevoBilId); });
+      if(!bilNueva || !bilNueva.CHUNIOR_UID){
+        if(resEl) resEl.innerHTML = '<span style="color:var(--red);font-size:12px">La billetera no tiene UID de Chunior.</span>';
+        return;
+      }
+      if(btn){ btn.disabled = true; btn.textContent = "Cambiando..."; }
+      if(resEl) resEl.innerHTML = '<span class="small">Aplicando cambio en Chunior...</span>';
+      try {
+        const r = await _cambiarBilleteraChunior(movId, bilNueva.CHUNIOR_UID);
+        if(r.ok){
+          // Actualizar la fila en historial_ops
+          if(historialId){
+            try {
+              await supabaseClient.from("historial_ops")
+                .update({ billetera_id: nuevoBilId, billetera_nombre: bilNueva.NOMBRE_VISIBLE })
+                .eq("id", historialId);
+            } catch(eUpd){ console.warn("update historial_ops:", eUpd); }
+          }
+          const tagMov = r.movId ? ' (N° ' + r.movId + ')' : '';
+          toast("✅ Billetera cambiada · " + bilNueva.NOMBRE_VISIBLE + tagMov, "green");
+          cerrarModal();
+          await cargarHistorial();
+        } else {
+          if(resEl) resEl.innerHTML = '<div class="err-box" style="padding:10px;font-size:12px;margin-top:6px">❌ ' + escapeHtml(r.error || 'Error') + '</div>';
+          if(btn){ btn.disabled = false; btn.textContent = "Cambiar billetera"; }
+        }
+      } catch(e){
+        if(resEl) resEl.innerHTML = '<div class="err-box" style="padding:10px;font-size:12px;margin-top:6px">❌ ' + escapeHtml(e.message || 'sin detalle') + '</div>';
+        if(btn){ btn.disabled = false; btn.textContent = "Cambiar billetera"; }
+      }
+    },
+    'Cambiar billetera'
+  );
+}
+
+async function _crearBilleterasNuevasChunior(nuevas){
+  const inserts = nuevas.map(function(w){
+    return {
+      nombre_visible: w.nombre,
+      chunior_uid: String(w.uid),
+      saldo: w.saldo,
+      pc_codigo: pcOperativa,
+      activa: true,
+      cbu_alias: '',
+      titular: '',
+      tipo: ''
+    };
+  });
+  const { error } = await supabaseClient.from('billeteras').insert(inserts);
+  if(error){
+    toast('Error al crear billeteras: '+error.message, 'red');
+    return;
+  }
+  toast('🆕 '+nuevas.length+' billetera(s) agregada(s). Completá CBU, titular y alias en Administrar billeteras.', 'blue');
+  // Mostrar también una notificación más visible
+  const alertas = document.getElementById('alertas');
+  if(alertas){
+    const lista = nuevas.map(function(w){ return escapeHtml(w.nombre); }).join(', ');
+    alertas.innerHTML += '<div class="alert-box" style="background:#1a3a5a;color:#cde0ff">⚠️ Nuevas billeteras de Chunior: <b>'+lista+'</b>. Falta cargar CBU, titular y alias en Administrar billeteras.</div>';
+  }
+}
+
+function chuniorNav(path){
+  if(window.chunior) window.chunior.navigate(CHUNIOR_BASE + path);
+}
+
+// ── Macros del chat ───────────────────────────────────────────────────────────
+let macrosList = [];
+
+async function cargarMacros(){
+  try {
+    const { data } = await supabaseClient.from('macros')
+      .select('*')
+      .or('pc_codigo.is.null,pc_codigo.eq.' + (pcOperativa || ''))
+      .order('orden', { ascending: true });
+    macrosList = data || [];
+  } catch(e){ macrosList = []; }
+}
+
+function toggleMacrosPanel(ev){
+  if(ev) ev.stopPropagation();
+  const p = document.getElementById('macrosPanel');
+  if(!p) return;
+  if(p.classList.contains('hidden')){
+    p.classList.remove('hidden');
+    if(!macrosList.length) cargarMacros().then(()=>renderMacrosPanel());
+    else renderMacrosPanel();
+  } else {
+    p.classList.add('hidden');
+  }
+}
+
+function renderMacrosPanel(){
+  const p = document.getElementById('macrosPanel');
+  if(!p) return;
+  // Billetera siempre primera (dinámica, no en Supabase)
+  let html = '<button class="macro-btn bil" onclick="aplicarMacroBilletera()">💳 Billetera</button>';
+  macrosList.forEach(function(m){
+    html += '<button class="macro-btn" onclick="aplicarMacro('+_jsonAttr(m.id)+')">'+escapeHtml(m.titulo)+'</button>';
+  });
+  html += '<div class="macro-edit-row"><button class="mini-btn gray" style="font-size:11px;padding:3px 10px" onclick="abrirEditorMacros()">⚙️ Editar</button></div>';
+  p.innerHTML = html;
+}
+
+function aplicarMacroBilletera(){
+  const p = document.getElementById('macrosPanel');
+  if(p) p.classList.add('hidden');
+  const b = getBilleraLanding();
+  if(!b){ toast('No hay billetera activa configurada', 'red'); return; }
+  const nombre    = b.NOMBRE_VISIBLE || '';
+  const cbuAlias  = (b.CBU_ALIAS || b.CBU_CVU || '').trim();
+  const esCBU     = /^\d{15,}$/.test(cbuAlias);
+  let texto = '💳 ' + nombre.toUpperCase() + '\n';
+  texto += esCBU ? 'CBU/CVU: ' + cbuAlias + '\n' : 'Alias: ' + cbuAlias + '\n';
+  texto += 'Titular: ' + nombre + '\nBanco: ' + (b.TIPO || b.BANCO || 'MP') + '\n\nTransferí y luego enviá el comprobante por este chat.';
+  const inp = document.getElementById('chatInput');
+  if(inp){ inp.value = texto; inp.focus(); }
+}
+
+function aplicarMacro(id){
+  const p = document.getElementById('macrosPanel');
+  if(p) p.classList.add('hidden');
+  const m = macrosList.find(function(x){ return x.id === id; });
+  if(!m) return;
+  const inp = document.getElementById('chatInput');
+  if(inp){ inp.value = m.texto; inp.focus(); }
+}
+
+function renderEditorMacrosHTML(){
+  let rows = macrosList.map(function(m){
+    return '<div style="display:flex;align-items:start;gap:8px;padding:10px;background:#1b202c;border-radius:10px;margin-bottom:8px">'
+      + '<div style="flex:1">'
+      + '<div style="font-weight:700;font-size:13px;margin-bottom:3px">'+escapeHtml(m.titulo)+'</div>'
+      + '<div style="font-size:11px;color:var(--muted);word-break:break-word">'+escapeHtml(m.texto.substring(0,80))+(m.texto.length>80?'…':'')+'</div>'
+      + '</div>'
+      + '<button class="mini-btn gray" style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="editarMacroModal('+_jsonAttr(m.id)+')">✏️</button>'
+      + '<button class="mini-btn red"  style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="borrarMacro('+_jsonAttr(m.id)+')">🗑️</button>'
+      + '</div>';
+  }).join('');
+  rows += '<hr style="border-color:#2e3444;margin:14px 0">'
+    + '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">NUEVA MACRO</div>'
+    + '<input id="nuevoMacroTitulo" placeholder="Título (ej: ✅ Aprobada)" style="margin-bottom:8px">'
+    + '<textarea id="nuevoMacroTexto" rows="3" placeholder="Texto del mensaje..." style="width:100%;background:#0e1525;border:1px solid #2e3444;border-radius:10px;color:#fff;padding:10px;font-size:13px;resize:vertical"></textarea>'
+    + '<button class="btn btn-primary" style="margin-top:10px;width:100%" onclick="crearMacro()">Guardar macro</button>';
+  return rows;
+}
+
+function abrirEditorMacros(){
+  const p = document.getElementById('macrosPanel');
+  if(p) p.classList.add('hidden');
+  if(!macrosList.length){
+    cargarMacros().then(function(){ abrirModal('⚙️ Macros del chat', renderEditorMacrosHTML(), null, null); });
+    return;
+  }
+  abrirModal('⚙️ Macros del chat', renderEditorMacrosHTML(), null, null);
+}
+
+function editarMacroModal(id){
+  const m = macrosList.find(function(x){ return x.id===id; });
+  if(!m) return;
+  const body = '<input id="editMacroTitulo" value="'+escapeHtml(m.titulo)+'" style="margin-bottom:8px">'
+    + '<textarea id="editMacroTexto" rows="4" style="width:100%;background:#0e1525;border:1px solid #2e3444;border-radius:10px;color:#fff;padding:10px;font-size:13px;resize:vertical">'+escapeHtml(m.texto)+'</textarea>';
+  abrirModal('✏️ Editar macro', body, async function(){
+    const titulo = (document.getElementById('editMacroTitulo')?.value||'').trim();
+    const texto  = (document.getElementById('editMacroTexto')?.value||'').trim();
+    if(!titulo||!texto){ toast('Completá título y texto','red'); return; }
+    const { error } = await supabaseClient.from('macros').update({titulo,texto}).eq('id',id);
+    if(error){ toast('Error al guardar: '+error.message,'red'); return; }
+    cerrarModal();
+    await cargarMacros();
+    toast('Macro actualizada','green');
+  }, 'Guardar');
+}
+
+async function crearMacro(){
+  const titulo = (document.getElementById('nuevoMacroTitulo')?.value||'').trim();
+  const texto  = (document.getElementById('nuevoMacroTexto')?.value||'').trim();
+  if(!titulo||!texto){ toast('Completá título y texto','red'); return; }
+  const maxOrden = macrosList.reduce(function(acc,m){ return Math.max(acc,m.orden||0); }, 0);
+  const { error } = await supabaseClient.from('macros').insert({titulo, texto, orden: maxOrden+1});
+  if(error){ toast('Error al crear: '+error.message,'red'); return; }
+  cerrarModal();
+  await cargarMacros();
+  toast('Macro creada','green');
+}
+
+async function borrarMacro(id){
+  if(!confirm('¿Borrar esta macro?')) return;
+  const { error } = await supabaseClient.from('macros').delete().eq('id',id);
+  if(error){ toast('Error: '+error.message,'red'); return; }
+  cerrarModal();
+  await cargarMacros();
+  toast('Macro eliminada','green');
+}
+
+// Cierre automático del panel de macros al click afuera
+document.addEventListener('click', function(e){
+  const p = document.getElementById('macrosPanel');
+  if(!p || p.classList.contains('hidden')) return;
+  const btn = document.querySelector('[onclick*="toggleMacrosPanel"]');
+  if(p.contains(e.target)) return;
+  if(btn && btn.contains(e.target)) return;
+  p.classList.add('hidden');
+}, true);
 
 // ── Cola de verificación de login ─────────────────────────────────────────────
 let _verifActivo = false;
@@ -3372,7 +4854,10 @@ async function procesarColaVerificacion(){
   const v = data[0];
   _verifActivo = true;
   try {
-    const result = await window.ctrlElectron.verifyUser(v.usuario);
+    // Resuelve el alias mirando NUESTRA base (igual que buscarUsuario): si está exacto, lo manda exacto;
+    // si no está exacto y tiene chars especiales, manda el normalizado. Una sola llamada al casino.
+    const aliasParaCasino = await _resolverAliasParaCasino(v.usuario);
+    const result = await window.ctrlElectron.verifyUser(aliasParaCasino);
     const nuevoEstado = result.exists ? "VERIFICADO" : "NO_EXISTE";
     await supabaseClient.from("verificaciones").update({
       estado: nuevoEstado,
