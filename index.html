@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NODO · OPERATIVO V21 · Fase 2 Acción Repo</title>
+<title>NODO · OPERATIVO V21 · Fase 2 Layout Fix</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
@@ -274,7 +274,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div class="login-card">
     <img src="logo-nodo.png" class="logo" alt="NODO">
     <h2 style="margin-bottom:6px">PANEL OPERATIVO LITE</h2>
-    <div class="small" style="margin-bottom:16px">Versión V21 · Fase 2 Acción Repo</div>
+    <div class="small" style="margin-bottom:16px">Versión V21 · Fase 2 Layout Fix</div>
     <label>Usuario</label>
     <input id="loginUsuario" autocomplete="username">
     <label>Clave</label>
@@ -12448,6 +12448,222 @@ body.nodo-v21-quick-repo .nodo-v21-hide-old-quick{
   document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,900));
   window.addEventListener('load',()=>setTimeout(boot,1400));
   setTimeout(boot,1600);
+})();
+</script>
+
+
+<style id="nodo-v21-layout-fix-topquick-css">
+/* =========================================================
+   NODO V21 · FIX LAYOUT
+   - Billeteras rápidas arriba
+   - Operación rápida debajo
+   - Oculta duplicados viejos
+   - Usa el espacio vacío del inicio
+========================================================= */
+body.nodo-v21-layout-fix .nodo-v21-main-top{
+  display:grid!important;
+  grid-template-columns:1fr 1.08fr!important;
+  gap:14px!important;
+  align-items:start!important;
+  margin-bottom:14px!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-left-stack,
+body.nodo-v21-layout-fix .nodo-v21-right-stack{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:14px!important;
+  min-width:0!important;
+}
+body.nodo-v21-layout-fix #nodoV21QuickShell{
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:14px!important;
+}
+body.nodo-v21-layout-fix #nodoV21QuickShell > .nodo-v21-card{
+  margin:0!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-quick-shell{
+  grid-template-columns:1fr!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-wallet-row{
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr))!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-quick-grid{
+  grid-template-columns:1.2fr 120px 1fr 1fr 160px!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-quick-actions{
+  grid-template-columns:1.4fr 1fr 1fr 1fr!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-force-hide{
+  display:none!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-spacer-fix{
+  min-height:0!important;
+  height:auto!important;
+}
+body.nodo-v21-layout-fix .nodo-v21-right-stack .nodo-v21-card,
+body.nodo-v21-layout-fix .nodo-v21-right-stack .ops-panel,
+body.nodo-v21-layout-fix .nodo-v21-right-stack .card{
+  min-width:0!important;
+}
+@media (max-width:1280px){
+  body.nodo-v21-layout-fix .nodo-v21-main-top{
+    grid-template-columns:1fr!important;
+  }
+}
+@media (max-width:920px){
+  body.nodo-v21-layout-fix .nodo-v21-quick-grid,
+  body.nodo-v21-layout-fix .nodo-v21-quick-actions{
+    grid-template-columns:1fr!important;
+  }
+}
+</style>
+
+<script id="nodo-v21-layout-fix-topquick-js">
+(function(){
+  if(window.__NODO_V21_LAYOUT_FIX_TOPQUICK__) return;
+  window.__NODO_V21_LAYOUT_FIX_TOPQUICK__ = true;
+
+  function $(id){ return document.getElementById(id); }
+  function norm(v){
+    try{return String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase();}
+    catch(e){return String(v ?? '').trim().toUpperCase();}
+  }
+
+  function findQuickShell(){
+    return $('nodoV21QuickShell');
+  }
+
+  function findRightColumnCandidate(view){
+    // Prioridad: cola operativa / historial reciente / panel único
+    const blocks = Array.from(view.querySelectorAll('.card,.ops-panel,section,div')).filter(el => {
+      if(!el || !el.textContent) return false;
+      return true;
+    });
+    return blocks.find(el => /COLA OPERATIVA/i.test(el.textContent || ''))
+        || blocks.find(el => /HISTORIAL RECIENTE/i.test(el.textContent || ''))
+        || blocks.find(el => /HISTORIAL UNIFICADO/i.test(el.textContent || ''))
+        || blocks.find(el => /PENDIENTES|WORKER|CHAT/i.test(el.textContent || ''));
+  }
+
+  function hideOldDuplicates(view){
+    const all = Array.from(view.querySelectorAll('.card,.ops-panel,section,div'));
+
+    all.forEach(el => {
+      const txt = norm(el.textContent || '');
+
+      // Ocultar bloque viejo de acción rápida/usuario agentes
+      if((txt.includes('ACCION RAPIDA') || txt.includes('ACCIÓN RÁPIDA') || txt.includes('USUARIO AGENTES'))
+          && !el.closest('#nodoV21QuickShell')){
+        el.classList.add('nodo-v21-force-hide');
+      }
+
+      // Ocultar el centro operativo viejo gigante si queda arriba ocupando espacio
+      if(txt.includes('CENTRO OPERATIVO') && !el.id && !el.closest('#nodoV21TopZone')){
+        const hasWallets = txt.includes('BILLETERAS RAPIDAS');
+        const hasQuick = txt.includes('OPERACION RAPIDA') || txt.includes('OPERACIÓN RÁPIDA');
+        if(hasWallets || hasQuick){
+          el.classList.add('nodo-v21-force-hide');
+        }
+      }
+
+      // Ocultar cards vacías / placeholders viejos
+      const childCount = el.children ? el.children.length : 0;
+      const visibleText = (el.textContent || '').trim();
+      if(childCount === 0 && visibleText === ''){
+        el.classList.add('nodo-v21-force-hide');
+      }
+    });
+
+    // Oculta un posible hueco / header vacío a la izquierda
+    const empties = Array.from(view.children || []).filter(el => {
+      if(!el || el.id === 'nodoV21TopZone' || el.id === 'nodoV21QuickShell') return false;
+      const txt = (el.textContent || '').trim();
+      const rect = el.getBoundingClientRect();
+      return txt === '' && rect.height > 20;
+    });
+    empties.forEach(el => el.classList.add('nodo-v21-force-hide','nodo-v21-spacer-fix'));
+  }
+
+  function buildTopZone(view){
+    let zone = $('nodoV21TopZone');
+    if(!zone){
+      zone = document.createElement('div');
+      zone.id = 'nodoV21TopZone';
+      zone.className = 'nodo-v21-main-top';
+      zone.innerHTML = `
+        <div id="nodoV21LeftStack" class="nodo-v21-left-stack"></div>
+        <div id="nodoV21RightStack" class="nodo-v21-right-stack"></div>
+      `;
+      view.prepend(zone);
+    }
+    return zone;
+  }
+
+  function moveTopLayout(){
+    const view = $('viewInicio');
+    const quick = findQuickShell();
+    if(!view || !quick) return;
+
+    document.body.classList.add('nodo-v21-layout-fix');
+
+    const zone = buildTopZone(view);
+    const left = $('nodoV21LeftStack');
+    const right = $('nodoV21RightStack');
+
+    // Meter quick shell arriba a la izquierda
+    if(left && quick.parentElement !== left){
+      left.appendChild(quick);
+    }
+
+    // Encontrar la cola operativa / historial y subirlo a la derecha
+    const candidates = Array.from(view.querySelectorAll('.card,.ops-panel,section,div')).filter(el => {
+      if(!el || el.id === 'nodoV21TopZone' || el.closest('#nodoV21QuickShell')) return false;
+      const t = norm(el.textContent || '');
+      return t.includes('COLA OPERATIVA') || t.includes('HISTORIAL RECIENTE') || t.includes('HISTORIAL UNIFICADO');
+    });
+
+    candidates.forEach(el => {
+      if(right && el.parentElement !== right){
+        right.appendChild(el);
+      }
+    });
+
+    hideOldDuplicates(view);
+  }
+
+  function boot(){
+    try{ moveTopLayout(); }catch(e){ console.warn('layout fix error', e); }
+  }
+
+  const oldCentro = window.renderCentroOperativo;
+  if(typeof oldCentro === 'function' && !oldCentro.__layoutFixTopQuick){
+    window.renderCentroOperativo = function(){
+      const r = oldCentro.apply(this, arguments);
+      setTimeout(boot, 120);
+      setTimeout(boot, 500);
+      return r;
+    };
+    window.renderCentroOperativo.__layoutFixTopQuick = true;
+    try{ renderCentroOperativo = window.renderCentroOperativo; }catch(e){}
+  }
+
+  const oldInicio = window.renderInicio;
+  if(typeof oldInicio === 'function' && !oldInicio.__layoutFixTopQuick){
+    window.renderInicio = function(){
+      const r = oldInicio.apply(this, arguments);
+      setTimeout(boot, 120);
+      setTimeout(boot, 500);
+      return r;
+    };
+    window.renderInicio.__layoutFixTopQuick = true;
+    try{ renderInicio = window.renderInicio; }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 900));
+  window.addEventListener('load', () => setTimeout(boot, 1300));
+  setTimeout(boot, 1700);
 })();
 </script>
 
